@@ -1,6 +1,6 @@
 # Remix DnB Stack
 
-![The Remix DnB Stack](https://github.com/robipop22/dnb-stack/blob/main/dnb-stack-preview.png?raw=true)
+<!-- ![The Remix DnB Stack](https://github.com/robipop22/dnb-stack/blob/main/dnb-stack-preview.png?raw=true) -->
 
 See it live: https://dnb-stack.vercel.app/
 
@@ -16,7 +16,6 @@ npx create-remix --template robipop22/dnb-stack
 - [GitHub Actions](https://github.com/features/actions) for deploy on merge to production and staging environments (all working via branching system)
 - Proposed opinionated folder structure for the project
 - Mocked api request for the project and route example
-- Styling with [Tailwind](https://tailwindcss.com/)
 - End-to-end testing with [Cypress](https://cypress.io)
 - Unit testing with [Vitest](https://vitest.dev) and [Testing Library](https://testing-library.com)
 - Code formatting with [Prettier](https://prettier.io)
