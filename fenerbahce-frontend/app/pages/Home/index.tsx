@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import type { ReactElement } from "react";
 import { Footer, Header } from "~/components";
-import { Hero, TokenDefinition, Utility } from "./components";
+import { Hero, TokenDefinition, Advantages } from "./components";
 
 export const Home = (): ReactElement => {
 
@@ -9,7 +9,10 @@ export const Home = (): ReactElement => {
         <Header />
         <Hero />
         <TokenDefinition />
-        <Utility />
+        <Advantages />
         <Footer />
+        <link rel="stylesheet" href="owl-carousel/owl.theme.css"></link>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+        {/* <link rel="stylesheet" href="owl-carousel/owl.theme.css" /> */}
     </Box>);
 };

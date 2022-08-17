@@ -1,10 +1,10 @@
 import { Hero } from "./Hero";
 import { TokenDefinition } from "./TokenDefinition";
-import { Utility } from "./Utility";
+import { Advantages } from "./Advantages";
 
 
 export {
     Hero,
     TokenDefinition,
-    Utility,
+    Advantages,
 };

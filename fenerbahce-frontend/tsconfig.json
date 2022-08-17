@@ -1,5 +1,6 @@
 {
 	"include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"],
+	"exclude": ["node_modules", "typings"],
 	"compilerOptions": {
 		"lib": ["DOM", "DOM.Iterable", "ES2019"],
 		"isolatedModules": true,
@@ -15,6 +16,7 @@
 		},
 		"noEmit": true,
 		"forceConsistentCasingInFileNames": true,
-		"allowJs": true
-	}
+		"allowJs": true,
+		"typeRoots": ["./types", "./node_modules/@types"],
+	},
 }
