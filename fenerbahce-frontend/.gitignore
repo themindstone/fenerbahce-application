@@ -17,9 +17,7 @@ node_modules
 
 /build/
 /public/build
-/api/index.js
-/api/index.js.map
-api/index.js.map
+/api
 
 /cypress/screenshots
 /cypress/videos

@@ -1,4 +1,13 @@
+
+:root {
+	--governor-bay: #2847A8;
+	--lucky-point: #163072;
+	--golden-fizz: #FFED38;
+	--biscay: #1B2F6F;
+}
+
+
 body {
-	background-color: #323232;
+	background-color: var(--lucky-point);
 	color: #fff;
 }
