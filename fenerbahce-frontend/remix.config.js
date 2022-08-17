@@ -9,7 +9,7 @@ module.exports = {
 	server: process.env.VERCEL ? './server.js' : undefined,
 	ignoredRouteFiles: ['**/.*'],
 	// appDirectory: "app",
-	// assetsBuildDirectory: "public/build",
+	assetsBuildDirectory: "public/build",
 	// serverBuildPath: "api/index.js",
 	// publicPath: "/build/",
 };
