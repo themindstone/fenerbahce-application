@@ -5,7 +5,7 @@ import { GoldenFizzButton } from "../Button";
 
 interface NavLinkProps {
     children?: React.ReactNode;
-}
+};
 
 const NavLink = ({
     children,
@@ -13,13 +13,13 @@ const NavLink = ({
 }: NavLinkProps): ReactElement => {
 
     return <Link {...rest} fontWeight="bold">{children}</Link>
-}
+};
 
 export const Header = (): ReactElement => {
 
 
-    return (<Flex justifyContent="space-between" p="10px 80px">
-        <Flex gap="20px" alignItems="center">
+    return (<Flex justifyContent="space-between" p="25px 60px">
+        <Flex gap="40px" alignItems="center">
             <Flex gap="10px" alignItems="center">
                 <Image src="/images/token-logo.png" w="60px" />
                 <Text fontWeight="bold">FENERBAHÇE <br /> TOKEN</Text>
@@ -41,5 +41,5 @@ export const Header = (): ReactElement => {
             <NavLink>EN</NavLink>
             <GoldenFizzButton>Giris yap</GoldenFizzButton>
         </Flex>
-    </Flex>)
-}
+    </Flex>);
+};

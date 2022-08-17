@@ -1,11 +1,10 @@
+import { Box } from "@chakra-ui/react";
 import type { ReactElement } from "react";
-import React from "react";
 
 
 export const Footer = (): ReactElement => {
 
 
-    return (<div>
-        footer
-    </div>);
+    return (<Box height="1000px">
+    </Box>);
 };
