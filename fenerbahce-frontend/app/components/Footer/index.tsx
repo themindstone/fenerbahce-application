@@ -5,6 +5,6 @@ import type { ReactElement } from "react";
 export const Footer = (): ReactElement => {
 
 
-    return (<Box height="1000px">
+    return (<Box height="500px">
     </Box>);
 };
