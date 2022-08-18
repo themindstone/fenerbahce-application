@@ -4,6 +4,7 @@ import { Advantages } from "./Advantages";
 import { Utility } from "./Utility";
 import { MobileApplication } from "./MobileApplication";
 import { ProjectCalendar } from "./ProjectCalendar";
+import { FAQ } from "./FAQ";
 
 export {
     Hero,
@@ -12,4 +13,5 @@ export {
     Utility,
     MobileApplication,
     ProjectCalendar,
+    FAQ,
 };

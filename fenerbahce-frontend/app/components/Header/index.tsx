@@ -1,4 +1,4 @@
-import { Box, Flex, Image, Link, Text } from "@chakra-ui/react";
+import { Flex, Image, Link, Text } from "@chakra-ui/react";
 import type { ReactElement } from "react";
 import { GoldenFizzButton } from "../Button";
 
