@@ -45,9 +45,12 @@
     "@remix-run/vercel": "^1.6.5",
     "@vercel/node": "^1.8.3",
     "framer-motion": "^6",
+    "rc-steps": "^4.1.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-owl-carousel2": "^0.3.0"
+    "react-owl-carousel2": "^0.3.0",
+    "remix-utils": "^3.3.0",
+    "swiper": "^8.3.2"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.6.5",

@@ -3,6 +3,7 @@ import { TokenDefinition } from "./TokenDefinition";
 import { Advantages } from "./Advantages";
 import { Utility } from "./Utility";
 import { MobileApplication } from "./MobileApplication";
+import { ProjectCalendar } from "./ProjectCalendar";
 
 export {
     Hero,
@@ -10,4 +11,5 @@ export {
     Advantages,
     Utility,
     MobileApplication,
+    ProjectCalendar,
 };
