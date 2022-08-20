@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import type { ReactElement } from "react";
 import { Footer, Header } from "~/components";
-import { Hero, TokenDefinition, Advantages, Utility, MobileApplication, ProjectCalendar, FAQ } from "./components";
+import { Hero, TokenDefinition, Advantages, Utility, MobileApplication, ProjectCalendar, FAQ, JoinCommunity } from "./components";
 
 export const Home = (): ReactElement => {
 
@@ -16,6 +16,7 @@ export const Home = (): ReactElement => {
         <MobileApplication />
         <ProjectCalendar />
         <FAQ />
+        <JoinCommunity />
         <Footer />
         {/* <link rel="stylesheet" href="owl-carousel/owl.theme.css" /> */}
     </Box>);

@@ -5,6 +5,7 @@ import { Utility } from "./Utility";
 import { MobileApplication } from "./MobileApplication";
 import { ProjectCalendar } from "./ProjectCalendar";
 import { FAQ } from "./FAQ";
+import { JoinCommunity } from "./JoinCommunity";
 
 export {
     Hero,
@@ -14,4 +15,5 @@ export {
     MobileApplication,
     ProjectCalendar,
     FAQ,
+    JoinCommunity,
 };

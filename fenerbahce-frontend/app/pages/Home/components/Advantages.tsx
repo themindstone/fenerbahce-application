@@ -2,7 +2,7 @@ import type { ReactElement } from "react";
 import { Flex, Heading, Image, Text } from "@chakra-ui/react";
 import { homeutility } from "~/data";
 import type { IHomeUtility } from "~/interfaces";
-// import { Carousel } from "~/components";
+import { Carousel } from "~/components";
 
 interface AdvantageCardProps extends IHomeUtility {}
 
@@ -25,7 +25,7 @@ export const Advantages = (): ReactElement => {
 
     return (<Flex direction="column" maxW="1200px" m="100px auto" gap="30px" alignItems="center" textAlign="center">
         <Heading maxW="30ch">Fenerbahce Token taraftarlara hangi avantajlari saglayacak?</Heading>
-        {/* <Carousel options={options}>
+        <Carousel options={options}>
             {homeutility.map((item, index) => {
                 return (<AdvantageCard
                     key={index}
@@ -34,6 +34,6 @@ export const Advantages = (): ReactElement => {
                     text={item.text}
                 />)
             })}
-        </Carousel> */}
+        </Carousel>
     </Flex>);
 };

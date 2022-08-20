@@ -1,6 +1,6 @@
 import { Flex, Heading, Text } from "@chakra-ui/react";
 import type { ReactElement } from "react";
-import Carousel from "~/components/Carousel";
+import { Carousel} from "~/components";
 
 
 interface UtilityCardProps {

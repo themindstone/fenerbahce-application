@@ -1,12 +1,8 @@
 import { ReactElement } from "react";
-// const { Swiper, SwiperSlide } = require('swiper/react');
 import React from "react";
-// import OwlCarousel from "react-owl-carousel2";
-
-const OwlCarousel = React.lazy(() => import("react-owl-carousel2"));
 import { ClientOnly } from "remix-utils";
 
-
+const OwlCarousel = React.lazy(() => import("react-owl-carousel2"));
 
 interface CarouselPropsInterface {
     children?: React.ReactNode;
@@ -17,10 +13,10 @@ const Fallback = (): ReactElement => {
     return <div>loading</div>
 }
 
-const Carousel = ({
+export const Carousel = ({
     children,
     options
-}: CarouselPropsInterface): React.ReactNode => {
+}: CarouselPropsInterface): ReactElement => {
 
     return (<React.Suspense fallback={<Fallback />}>
         <ClientOnly fallback={<Fallback />}>
@@ -32,5 +28,3 @@ const Carousel = ({
     
 };
 
-
-export default Carousel;
