@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import { Flex, Heading, Image, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Image, Text, VStack } from "@chakra-ui/react";
 import { homeutility } from "~/data";
 import type { IHomeUtility } from "~/interfaces";
 import { Carousel } from "~/components";
@@ -9,16 +9,26 @@ interface AdvantageCardProps extends IHomeUtility {}
 
 const options = {
     loop: false,
-    items: 4,
+    responsive: {
+        800: { items: 4, dots: false },
+        600: { items: 3 },
+        500: { items: 2 },
+        0: {
+            items: 1,
+            dots: true
+        }
+    }
 }
 
 const AdvantageCard = (props: AdvantageCardProps): ReactElement => {
 
-    return (<Flex direction="column" gap="20px" alignItems="center" p="20px">
-        <Image width="100px" src={props.avatarUrl} />
-        <Heading size="sm" fontWeight="extrabold">{props.title}</Heading>
-        <Text>{props.text}</Text>
-    </Flex>);
+    return (<VStack>
+        <Flex direction="column" gap="20px" p="20px" maxW="300px">
+            <Image width="100px" src={props.avatarUrl} />
+            <Heading size="sm" fontWeight="extrabold">{props.title}</Heading>
+            <Text>{props.text}</Text>
+        </Flex>
+    </VStack>);
 }
 
 export const Advantages = (): ReactElement => {

@@ -18,7 +18,7 @@ const NavLink = ({
 export const Header = (): ReactElement => {
 
 
-    return (<Flex justifyContent="space-between" p="25px 60px">
+    return (<Flex justifyContent="space-between" p="25px 3%">
         <Flex gap="40px" alignItems="center">
             <Flex gap="10px" alignItems="center">
                 <Image src="/images/token-logo.png" w="60px" />
@@ -33,7 +33,7 @@ export const Header = (): ReactElement => {
                 fontSize="16px"
             >FB Token: 36.05₺</Text>
         </Flex>
-        <Flex gap="30px" alignItems="center">
+		<Flex gap="30px" alignItems="center" display={{ base: "none", lg: "flex" }}>
             <NavLink>HAKKINDA</NavLink>
             <NavLink>FAYDALAR</NavLink>
             <NavLink>ŞARTLAR</NavLink>
