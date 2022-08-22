@@ -1,11 +1,9 @@
-
 :root {
-	--governor-bay: #2847A8;
+	--governor-bay: #2847a8;
 	--lucky-point: #163072;
-	--golden-fizz: #FFED38;
-	--biscay: #1B2F6F;
+	--golden-fizz: #ffed38;
+	--biscay: #1b2f6f;
 }
-
 
 body {
 	background-color: var(--lucky-point);

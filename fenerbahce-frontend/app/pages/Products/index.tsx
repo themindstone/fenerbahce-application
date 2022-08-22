@@ -3,6 +3,5 @@ import type { ReactElement } from "react";
 import { Box } from "@chakra-ui/react";
 
 export const Products = (): ReactElement => {
-
-    return (<Box></Box>);
+	return <Box></Box>;
 };

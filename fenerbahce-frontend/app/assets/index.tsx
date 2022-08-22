@@ -6,12 +6,9 @@ import Instagram from "~/assets/icons/instagram.svg";
 import Twitter from "~/assets/icons/twitter.svg";
 import HeroImage from "./images/Hero.png";
 
+export const TelegramIcon = (): ReactElement => <Image src={Telegram} />;
+export const FacebookIcon = (): ReactElement => <Image src={Facebook} />;
+export const InstagramIcon = (): ReactElement => <Image src={Instagram} />;
+export const TwitterIcon = (): ReactElement => <Image src={Twitter} />;
 
-export const TelegramIcon = (): ReactElement => <Image src={Telegram} />
-export const FacebookIcon = (): ReactElement => <Image src={Facebook} />
-export const InstagramIcon = (): ReactElement => <Image src={Instagram} />
-export const TwitterIcon = (): ReactElement => <Image src={Twitter} />
-
-export {
-    HeroImage,
-};
+export { HeroImage };

@@ -1,4 +1,4 @@
-import { defineConfig } from 'cypress';
+import { defineConfig } from "cypress";
 
 export default defineConfig({
 	video: false,
@@ -8,6 +8,6 @@ export default defineConfig({
 		setupNodeEvents(on, config) {
 			// implement node event listeners here
 		},
-		baseUrl: 'https://dnb-stack.vercel.app',
+		baseUrl: "https://dnb-stack.vercel.app",
 	},
 });

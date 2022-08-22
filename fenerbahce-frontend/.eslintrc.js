@@ -3,12 +3,12 @@
  */
 module.exports = {
 	extends: [
-		'@remix-run/eslint-config',
-		'@remix-run/eslint-config/node',
-		'@remix-run/eslint-config/jest-testing-library',
-		'prettier',
+		"@remix-run/eslint-config",
+		"@remix-run/eslint-config/node",
+		"@remix-run/eslint-config/jest-testing-library",
+		"prettier",
 	],
 	rules: {
-		'@typescript-eslint/no-unused-vars': ['error'],
+		"@typescript-eslint/no-unused-vars": ["error"],
 	},
 };

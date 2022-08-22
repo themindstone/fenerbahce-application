@@ -1,1 +1,1 @@
-import './specificBookData.cy.ts';
+import "./specificBookData.cy.ts";

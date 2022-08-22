@@ -1,27 +1,27 @@
 // root.tsx
-import React, { useContext, useEffect } from 'react';
-import { withEmotionCache } from '@emotion/react';
-import { ChakraProvider } from '@chakra-ui/react';
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
-import { MetaFunction, LinksFunction } from '@remix-run/node'; // Depends on the runtime you choose
+import React, { useContext, useEffect } from "react";
+import { withEmotionCache } from "@emotion/react";
+import { ChakraProvider } from "@chakra-ui/react";
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from "@remix-run/react";
+import { MetaFunction, LinksFunction } from "@remix-run/node"; // Depends on the runtime you choose
 import { theme } from "./theme";
 import styles from "./styles/globals.css";
 
-import { ServerStyleContext, ClientStyleContext } from './_context';
+import { ServerStyleContext, ClientStyleContext } from "./_context";
 
 export const meta: MetaFunction = () => ({
-	charset: 'utf-8',
-	title: 'New Remix App',
-	viewport: 'width=device-width,initial-scale=1',
+	charset: "utf-8",
+	title: "New Remix App",
+	viewport: "width=device-width,initial-scale=1",
 });
 
 export let links: LinksFunction = () => {
 	return [
-		{ rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-		{ rel: 'preconnect', href: 'https://fonts.gstatic.com' },
+		{ rel: "preconnect", href: "https://fonts.googleapis.com" },
+		{ rel: "preconnect", href: "https://fonts.gstatic.com" },
 		{
-			rel: 'stylesheet',
-			href: 'https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300;400;500;600;700&display=swap',
+			rel: "stylesheet",
+			href: "https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300;400;500;600;700&display=swap",
 		},
 		{ rel: "stylesheet", href: styles },
 	];
@@ -57,7 +57,7 @@ const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) =>
 				{serverStyleData?.map(({ key, ids, css }) => (
 					<style
 						key={key}
-						data-emotion={`${key} ${ids.join(' ')}`}
+						data-emotion={`${key} ${ids.join(" ")}`}
 						dangerouslySetInnerHTML={{ __html: css }}
 					/>
 				))}

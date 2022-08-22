@@ -1,8 +1,8 @@
-import type { ReactElement, FC } from 'react';
+import type { ReactElement, FC } from "react";
 
 // import BookCard from '~/components/BookCard';
 
-import type { BookScreenProps } from './props';
+import type { BookScreenProps } from "./props";
 
 const BooksScreen: FC<BookScreenProps> = (): ReactElement => {
 	return (

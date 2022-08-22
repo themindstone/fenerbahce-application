@@ -25,6 +25,6 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 // @ts-ignore
-Cypress.Commands.add('getByTestID', testID => {
+Cypress.Commands.add("getByTestID", testID => {
 	return cy.get(`[data-testid="${testID}"]`);
 });
