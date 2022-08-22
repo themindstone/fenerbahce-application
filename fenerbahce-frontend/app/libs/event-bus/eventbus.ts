@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import type { EventBus, EventBusConfig } from "./eventbus.interface";
 import { EventMap, Bus } from "./eventbus.type";
 
@@ -40,5 +41,15 @@ export function eventbus<E extends EventMap>(config?: EventBusConfig): EventBus<
 		});
 	};
 
-	return { subscribe, unsubscribe, once, publish };
+	const useListener: EventBus<E>['useListener'] = (key, handler) => {
+		useEffect(() => {
+			subscribe(key, handler);
+
+			return () => {
+				unsubscribe(key, handler);
+			}
+		}, []);
+	};
+
+	return { subscribe, unsubscribe, once, publish, useListener };
 }
