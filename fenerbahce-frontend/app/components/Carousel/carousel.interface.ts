@@ -1,6 +1,8 @@
 export interface OwlCarouselChangeEventInterface {
-	index: number;
+	currentPage: number;
+	pageCount: number;
 }
+
 export interface OwlCarouselGoToEventInterface {
 	page: number;
 }

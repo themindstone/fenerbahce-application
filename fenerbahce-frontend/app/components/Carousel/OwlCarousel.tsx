@@ -1,7 +1,7 @@
-import type { ReactElement } from "react";
+import { ReactElement, useCallback, useEffect, useLayoutEffect } from "react";
 import React, { useRef, useState, Fragment, useMemo } from "react";
 import { CarouselPropsInterface } from "./carousel.interface";
-import { Button, Flex } from "@chakra-ui/react";
+import { Box, Button, Flex } from "@chakra-ui/react";
 import { eventbus } from "~/libs/event-bus";
 import { OwlCarouselChangeEventInterface, OwlCarouselGoToEventInterface } from "./carousel.interface";
 import { ClientOnly } from "remix-utils";
@@ -18,34 +18,33 @@ const Carousel = (props: CarouselPropsInterface) => {
 		"owlcarousel.goto": (event: OwlCarouselGoToEventInterface) => void;
 	}>();
 
-	const CarouselNav = ({ num }: { num: number }): ReactElement => {
-		const [number, setNumber] = useState(() => num);
+	const CarouselNav = (): ReactElement => {
+		const [pageCount, setPageCount] = useState<number>(0);
+		const [currentPage, setCurrentPage] = useState<number>(1);
 
 		owlcarouselEventBus.useListener("owlcarousel.changed", event => {
-			setNumber(event.index);
+			setCurrentPage(event.currentPage);
+			setPageCount(event.pageCount);
 		});
 
-		const numArr = useMemo<number[]>(() => {
-			const arr: number[] = [];
-
-			for (let i = 0; i < num; i++) {
-				arr.push(i);
-			}
-
-			return arr;
-		}, [num]);
+		const numArr = useMemo<number[]>(() => Array.from(Array(pageCount).keys()), [pageCount]);
 
 		const goTo = (page: number) => {
 			owlcarouselEventBus.publish("owlcarousel.goto", { page });
 		};
 
 		return (
-			<Flex gap="10px">
+			<Flex gap="10px" alignItems="center">
 				{numArr.map((item, index) => {
 					return (
-						<div key={index} onClick={() => goTo(item)}>
-							{item}
-						</div>
+						<Box 
+							bgColor={currentPage === index ? "#D8D8D8" : "#051A4E"}
+							borderRadius="10px"
+							h="10px"
+							w="10px"
+							onClick={() => goTo(index)}
+							key={Math.random()}
+						></Box>
 					);
 				})}
 			</Flex>
@@ -53,6 +52,9 @@ const Carousel = (props: CarouselPropsInterface) => {
 	};
 
 	const OwlCarousel2 = ({ children, options }: CarouselPropsInterface): ReactElement => {
+
+		const [show, setShow] = useState<boolean>(false);
+		
 		const ref = useRef();
 
 		owlcarouselEventBus.useListener("owlcarousel.goto", event => {
@@ -63,19 +65,26 @@ const Carousel = (props: CarouselPropsInterface) => {
 		const next = () => (ref as any).current.next();
 
 		const events = {
-			onChanged: (event: any) => {
-				owlcarouselEventBus.publish("owlcarousel.changed", { index: event.page.index as number });
-			},
+			onChanged: (event: any) => owlcarouselEventBus.publish("owlcarousel.changed", {
+					currentPage: Math.floor(event.item.index / event.page.size) as number,
+					pageCount: Math.floor(event.item.count / event.page.size) as number
+				}),
 		};
+
+		useLayoutEffect(() => {
+			setShow(true);
+		}, []);
 
 		return (
 			<Fragment>
-				<OwlCarousel ref={ref} options={options} events={events}>
-					{children}
-				</OwlCarousel>
+				{show &&
+					<OwlCarousel ref={ref} options={options} events={events}>
+						{children}
+					</OwlCarousel>
+				}
 				<Flex gap="10px">
 					<Button onClick={prev}>prev</Button>
-					<CarouselNav num={(children as Array<Object>).length} />
+					<CarouselNav />
 					<Button onClick={next}>next</Button>
 				</Flex>
 			</Fragment>
