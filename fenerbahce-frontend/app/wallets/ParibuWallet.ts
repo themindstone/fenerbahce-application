@@ -22,5 +22,8 @@ export const ParibuWallet: IWallet = {
             this.address = accounts[0] as string;
         }
         return this;
+    },
+    getWallet: function() {
+        return this;
     }
 };
