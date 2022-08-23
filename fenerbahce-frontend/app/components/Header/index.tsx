@@ -1,5 +1,6 @@
 import { Flex, Image, Link, Text } from "@chakra-ui/react";
 import type { ReactElement } from "react";
+import { UserIcon } from "~/assets";
 import { connectWalletEventBus } from "~/eventbus";
 import { GoldenFizzButton } from "../Button";
 
@@ -46,7 +47,8 @@ export const Header = (): ReactElement => {
 				<NavLink>ŞARTLAR</NavLink>
 				<NavLink>S.S.S</NavLink>
 				<NavLink>EN</NavLink>
-				<GoldenFizzButton onClick={connectWallet}>Giris yap</GoldenFizzButton>
+				
+				<GoldenFizzButton onClick={connectWallet} leftIcon={<UserIcon />}>Giris yap</GoldenFizzButton>
 			</Flex>
 		</Flex>
 	);

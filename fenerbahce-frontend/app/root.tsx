@@ -6,6 +6,7 @@ import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from "@re
 import { MetaFunction, LinksFunction } from "@remix-run/node"; // Depends on the runtime you choose
 import { theme } from "./theme";
 import styles from "./styles/globals.css";
+import { ConnectWalletProvider } from "~/context";
 
 import { ServerStyleContext, ClientStyleContext } from "./_context";
 
@@ -75,9 +76,11 @@ const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) =>
 export default function App() {
 	return (
 		<Document>
-			<ChakraProvider theme={theme}>
-				<Outlet />
-			</ChakraProvider>
+			<ConnectWalletProvider>
+				<ChakraProvider theme={theme}>
+					<Outlet />
+				</ChakraProvider>
+			</ConnectWalletProvider>
 		</Document>
 	);
 }

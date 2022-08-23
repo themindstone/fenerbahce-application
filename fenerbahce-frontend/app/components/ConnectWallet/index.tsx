@@ -1,8 +1,9 @@
-import type { ReactElement } from "react";
-import { Box, ButtonProps, Flex, Heading, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalOverlay, Text, useDisclosure, VStack } from "@chakra-ui/react";
+import { ReactElement, useEffect } from "react";
+import { ButtonProps, Flex, Heading, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Text, useDisclosure, VStack } from "@chakra-ui/react";
 import { connectWalletEventBus } from "~/eventbus";
 import { TokenLogoImage, MetamaskLogoImage, ParibuLogoImage } from "~/assets";
 import { ColorfulBorderButton } from "~/components";
+import { useConnectWallet } from "~/context";
 
 const CustomButton = (props: ButtonProps) => <ColorfulBorderButton
 						from="var(--biscay)"
@@ -14,6 +15,21 @@ const CustomButton = (props: ButtonProps) => <ColorfulBorderButton
 
 export const ConnectWallet = (): ReactElement => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
+
+	const connectWallet = useConnectWallet();
+
+	const connectWithMetamask = () => {
+		try {
+			connectWallet.connect()
+		}
+		catch {
+			// show user an alert that he was unable to login with metamask
+		}
+	};
+
+	useEffect(() => {
+		console.log(connectWallet)
+	}, [connectWallet]);
 
     connectWalletEventBus.useListener("connectwallet.open", onOpen);
 
@@ -30,7 +46,7 @@ export const ConnectWallet = (): ReactElement => {
 							<Text>Nasıl bağlanmak istediğinizi seçin.</Text>
 						</VStack>
 						<Flex direction="column" w="100%" gap="10px">
-							<CustomButton leftIcon={<Image src={MetamaskLogoImage} />}>Metamask Cüzdan</CustomButton>
+							<CustomButton leftIcon={<Image src={MetamaskLogoImage} />} onClick={connectWithMetamask}>Metamask Cüzdan</CustomButton>
 							<CustomButton leftIcon={<Image src={ParibuLogoImage} />} disabled>Paribu Cüzdan</CustomButton>
 						</Flex>
 						<Text>Cüzdanlar hakkında daha fazla bilgi edinin.</Text>
