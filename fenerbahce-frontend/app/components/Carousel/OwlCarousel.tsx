@@ -1,4 +1,4 @@
-import { ReactElement, useCallback, useEffect, useLayoutEffect } from "react";
+import { ReactElement, useLayoutEffect } from "react";
 import React, { useRef, useState, Fragment, useMemo } from "react";
 import { CarouselPropsInterface } from "./carousel.interface";
 import { Box, Button, Flex } from "@chakra-ui/react";
@@ -55,14 +55,14 @@ const Carousel = (props: CarouselPropsInterface) => {
 
 		const [show, setShow] = useState<boolean>(false);
 		
-		const ref = useRef();
+		const ref = useRef() as any;
 
 		owlcarouselEventBus.useListener("owlcarousel.goto", event => {
-			(ref as any).current.goTo(event.page);
+			ref.current.goTo(event.page);
 		});
 
-		const prev = () => (ref as any).current.prev();
-		const next = () => (ref as any).current.next();
+		const prev = () => ref.current.prev();
+		const next = () => ref.current.next();
 
 		const events = {
 			onChanged: (event: any) => owlcarouselEventBus.publish("owlcarousel.changed", {

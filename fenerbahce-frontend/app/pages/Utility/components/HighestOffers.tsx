@@ -26,7 +26,7 @@ const options = {
 	margin: 30
 };
 
-const ActiveAuctionsCard = (): ReactElement => {
+const HighestOffersCard = (): ReactElement => {
 	return (<Flex borderRadius="15px" overflow="hidden">
 		<Box style={{ aspectRatio: "13/16" }}
 			bgImage={`url(${UniformImage})`}
@@ -36,23 +36,21 @@ const ActiveAuctionsCard = (): ReactElement => {
 	</Flex>);
 };
 
-export const ActiveAuctions = (): ReactElement => {
+export const HighestOffers = (): ReactElement => {
 	return (
 		<VStack gap="20px" maxW="1000px" margin="50px auto">
 			<Heading size="xl">Aktif acik artirmalar</Heading>
 			<Carousel options={options}>
-				<ActiveAuctionsCard></ActiveAuctionsCard>
-				<ActiveAuctionsCard></ActiveAuctionsCard>
-				<ActiveAuctionsCard></ActiveAuctionsCard>
-				<ActiveAuctionsCard></ActiveAuctionsCard>
-				<ActiveAuctionsCard></ActiveAuctionsCard>
-				<ActiveAuctionsCard></ActiveAuctionsCard>
-				<ActiveAuctionsCard></ActiveAuctionsCard>
-				<ActiveAuctionsCard></ActiveAuctionsCard>
-				<ActiveAuctionsCard></ActiveAuctionsCard>
-				<ActiveAuctionsCard></ActiveAuctionsCard>
-				<ActiveAuctionsCard></ActiveAuctionsCard>
-				<ActiveAuctionsCard></ActiveAuctionsCard>
+                <HighestOffersCard></HighestOffersCard>
+                <HighestOffersCard></HighestOffersCard>
+                <HighestOffersCard></HighestOffersCard>
+                <HighestOffersCard></HighestOffersCard>
+                <HighestOffersCard></HighestOffersCard>
+                <HighestOffersCard></HighestOffersCard>
+                <HighestOffersCard></HighestOffersCard>
+                <HighestOffersCard></HighestOffersCard>
+                <HighestOffersCard></HighestOffersCard>
+                <HighestOffersCard></HighestOffersCard>
 			</Carousel>
 		</VStack>
 	);

@@ -1,5 +1,6 @@
 import { Flex, Image, Link, Text } from "@chakra-ui/react";
 import type { ReactElement } from "react";
+import { connectWalletEventBus } from "~/eventbus";
 import { GoldenFizzButton } from "../Button";
 
 interface NavLinkProps {
@@ -15,6 +16,11 @@ const NavLink = ({ children, ...rest }: NavLinkProps): ReactElement => {
 };
 
 export const Header = (): ReactElement => {
+
+	const connectWallet = () => {
+		connectWalletEventBus.publish("connectwallet.open");
+	};
+
 	return (
 		<Flex justifyContent="space-between" p="25px 3%">
 			<Flex gap="40px" alignItems="center">
@@ -40,7 +46,7 @@ export const Header = (): ReactElement => {
 				<NavLink>ŞARTLAR</NavLink>
 				<NavLink>S.S.S</NavLink>
 				<NavLink>EN</NavLink>
-				<GoldenFizzButton>Giris yap</GoldenFizzButton>
+				<GoldenFizzButton onClick={connectWallet}>Giris yap</GoldenFizzButton>
 			</Flex>
 		</Flex>
 	);
