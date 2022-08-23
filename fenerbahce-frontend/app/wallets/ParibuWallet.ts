@@ -3,14 +3,14 @@ import { ethers } from "ethers";
 
 export const ParibuWallet: IWallet = {
     name: "Paribu",
-    account: "",
+    address: "",
     connectionState: "idle",
     disconnect: function (): IWallet {
         return this;
     },
     isConnected: false,
     connect: async function (): Promise<IWallet> {
-        this.account = "0xaaa"
+        this.address = "0xaaa"
         return this;
     },
     initialize: async function(): Promise<IWallet> {
@@ -19,7 +19,7 @@ export const ParibuWallet: IWallet = {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const accounts = await provider.listAccounts(); 
         if (accounts[0]) {
-            this.account = accounts[0] as string;
+            this.address = accounts[0] as string;
         }
         return this;
     }

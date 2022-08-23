@@ -20,7 +20,7 @@ export const ConnectWallet = (): ReactElement => {
 
 	const connectWithMetamask = () => {
 		try {
-			connectWallet.connect()
+			connectWallet.connect();
 		}
 		catch {
 			// show user an alert that he was unable to login with metamask
