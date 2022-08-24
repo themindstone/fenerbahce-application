@@ -41,14 +41,14 @@ export function eventbus<E extends EventMap>(config?: EventBusConfig): EventBus<
 		});
 	};
 
-	const useListener: EventBus<E>["useListener"] = (key, handler) => {
+	const useListener: EventBus<E>["useListener"] = (key, handler, deps) => {
 		useEffect(() => {
 			subscribe(key, handler);
 
 			return () => {
 				unsubscribe(key, handler);
 			};
-		}, []);
+		}, deps);
 	};
 
 	return { subscribe, unsubscribe, once, publish, useListener };

@@ -9,6 +9,7 @@ interface ConnectWalletContextInterface {
     disconnect: () => void;
     name: string;
     address: string;
+    shortAddress: string;
     isConnected: boolean;
     connectionState: IWallet["connectionState"];
 }
@@ -23,6 +24,7 @@ const ConnectWalletContext = React.createContext<ConnectWalletContextInterface>(
     disconnect: () => {},
     name: "",
     address: "",
+    shortAddress: "",
     isConnected: false,
     connectionState: "idle",
 });
@@ -32,18 +34,21 @@ export const ConnectWalletProvider = ({
 }: ConnectWalletProviderInterface): ReactElement => {
 
     // fetch last default wallet from local storage
-    const [defaultWallet, setDefaultWallet] = useState<IWallet>(wallets.MetamaskWallet);
+    const [defaultWallet, setDefaultWallet] = useState<IWallet>(() => wallets.MetamaskWallet);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         // check every wallet and show connected ones
-        const wallet = wallets[localStorage.defaultWallet as keyof typeof wallets || "MetamaskWallet"];
-
         async function handler() {
+            const wallet = wallets[localStorage.defaultWallet as keyof typeof wallets || "MetamaskWallet"];
             await wallet.initialize();
             const newWallet = wallet.getWallet();
+
+
             setDefaultWallet(newWallet);
         }
-        handler();
+        if (!defaultWallet.isConnected) {
+            handler();
+        }
     }, []);
 
     const initialize = async (name: keyof typeof wallets) => {
@@ -76,8 +81,8 @@ export const ConnectWalletProvider = ({
         name: defaultWallet.name,
         isConnected: defaultWallet.isConnected,
         connectionState: defaultWallet.connectionState,
+        shortAddress: defaultWallet.shortAddress,
     };
-
 
     return (<ConnectWalletContext.Provider value={value}>
         {children}

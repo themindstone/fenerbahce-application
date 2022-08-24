@@ -18,9 +18,10 @@ export const ConnectWallet = (): ReactElement => {
 
 	const connectWallet = useConnectWallet();
 
-	const connectWithMetamask = () => {
+	const connectWithMetamask = async () => {
 		try {
-			connectWallet.connect();
+			await connectWallet.connect();
+			onClose();
 		}
 		catch {
 			// show user an alert that he was unable to login with metamask
