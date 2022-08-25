@@ -10,11 +10,7 @@ const options = {
 			items: 3,
 			slideBy: 3,
 		},
-		600: {
-			items: 3,
-			slideBy: 3,
-		},
-		500: {
+		550: {
 			items: 2,
 			slideBy: 2,
 		},
@@ -48,7 +44,7 @@ const ActiveAuctionsCard = (): ReactElement => {
 
 export const ActiveAuctions = (): ReactElement => {
 	return (
-		<VStack gap="20px" maxW="1000px" margin="50px auto">
+		<VStack gap="20px" maxW="1000px" margin="50px auto" padding="0 30px">
 			<Heading size="xl">Aktif acik artirmalar</Heading>
 			<Carousel options={options}>
 				<ActiveAuctionsCard></ActiveAuctionsCard>

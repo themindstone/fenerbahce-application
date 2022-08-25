@@ -35,7 +35,7 @@ const Carousel = (props: CarouselPropsInterface) => {
 		};
 
 		return (
-			<Flex gap="10px" alignItems="center">
+			<Flex gap={{ base: "5px", md: "10px" }} alignItems="center">
 				{numArr.map((item, index) => {
 					return (
 						<Box 
@@ -84,7 +84,6 @@ const Carousel = (props: CarouselPropsInterface) => {
 					</OwlCarousel>
 				}
 				<Flex paddingTop="10px" gap="10px" alignItems="center" userSelect="none">
-					{/* <Icon as={() => <Image src={ArrowBackIcon} h="25px" w="25px" onClick={prev} cursor="pointer" />} fill="white"  /> */}
 					<ArrowBackIcon onClick={prev} cursor="pointer" height="24px" width="24px" fill="white" />
 					<CarouselNav />
 					<ArrowForwardIcon fill="white" onClick={next} cursor="pointer" />
