@@ -1,7 +1,7 @@
 import { ReactElement, useLayoutEffect } from "react";
 import React, { useRef, useState, Fragment, useMemo } from "react";
 import { CarouselPropsInterface } from "./carousel.interface";
-import { Box, Flex, Icon, Image } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { eventbus } from "~/libs/event-bus";
 import { OwlCarouselChangeEventInterface, OwlCarouselGoToEventInterface } from "./carousel.interface";
 import { ClientOnly } from "remix-utils";

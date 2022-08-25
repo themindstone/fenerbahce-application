@@ -1,4 +1,3 @@
-import React from "react";
 import { eventbus } from "~/libs/event-bus";
 
 export const connectWalletEventBus = eventbus<{

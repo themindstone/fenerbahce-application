@@ -17,12 +17,12 @@ export const ColorfulBorderButton = ({
     borderRadius = "9px",
     p="25px 0",
     ...rest
-}: ColorfulBorderButtonProps) => {
+}: ColorfulBorderButtonProps): ReactElement => {
 
 
     return <Button style={{
                     background: `linear-gradient(${angle}, white, white), 
-                        linear-gradient(${angle}, ${from} , ${to})`, 
+                        linear-gradient(${angle}, ${from} , ${to})`,
                     backgroundClip: "padding-box, border-box",
                     backgroundOrigin: "padding-box, border-box",
                 }}
