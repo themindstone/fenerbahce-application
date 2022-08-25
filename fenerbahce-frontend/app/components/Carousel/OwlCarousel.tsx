@@ -1,10 +1,11 @@
 import { ReactElement, useLayoutEffect } from "react";
 import React, { useRef, useState, Fragment, useMemo } from "react";
 import { CarouselPropsInterface } from "./carousel.interface";
-import { Box, Button, Flex } from "@chakra-ui/react";
+import { Box, Flex, Icon, Image } from "@chakra-ui/react";
 import { eventbus } from "~/libs/event-bus";
 import { OwlCarouselChangeEventInterface, OwlCarouselGoToEventInterface } from "./carousel.interface";
 import { ClientOnly } from "remix-utils";
+import { ArrowBackIcon, ArrowForwardIcon } from "~/assets";
 
 const OwlCarousel = React.lazy(() => import("react-owl-carousel2"));
 
@@ -25,7 +26,7 @@ const Carousel = (props: CarouselPropsInterface) => {
 		owlcarouselEventBus.useListener("owlcarousel.changed", event => {
 			setCurrentPage(event.currentPage);
 			setPageCount(event.pageCount);
-		});
+		}, []);
 
 		const numArr = useMemo<number[]>(() => Array.from(Array(pageCount).keys()), [pageCount]);
 
@@ -59,7 +60,7 @@ const Carousel = (props: CarouselPropsInterface) => {
 
 		owlcarouselEventBus.useListener("owlcarousel.goto", event => {
 			ref.current.goTo(event.page);
-		});
+		}, []);
 
 		const prev = () => ref.current.prev();
 		const next = () => ref.current.next();
@@ -82,10 +83,11 @@ const Carousel = (props: CarouselPropsInterface) => {
 						{children}
 					</OwlCarousel>
 				}
-				<Flex gap="10px">
-					<Button onClick={prev}>prev</Button>
+				<Flex paddingTop="10px" gap="10px" alignItems="center" userSelect="none">
+					{/* <Icon as={() => <Image src={ArrowBackIcon} h="25px" w="25px" onClick={prev} cursor="pointer" />} fill="white"  /> */}
+					<ArrowBackIcon onClick={prev} cursor="pointer" height="24px" width="24px" fill="white" />
 					<CarouselNav />
-					<Button onClick={next}>next</Button>
+					<ArrowForwardIcon fill="white" onClick={next} cursor="pointer" />
 				</Flex>
 			</Fragment>
 		);

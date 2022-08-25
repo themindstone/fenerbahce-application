@@ -15,6 +15,7 @@ export const ColorfulBorderButton = ({
     from,
     to,
     borderRadius = "9px",
+    p="25px 0",
     ...rest
 }: ColorfulBorderButtonProps) => {
 
@@ -27,7 +28,7 @@ export const ColorfulBorderButton = ({
                 }}
                 borderRadius={borderRadius}
                 border={border}
-                p="25px 0"
+                p={p}
                 {...rest}>
                     {children}
                 </Button>

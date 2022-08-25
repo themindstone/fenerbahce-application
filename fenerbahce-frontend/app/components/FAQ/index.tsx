@@ -1,15 +1,21 @@
 import type { ReactElement } from "react";
-import { Box, Flex, Heading, Link, VStack } from "@chakra-ui/react";
+import { Box, Flex, Heading, Icon, Image, Link, Text, VStack } from "@chakra-ui/react";
 import { IFAQ } from "~/interfaces";
 import { faq } from "~/data";
+import React from "react";
+import { ArrowForwardIcon } from "~/assets";
 
 interface FAQItemProps extends IFAQ {}
+
 
 const FAQItem = ({ text, url }: FAQItemProps): ReactElement => {
 	return (
 		<Link href={url}>
 			<Flex borderBottom="1px solid #ddd" justifyContent="space-between" p="10px 15px">
-				{text}
+				<Text>
+					{text}
+				</Text>
+				<ArrowForwardIcon height="25px" width="25px" cursor="pointer" fill="#000" />
 			</Flex>
 		</Link>
 	);

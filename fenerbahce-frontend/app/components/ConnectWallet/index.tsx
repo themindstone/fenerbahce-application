@@ -28,11 +28,7 @@ export const ConnectWallet = (): ReactElement => {
 		}
 	};
 
-	useEffect(() => {
-		console.log(connectWallet)
-	}, [connectWallet]);
-
-    connectWalletEventBus.useListener("connectwallet.open", onOpen);
+    connectWalletEventBus.useListener("connectwallet.open", onOpen, []);
 
 	return (
 		<Modal isOpen={isOpen} onClose={onClose}>
