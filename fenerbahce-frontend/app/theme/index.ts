@@ -9,4 +9,8 @@ export const theme = extendTheme({
 			},
 		},
 	},
+	fonts: {
+		heading: `'Cairo', sans-serif`,
+		body: `'Cairo', sans-serif`
+	}
 });

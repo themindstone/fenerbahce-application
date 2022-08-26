@@ -10,6 +10,8 @@ import { ConnectWalletProvider } from "~/context";
 
 import { ServerStyleContext, ClientStyleContext } from "./_context";
 
+// import fontStyles from "@fontsource/cairo";
+
 export const meta: MetaFunction = () => ({
 	charset: "utf-8",
 	title: "New Remix App",
@@ -22,7 +24,7 @@ export let links: LinksFunction = () => {
 		{ rel: "preconnect", href: "https://fonts.gstatic.com" },
 		{
 			rel: "stylesheet",
-			href: "https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300;400;500;600;700&display=swap",
+			href: "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap",
 		},
 		{ rel: "stylesheet", href: styles },
 	];

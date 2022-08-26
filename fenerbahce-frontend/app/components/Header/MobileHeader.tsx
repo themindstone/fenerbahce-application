@@ -1,34 +1,51 @@
 import type { ReactElement } from "react";
 import { useState } from "react";
 import { Flex, Image, Box } from "@chakra-ui/react";
-import { GoldenFizzIconButton } from "~/components";
-import { connectWalletEventBus } from "~/eventbus";
+import { GoldenFizzIconButton, ShowAccount, GoldenFizzButton } from "~/components";
 import { MenuIcon, UserIcon } from "~/assets";
 import { FBTokenText } from "./utils";
-import { ShowAccount } from "~/components";
+import { useConnectWalletModal, useWalletModal } from "~/hooks";
+import { useConnectWallet } from "~/context";
+import { sideNavEventBus } from "~/eventbus";
 
 export const MobileHeader = (): ReactElement => {
-	const [isAccountModelOpen, setIsAccountModelOpen] = useState<boolean>(false);
 
-	const showWalletAccount = () => {
-		connectWalletEventBus.publish("connectwallet.toggleaccountmodal");
+	const { connectWalletModalOpen } = useConnectWalletModal();
+	const { isWalletModalOpen, showWalletModal } = useWalletModal();
+	const connectWallet = useConnectWallet();
+
+	const openSideNav = () => {
+		sideNavEventBus.publish("sidenav.open");
 	};
 
 	return (
 		<Flex display={{ base: "flex", lg: "none" }} w="100%" alignItems="center" justifyContent="space-between">
 			<Image src="/images/token-logo.png" w="60px" />
-			<Flex gap="30px" alignItems="center">
+			<Flex gap="15px" alignItems="center" flexWrap="wrap-reverse">
 				<FBTokenText />
-				<MenuIcon />
+				<MenuIcon onClick={openSideNav} cursor="pointer" />
 				<Box pos="relative">
-					<GoldenFizzIconButton
-						icon={<UserIcon />}
-						aria-label="user"
-						onClick={showWalletAccount}
-						_active={{
-							pointerEvents: isAccountModelOpen ? "none" : "all",
-						}}
-					/>
+					{connectWallet.connectionState === "disconnected" &&
+						<GoldenFizzIconButton
+							icon={<UserIcon />}
+							aria-label="user"
+							onClick={connectWalletModalOpen}
+							_active={{
+								pointerEvents: isWalletModalOpen ? "none" : "all",
+							}}
+						/>
+					}
+
+					{connectWallet.connectionState === "connected" &&
+						<GoldenFizzIconButton
+							icon={<UserIcon />}
+							aria-label="user"
+							onClick={showWalletModal}
+							_active={{
+								pointerEvents: isWalletModalOpen ? "none" : "all",
+							}}
+						/>
+					}
 					<Box pos="absolute" p="10px 0px" zIndex="2" right="0" w="300px">
 						<ShowAccount />
 					</Box>

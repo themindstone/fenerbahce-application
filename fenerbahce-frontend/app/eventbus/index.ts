@@ -1,7 +1,7 @@
 import { connectWalletEventBus } from "./connectwallet.eventbus";
-import { sidebarEventBus } from "./sidebar.eventbus";
+import { sideNavEventBus } from "./sidenav.eventbus";
 
 export {
     connectWalletEventBus,
-    sidebarEventBus,
+    sideNavEventBus,
 };

@@ -34,6 +34,3 @@ export { UniformImage };
 export { TokenLogoImage };
 export { MetamaskLogoImage };
 export { ParibuLogoImage };
-
-// export { ArrowForwardIcon };
-// export { ArrowBackIcon };

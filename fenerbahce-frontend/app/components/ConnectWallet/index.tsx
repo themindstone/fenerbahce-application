@@ -28,10 +28,20 @@ export const ConnectWallet = (): ReactElement => {
 		}
 	};
 
-    connectWalletEventBus.useListener("connectwallet.open", onOpen, []);
+	const open = () => {
+		connectWalletEventBus.publish("connectwallet.connectwalletmodalchange", true);
+		onOpen();
+	}
+
+	const close = () => {
+		connectWalletEventBus.publish("connectwallet.connectwalletmodalchange", false);
+		onClose();
+	}
+
+    connectWalletEventBus.useListener("connectwallet.open", open, []);
 
 	return (
-		<Modal isOpen={isOpen} onClose={onClose}>
+		<Modal isOpen={isOpen} onClose={close}>
 			<ModalOverlay />
 			<ModalContent bg="#F5F5F5" maxW="400px" p="20px">
 				<ModalCloseButton color="#000" />

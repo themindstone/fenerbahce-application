@@ -6,5 +6,6 @@ import { FAQ } from "./FAQ";
 import { JoinCommunity } from "./JoinCommunity";
 import { ShowAccount } from "./ShowAccount";
 import { GoldenFizzIconButton } from "./IconButton/GoldenFizzIconButton";
+import { SideNav } from "./SideNav";
 
-export { Header, Footer, GoldenFizzButton, WhiteButton, ColorfulBorderButton, Carousel, FAQ, JoinCommunity, ShowAccount, GoldenFizzIconButton, };
+export { Header, Footer, GoldenFizzButton, WhiteButton, ColorfulBorderButton, Carousel, FAQ, JoinCommunity, ShowAccount, GoldenFizzIconButton, SideNav };

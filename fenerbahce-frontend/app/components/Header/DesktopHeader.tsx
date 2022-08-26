@@ -1,35 +1,19 @@
 import type { ReactElement } from "react";
-import { useState, Fragment } from "react";
-import { connectWalletEventBus } from "~/eventbus";
+import { Fragment } from "react";
 import { useConnectWallet } from "~/context";
 import { Flex, Image, Text, Box } from "@chakra-ui/react";
 import { NavLink, FBTokenText } from "./utils";
 import { GoldenFizzButton, ShowAccount } from "~/components";
 import { UserIcon } from "~/assets";
+import { useHeader } from "../../hooks/useHeader";
+import { useConnectWalletModal, useWalletModal } from "~/hooks";
 
 export const DesktopHeader = (): ReactElement => {
 
-	const [isAccountModelOpen, setIsAccountModelOpen] = useState<boolean>(false);
-
 	const connectWallet = useConnectWallet();
+	const { connectWalletModalOpen } = useConnectWalletModal();
+	const { isWalletModalOpen, showWalletModal } = useWalletModal();
 	
-	const connectWalletModalOpen = () => {
-		connectWalletEventBus.publish("connectwallet.open");
-	};
-
-	const showWalletAccount = () => {
-		connectWalletEventBus.publish("connectwallet.toggleaccountmodal");
-	};
-
-	connectWalletEventBus.useListener(
-		"connectwallet.accountmodalchange",
-		(status: boolean) => {
-			setIsAccountModelOpen(status);
-		},
-		[],
-	);
-
-
 	return (
 		<Fragment>
 			<Flex gap="40px" alignItems="center" display={{ base: "none", lg: "flex" }}>
@@ -56,9 +40,9 @@ export const DesktopHeader = (): ReactElement => {
 				{connectWallet.connectionState === "connected" && (
 					<Box pos="relative">
 						<GoldenFizzButton
-							onClick={showWalletAccount}
+							onClick={showWalletModal}
 							_active={{
-								pointerEvents: isAccountModelOpen ? "none" : "all",
+								pointerEvents: isWalletModalOpen ? "none" : "all",
 							}}
 							leftIcon={<UserIcon />}>
 							{connectWallet.shortAddress}
