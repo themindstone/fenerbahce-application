@@ -6,7 +6,7 @@ export const GoldenFizzButton = React.forwardRef((
 	ref: React.LegacyRef<HTMLButtonElement>
 ): ReactElement => {
 	return (
-		<Button ref={ref} {...rest} bg="var(--golden-fizz)" color="var(--biscay)">
+		<Button ref={ref} {...rest} bg="var(--golden-fizz)" color="var(--biscay)" fontWeight="bold">
 			{children}
 		</Button>
 	);

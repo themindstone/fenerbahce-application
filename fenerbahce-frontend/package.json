@@ -5,9 +5,9 @@
 	"license": "",
 	"sideEffects": false,
 	"scripts": {
-		"build": "run-s build:*",
+		"build": "remix build",
 		"build:remix": "remix build",
-		"dev": "run-p dev:*",
+		"dev": "remix dev",
 		"dev:remix": "remix dev",
 		"start": "remix-serve build",
 		"lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
@@ -44,12 +44,17 @@
 		"@remix-run/react": "^1.6.5",
 		"@remix-run/vercel": "^1.6.5",
 		"@vercel/node": "^1.8.3",
+		"axios": "^0.27.2",
 		"ethers": "^5.7.0",
 		"framer-motion": "^6",
 		"react": "^18.2.0",
+		"react-collapsed": "^3.3.2",
 		"react-dom": "^18.2.0",
+		"react-image-gallery": "^1.2.9",
 		"react-owl-carousel2": "^0.3.0",
-		"remix-utils": "^3.3.0"
+		"remix-utils": "^3.3.0",
+		"slugify": "^1.6.5",
+		"yet-another-react-lightbox": "^2.0.3"
 	},
 	"devDependencies": {
 		"@remix-run/dev": "^1.6.5",
@@ -79,5 +84,6 @@
 	},
 	"engines": {
 		"node": ">=14"
-	}
+	},
+	"packageManager": "yarn@3.2.3"
 }

@@ -3,7 +3,7 @@ import type { ReactElement } from "react";
 
 export const WhiteButton = ({ children, ...rest }: ButtonProps): ReactElement => {
 	return (
-		<Button {...rest} bg="white" color="var(--biscay)">
+		<Button {...rest} bg="white" color="var(--biscay)" fontWeight="bold">
 			{children}
 		</Button>
 	);

@@ -68,7 +68,6 @@ const Timeline = (): ReactElement => {
 	return (
 		<Carousel options={options}>
 			{items.map((item, index) => {
-				console.log(item);
 				return (
 					<TimelineItem
 						title={item.title}

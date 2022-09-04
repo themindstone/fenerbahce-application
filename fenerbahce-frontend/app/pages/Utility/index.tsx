@@ -4,6 +4,7 @@ import { ActiveAuctions, Hero, HighestOffers, MobileApplication } from "./compon
 import { ConnectWallet } from "~/components/ConnectWallet";
 
 export const Utility = (): ReactElement => {
+
 	return (
 		<Fragment>
 			<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>

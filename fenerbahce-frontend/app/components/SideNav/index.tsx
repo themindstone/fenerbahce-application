@@ -3,7 +3,7 @@ import { ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import React from "react";
 import { connectWalletEventBus, sideNavEventBus } from "~/eventbus";
 import { motion } from "framer-motion";
-import { TokenLogoImage } from "~/assets";
+import { TokenLogoImage, UserIcon } from "~/assets";
 import { ISideNavLink, ISocialMediaIcon } from "~/interfaces";
 import { sidenavlink } from "~/data";
 import { GoldenFizzButton } from "~/components/Button";
@@ -106,7 +106,7 @@ export const SideNav = (): ReactElement => {
                     height: "100%",
                     width: `${w}px`,
                     marginRight: "-400px",
-                    padding: "20px",
+                    padding: "25px",
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "stretch",
@@ -123,7 +123,7 @@ export const SideNav = (): ReactElement => {
                         })}
                     </Flex>
                     {connectWallet.connectionState === "disconnected" &&
-                        <GoldenFizzButton fontWeight="bold" onClick={connectWalletModalOpen}>Giris Yap</GoldenFizzButton>
+                        <GoldenFizzButton leftIcon={<UserIcon />} fontWeight="bold" onClick={connectWalletModalOpen}>Giris Yap</GoldenFizzButton>
                     }
                     {connectWallet.connectionState === "connected" &&
                         <GoldenFizzButton maxW="100%" bg="var(--golden-fizz)">
@@ -133,7 +133,7 @@ export const SideNav = (): ReactElement => {
                     }
                     <Flex mt="auto" h="40px" justifyContent="space-between">
                         {socialmediaicons.map((item: ISocialMediaIcon) => {
-                            return <SideNavSocialMediaIcon Icon={item.Icon} link={item.link} />
+                            return <SideNavSocialMediaIcon Icon={item.Icon} link={item.link} key={item.key} />
                         })}
                     </Flex>
                     <Text align="center">&copy; 2022 Fenerbahce Token</Text>
