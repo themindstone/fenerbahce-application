@@ -41,6 +41,7 @@ contract AuctionMachine is Ownable {
         // The auction end time will be prolonged to half an hour
         if (diff < 30 * 60 * 1000) {
             auction.endDate += 30 * 60 * 1000 - diff;
+            emit AuctionProlonged(_auctionId, auction.endDate);
         }
 
         emit AuctionDeposited(_auctionId, msg.sender, msg.value);
