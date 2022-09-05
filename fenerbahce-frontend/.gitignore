@@ -22,3 +22,9 @@ node_modules
 /cypress/screenshots
 /cypress/videos
 /coverage
+
+
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+.pnp.*

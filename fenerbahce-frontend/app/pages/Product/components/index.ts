@@ -1,5 +1,7 @@
-import { ProductWrapper } from "./ProductWrapper";
+import { Gallery } from "./Gallery";
+import { ProductInfo } from "./ProductInfo";
 
 export {
-    ProductWrapper,
+    Gallery,
+    ProductInfo,
 };

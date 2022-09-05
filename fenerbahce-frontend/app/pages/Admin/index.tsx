@@ -1,4 +1,4 @@
-import { Flex, Heading, Input, Box } from "@chakra-ui/react";
+import { Flex, Heading, Input } from "@chakra-ui/react";
 import { Form } from "@remix-run/react";
 import { Fragment, useMemo, useState } from "react";
 import { Footer, GoldenFizzButton, Header } from "~/components";
@@ -7,17 +7,16 @@ export const Admin = () => {
 
     const [productPhotosInputCount, setProductPhotosInputCount] = useState<number>(1);
 
-
     const increase = () => {
         setProductPhotosInputCount(productPhotosInputCount + 1);
-    }
+    };
 
     const decrease = () => {
         if (productPhotosInputCount === 1) {
             return;
         }
         setProductPhotosInputCount(productPhotosInputCount - 1);
-    }
+    };
 
     const arr = useMemo(() => Array(productPhotosInputCount).fill(0).map((item, index) => {
         return index + 1
@@ -29,8 +28,8 @@ export const Admin = () => {
             <Flex direction="column" gap="15px" padding="40px">
                 <Heading>Urun ekle</Heading>
                 <Input type="hidden" name="_method" value="add_product" />
-                <Input type="hidden" name="username" value="fb-admin" />
-                <Input type="hidden" name="password" value="fb-admin" />
+                <Input name="username" value="fb-admin" />
+                <Input name="password" value="fb-admin" />
                 <Input placeholder="urun adi" name="name" defaultValue="enesince 2. imzali forma" />
                 <Flex gap="20px" alignSelf="stretch">
                     <Flex direction="column" gap="15px" flexGrow="1">

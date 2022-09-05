@@ -34,9 +34,12 @@ const ActiveAuctionsCard = ({
 	slug
 }: ActiveAuctionsCardProps): ReactElement => {
 
-	const highestOffer = useMemo(() => offers[offers.length - 1], [offers]);
-
-	console.log(slug)
+	const highestOffer = useMemo(() => {
+		if (Array.isArray(offers) && offers.length > 0) {
+			return offers[offers.length - 1]
+		}
+		return null;
+	}, [offers]);
 
 	return (<Link href={`/product/${slug}`}>
 		<Flex borderRadius="15px" overflow="hidden" bg="var(--governor-bay)" direction="column">

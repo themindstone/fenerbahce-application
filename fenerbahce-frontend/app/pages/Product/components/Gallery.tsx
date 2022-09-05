@@ -24,18 +24,16 @@ const GalleryItem = (): ReactElement => {
 
 export const Gallery = (): ReactElement => {
 
-    const { product } = useLoaderData();
+    const { product: { photoUrls } } = useLoaderData();
 
-    console.log(product)
+    const _photoUrls = photoUrls.map((item: string) => {
+        return {
+            original: item,
+            thumbnail: item,
+        };
+    });
 
     return <Box overflow="hidden">
-        <Slideshow options={options}>
-            <GalleryItem></GalleryItem>
-            <GalleryItem></GalleryItem>
-            <GalleryItem></GalleryItem>
-            <GalleryItem></GalleryItem>
-            <GalleryItem></GalleryItem>
-            <GalleryItem></GalleryItem>
-        </Slideshow>
+        <Slideshow options={options} images={_photoUrls} />
     </Box>
 };
