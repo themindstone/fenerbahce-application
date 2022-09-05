@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, Generated, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, Generated, JoinColumn, OneToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Offer } from "./Offer.entity";
 
 
 @Entity({
@@ -24,8 +25,12 @@ export class Product {
     @Column({ name: "auction_immediate_price", type: "int", nullable: false })
     public auctionImmediatePrice: number;
 
-    @Column({ name: "offers", type: "int", array: true })
-    public offers: number[];
+    @Column({ name: "bid_increment", type: "int", nullable: false, default: 0 })
+    public bidIncrement: number;
+
+    // TODO: cascade will be added to products table
+    @OneToMany(() => Offer, (offer) => offer.product_id) @JoinColumn()
+    public offers: Offer[];
 
     @Column({ name: "start_date", type: "timestamp with time zone", nullable: false })
     public startDate: Date;

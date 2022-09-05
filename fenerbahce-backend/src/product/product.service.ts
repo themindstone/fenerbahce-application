@@ -14,7 +14,7 @@ export class ProductService {
         @InjectRepository(ProductRepository) private readonly productRepository: Repository<ProductRepository>,
     ) {}
 
-    create(product: CreateProductDto) {
+    async create(product: CreateProductDto) {
         const newProduct: DeepPartial<ProductRepository> = {
             id: v4(),
             name: product.name,
@@ -25,10 +25,11 @@ export class ProductService {
             auctionImmediatePrice: product.auctionImmediatePrice,
             offers: [],
             photoUrls: product.photoUrls,
+            bidIncrement: product.bidIncrement,
         };
 
-        // this.productRepository.create(newProduct);
-        this.productRepository.save(newProduct);
+        const createdProduct = this.productRepository.create(newProduct);
+        await this.productRepository.save(createdProduct);
     }
 
     listByPage(page: number = 1): Product[] | null {
@@ -46,7 +47,7 @@ export class ProductService {
 
     async getBySlug(slug: string): Promise<ProductRepository> {
         const product = await this.productRepository.findOne({
-            select: ["auctionImmediatePrice", "auctionStartPrice", "id", "offers", "photoUrls", "startDate", "slug", "endDate"],
+            select: ["auctionImmediatePrice", "auctionStartPrice", "id", "offers", "photoUrls", "startDate", "slug", "endDate", "name"],
             where: {
                 slug
             },

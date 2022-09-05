@@ -21,6 +21,9 @@ export class Product {
 
     @IsNumber()
     auctionImmediatePrice: number;
+    
+    @IsNumber()
+    bidIncrement: number;
 
     @IsArray()
     photoUrls: string[];
@@ -47,6 +50,9 @@ export class CreateProductDto {
 
     @IsNumber()
     auctionImmediatePrice: number;
+
+    @IsNumber()
+    bidIncrement: number;
 
     @IsArray()
     photoUrls: string[];

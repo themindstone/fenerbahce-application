@@ -1,10 +1,14 @@
-import { Controller, Get, NotFoundException, Param, Post, Req, UnauthorizedException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
+import { Body, Controller, Get, NotFoundException, Param, Post, Req, UnauthorizedException } from "@nestjs/common";
 import { Product as ProductRepository } from "~/shared/entities";
 import { Request } from "express";
 import { AuthService } from "~/auth/auth.service";
-import { Product } from "./product.model";
+import { CreateProductDto, Product } from "./product.model";
 import { ProductService } from "./product.service";
+
+interface CreateProductDtoWithCred extends CreateProductDto {
+    username: string;
+    password: string;
+}
 
 @Controller("/product")
 export class ProductController {
@@ -15,15 +19,14 @@ export class ProductController {
         ) {}
 
     @Post("/create")
-    create(@Req() req: Request): any {
-        const { username, password, ...createProductDto } = req.body;
+    async create(@Body() { username, password, ...createProductDto }: CreateProductDtoWithCred): Promise<{ message: string }> {
 
         const isAuthenticated = this.authService.isAuthenticated(username, password);
 
         if (isAuthenticated) {
-            this.productService.create(createProductDto);
+            await this.productService.create(createProductDto);
             return {
-                message: "Product created"
+                message: "Product Created"
             };
         }
         else {
