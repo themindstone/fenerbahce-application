@@ -9,8 +9,8 @@ export class Offer {
     @Generated("uuid")
     public id: string;
 
-    @Column({ name: "product_id", type: "uuid" })
-    public product_id: string;
+    @Column({ name: "auction_id", type: "uuid" })
+    public auction_id: string;
 
     @Column({ name: "address", type: "varchar" })
     public address: string;

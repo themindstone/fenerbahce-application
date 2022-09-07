@@ -2,13 +2,13 @@ import { UnauthorizedException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { AuthService } from "~/auth/auth.service";
-import { ProductController } from "~/product/product.controller";
-import { ProductService } from "~/product/product.service";
-import { Product } from "~/shared/entities";
+import { AuctionController } from "~/auction/auction.controller";
+import { AuctionService } from "~/auction/auction.service";
+import { Auction } from "~/shared/entities";
 
-describe("Test Product Controller", () => {
-    let productController: ProductController;
-    let productService: ProductService;
+describe("Test Auction Controller", () => {
+    let auctionController: AuctionController;
+    let auctionService: AuctionService;
     let authService: AuthService;
 
     const mockedRepo = {
@@ -19,21 +19,21 @@ describe("Test Product Controller", () => {
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
-                ProductService,
+                AuctionService,
                 {
-                    provide: getRepositoryToken(Product),
+                    provide: getRepositoryToken(Auction),
                     useValue: mockedRepo,
                 },
             ],
         }).compile();
 
-        productService = module.get(ProductService);
+        auctionService = module.get(AuctionService);
         authService = new AuthService();
-        productController = new ProductController(productService, authService);
+        auctionController = new AuctionController(auctionService, authService);
     });
 
     describe("Test Create Function", async () => {
-        const res = await productController.create({
+        const res = await auctionController.create({
             username: "fb-admin",
             password: "fb-admin",
             startDate: new Date("09-09-2022").toString(),
@@ -46,9 +46,9 @@ describe("Test Product Controller", () => {
             bidIncrement: 5,
         });
 
-        expect(res).toBe({ message: "Product Created" });
+        expect(res).toBe({ message: "Auction Created" });
 
-        const res2 = await productController.create({
+        const res2 = await auctionController.create({
             username: "",
             password: "fb-admin",
             startDate: new Date("09-09-2022").toString(),

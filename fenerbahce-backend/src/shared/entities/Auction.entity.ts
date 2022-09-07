@@ -3,9 +3,9 @@ import { Offer } from "./Offer.entity";
 
 
 @Entity({
-    name: "products"
+    name: "auctions"
 })
-export class Product {
+export class Auction {
     @PrimaryColumn({ name: "id", type: "uuid" })
     @Generated("uuid")
     public id: string;
@@ -29,7 +29,7 @@ export class Product {
     public bidIncrement: number;
 
     // TODO: cascade will be added to products table
-    @OneToMany(() => Offer, (offer) => offer.product_id) @JoinColumn()
+    @OneToMany(() => Offer, (offer) => offer.auction_id) @JoinColumn()
     public offers: Offer[];
 
     @Column({ name: "start_date", type: "timestamp with time zone", nullable: false })

@@ -1,13 +1,13 @@
 import { Offer } from "./Offer.entity";
-import { Product } from "./Product.entity";
+import { Auction } from "./Auction.entity";
 
 const entities = [
-    Product,
+    Auction,
     Offer,
 ];
 
 export {
-    Product,
+    Auction,
     Offer,
 };
 

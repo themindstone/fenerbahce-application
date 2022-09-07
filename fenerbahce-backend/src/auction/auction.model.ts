@@ -1,6 +1,6 @@
 import { IsArray, IsNumber, IsString } from "class-validator";
 
-export class Product {
+export class Auction {
     @IsString()
     id: string;
 
@@ -32,7 +32,7 @@ export class Product {
     offers: string[];
 }
 
-export class CreateProductDto {
+export class CreateAuctionDto {
     @IsString()
     name: string;
 
