@@ -1,7 +1,8 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { ReactElement } from "react";
 import { IWallet } from "~/interfaces";
 import { wallets } from "~/wallets";
+import { ethers } from "ethers";
 
 interface ConnectWalletContextInterface {
     initialize: (name: keyof typeof wallets) => void;

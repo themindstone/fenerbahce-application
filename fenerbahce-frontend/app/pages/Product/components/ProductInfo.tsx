@@ -6,6 +6,7 @@ import { useLoaderData } from "@remix-run/react";
 import { OfferCard } from "./OfferCard";
 import { CollapsibleCard } from "./CollapsibleCard";
 import { TimeLeftBox } from "./TimeLeftBox";
+import { humanReadableNumber } from "~/utils";
 
 export const ProductInfo = (): ReactElement => {
 	const { product } = useLoaderData();
@@ -25,7 +26,7 @@ export const ProductInfo = (): ReactElement => {
 					</Flex>
 				</Flex>
 				<Flex gap="10px" direction="column" alignItems="stretch">
-					<WhiteButton>HEMEN AL {product.auctionImmediatePrice}₺</WhiteButton>
+					<WhiteButton>HEMEN AL {humanReadableNumber(product.auctionImmediatePrice)}₺</WhiteButton>
 					<GoldenFizzButton>TEKLİF VER</GoldenFizzButton>
 				</Flex>
 				<Flex direction="column" gap="10px">
