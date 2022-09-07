@@ -5,28 +5,28 @@ import { AppService } from "./app.service";
 import { AuthModule } from "./auth/auth.module";
 import { AuctionModule } from "./auction/auction.module";
 import { DatabaseModule } from "./shared/database.module";
-import { IndexerModule } from './indexer/indexer.module';
 import { EthersModule } from "nestjs-ethers";
 import { envPath } from "~/shared/utils";
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { IndexerModule } from "./indexer/indexer.module";
 import { ContractsModule } from "./contracts";
 
 @Module({
     imports: [
-        AuthModule,
-        AuctionModule,
         ConfigModule.forRoot({
             isGlobal: true,
             envFilePath: envPath,
         }),
-        DatabaseModule,
-        IndexerModule,
         EthersModule.forRoot({
             custom: "http://localhost:8545",
             useDefaultProvider: false,
-          }),
+        }),
+        DatabaseModule,
         EventEmitterModule.forRoot(),
-        ContractsModule
+        IndexerModule,
+        AuthModule,
+        AuctionModule,
+        ContractsModule,
     ],
     controllers: [AppController],
     providers: [AppService],

@@ -1,17 +1,16 @@
-import { AuctionContract } from "~/contracts/auction.contract";
-import { OnEvent } from "@nestjs/event-emitter";
-import { AuctionService } from "~/auction/auction.service";
+import { EventEmitter2, OnEvent } from "@nestjs/event-emitter";
+
 
 export class Indexer {
 
-    constructor(
-        private readonly auctionContract: AuctionContract,
-        private readonly auctionService: AuctionService
-    ) {}
 
+    constructor(
+        private readonly eventEmitter: EventEmitter2
+    ) {
+    }
 
     @OnEvent("auction.created")
-    auctionCreated() {
+    created() {
         console.log("auction.created 2")
     }
 }

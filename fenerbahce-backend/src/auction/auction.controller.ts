@@ -1,6 +1,5 @@
 import { Body, Controller, Get, NotFoundException, Param, Post, Req, UnauthorizedException } from "@nestjs/common";
 import { Auction as AuctionRepository } from "~/shared/entities";
-import { Request } from "express";
 import { AuthService } from "~/auth/auth.service";
 import { CreateAuctionDto, Auction } from "./auction.model";
 import { AuctionService } from "./auction.service";

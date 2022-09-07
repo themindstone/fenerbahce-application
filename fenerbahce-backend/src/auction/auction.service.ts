@@ -5,6 +5,7 @@ import { Auction as AuctionRepository } from "~/shared/entities";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DeepPartial, Repository } from "typeorm";
 import { AuctionContract } from "~/contracts/auction.contract";
+import { OnEvent } from "@nestjs/event-emitter";
 
 @Injectable()
 export class AuctionService {
@@ -18,14 +19,10 @@ export class AuctionService {
 
     async create(auction: CreateAuctionDto) {
         const auctionId = v4()
-        const blockchainResponse = await this.auctionContract.createAuction(auctionId, auction.startDate, auction.endDate, auction.bidIncrement);
+        this.auctionContract.createAuction(auctionId, auction.startDate, auction.endDate, auction.bidIncrement);
 
-        console.log("merhaba dunya")
-        console.log(blockchainResponse);
-        
         const newAuction: DeepPartial<AuctionRepository> = {
             id: auctionId,
-            offers: [],
             ...auction
         };
 
@@ -72,4 +69,5 @@ export class AuctionService {
     async listHighestOfferAuctions(): Promise<AuctionRepository[]> {
         return await this.auctionRepository.find();
     }
+
 }

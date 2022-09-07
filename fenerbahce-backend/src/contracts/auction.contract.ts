@@ -1,7 +1,9 @@
+import { Injectable } from "@nestjs/common";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { InjectContractProvider, InjectSignerProvider, EthersContract, EthersSigner, Wallet, Contract, BigNumber } from "nestjs-ethers";
 import { auctionABI, auctionAddress } from "~/data";
 
+@Injectable()
 export class AuctionContract {
 
     private wallet: Wallet;
@@ -14,7 +16,6 @@ export class AuctionContract {
         @InjectSignerProvider()
         private readonly ethersSigner: EthersSigner,
     ) {
-        // this.eventEmitter = eventEmitter;
         this.wallet = this.ethersSigner.createWalletfromMnemonic(
             "test test test test test test test test test test test junk",
         );
@@ -29,15 +30,18 @@ export class AuctionContract {
         catch {
             throw new Error("Error connecting to the contract");
         }
-        this.contract.on("AuctionCreated", this.auctionCreated.bind(this));
+
+        this.contract.on("AuctionCreated(string,uint256,uint256,uint256)", this.auctionCreated.bind(this));
         this.contract.on("AuctionDeposited", this.auctionDeposited.bind(this));
         this.contract.on("AuctionRefunded", this.auctionRefunded.bind(this));
         this.contract.on("AuctionProlonged", this.auctionProlonged.bind(this));
+
     }
 
     private auctionCreated(...args: any[]) {
+        console.log(args)
+        this.eventEmitter.emit("auction.created", { msg: "hello world" });
         console.log("auction.created 1")
-        this.eventEmitter.emit("auction.created", args);
     }
 
     private auctionDeposited(...args: any[]) {
@@ -55,15 +59,12 @@ export class AuctionContract {
     async createAuction(auctionId: string, startDate: string, endDate: string, bidIncrement: number = 100) {
         
         const tx = await this.contract.createAuction(
-            // formatBytes32String(auctionId),
             auctionId,
             BigNumber.from(new Date(startDate).getTime()),
             BigNumber.from(new Date(endDate).getTime()),
             BigNumber.from(bidIncrement),
         );
-        const res = await tx.wait();
-        console.log(res);
-
+        return await tx.wait();
     }
 
     async refund(...args: any) {
