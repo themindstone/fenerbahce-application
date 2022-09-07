@@ -5,7 +5,6 @@ import { Auction as AuctionRepository } from "~/shared/entities";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DeepPartial, Repository } from "typeorm";
 import { AuctionContract } from "~/contracts/auction.contract";
-import { OnEvent } from "@nestjs/event-emitter";
 
 @Injectable()
 export class AuctionService {
@@ -68,6 +67,14 @@ export class AuctionService {
 
     async listHighestOfferAuctions(): Promise<AuctionRepository[]> {
         return await this.auctionRepository.find();
+    }
+
+
+    async activate(auctionId: string) {
+        await this.auctionRepository.update(
+            { id: auctionId },
+            { isActive: true }
+        );
     }
 
 }

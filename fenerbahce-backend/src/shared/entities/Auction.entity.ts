@@ -39,7 +39,7 @@ export class Auction {
     public endDate: Date;
 
     @Column({ name: "is_active", type: "boolean", nullable: false, default: false })
-    public is_active: boolean;
+    public isActive: boolean;
 
     @CreateDateColumn({ name: "created_at", type: "timestamp with time zone" })
     public createdAt: Date;

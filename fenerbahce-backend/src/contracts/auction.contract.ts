@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { InjectContractProvider, InjectSignerProvider, EthersContract, EthersSigner, Wallet, Contract, BigNumber } from "nestjs-ethers";
-import { auctionABI, auctionAddress } from "~/data";
+import { auctionABI, auctionAddress } from "~/shared/data";
 
 @Injectable()
 export class AuctionContract {
@@ -15,7 +15,9 @@ export class AuctionContract {
         private readonly ethersContract: EthersContract,
         @InjectSignerProvider()
         private readonly ethersSigner: EthersSigner,
-    ) {
+    ) {}
+
+    onModuleInit() {
         this.wallet = this.ethersSigner.createWalletfromMnemonic(
             "test test test test test test test test test test test junk",
         );
@@ -35,25 +37,43 @@ export class AuctionContract {
         this.contract.on("AuctionDeposited", this.auctionDeposited.bind(this));
         this.contract.on("AuctionRefunded", this.auctionRefunded.bind(this));
         this.contract.on("AuctionProlonged", this.auctionProlonged.bind(this));
-
     }
 
-    private auctionCreated(...args: any[]) {
-        console.log(args)
-        this.eventEmitter.emit("auction.created", { msg: "hello world" });
-        console.log("auction.created 1")
+    onModuleDestroy() {
+        this.contract.off("AuctionCreated(string,uint256,uint256,uint256)", this.auctionCreated.bind(this));
+        this.contract.off("AuctionDeposited", this.auctionDeposited.bind(this));
+        this.contract.off("AuctionRefunded", this.auctionRefunded.bind(this));
+        this.contract.off("AuctionProlonged", this.auctionProlonged.bind(this));
     }
 
-    private auctionDeposited(...args: any[]) {
-        this.eventEmitter.emit("auction.deposited", args);
+    private auctionCreated(auctionId: string, bidIncrement: BigNumber) {
+        this.eventEmitter.emit("auction.created", {
+            auctionId,
+            bidIncrement: bidIncrement.toNumber()
+        });
     }
 
-    private auctionRefunded(...args: any[]) {
-        this.eventEmitter.emit("auction.refunded", args);
+    private auctionDeposited(auctionId: string, address: string, value: BigNumber) {
+        this.eventEmitter.emit("auction.deposited", {
+            auctionId,
+            address,
+            value: value.toNumber()
+        });
     }
 
-    private auctionProlonged(...args: any[]) {
-        this.eventEmitter.emit("auction.prolonged", args);
+    private auctionRefunded(auctionId: string, toAddress: string, value: BigNumber) {
+        this.eventEmitter.emit("auction.refunded", {
+            auctionId,
+            toAddress,
+            value: value.toNumber()
+        });
+    }
+
+    private auctionProlonged(auctionId: string, endDate: BigNumber) {
+        this.eventEmitter.emit("auction.prolonged", {
+            auctionId,
+            endDate: new Date(endDate.toNumber())
+        });
     }
 
     async createAuction(auctionId: string, startDate: string, endDate: string, bidIncrement: number = 100) {

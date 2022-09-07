@@ -3,10 +3,17 @@ import { Auction as AuctionRepository } from "~/shared/entities";
 import { AuthService } from "~/auth/auth.service";
 import { CreateAuctionDto, Auction } from "./auction.model";
 import { AuctionService } from "./auction.service";
+import { IsString } from "class-validator";
 
-interface CreateAuctionDtoWithCred extends CreateAuctionDto {
+class CreateAuctionDtoWithCred extends CreateAuctionDto {
+
+    @IsString()
     username: string;
+
+    @IsString()
     password: string;
+
+    
 }
 
 @Controller("/auction")
