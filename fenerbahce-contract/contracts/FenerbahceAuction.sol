@@ -3,7 +3,7 @@ pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract AuctionMachine is Ownable {
+contract FenerbahceAuction is Ownable {
     
 
     struct Auction {
