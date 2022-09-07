@@ -1,18 +1,18 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { AuthModule } from "~/auth/auth.module";
+import { AuthService } from "~/auth/auth.service";
+import { AuctionContract } from "~/contracts/auction.contract";
 import { Auction } from "~/shared/entities";
 import { AuctionController } from "./auction.controller";
 import { AuctionService } from "./auction.service";
 
 @Module({
     imports: [
-        AuthModule,
         TypeOrmModule.forFeature([
             Auction,
         ]),
     ],
     controllers: [AuctionController],
-    providers: [AuctionService],
+    providers: [AuctionService, AuthService, AuctionContract],
 })
-export class ProductModule {}
+export class AuctionModule {}

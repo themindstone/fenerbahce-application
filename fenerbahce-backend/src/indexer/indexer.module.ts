@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Offer, Auction } from '~/shared/entities';
-import { IndexerController } from './indexer.service';
+import { Indexer } from './indexer';
 
 @Module({
     imports: [
@@ -9,8 +9,8 @@ import { IndexerController } from './indexer.service';
             Auction,
             Offer
         ]),
-        // ContractModule,
     ],
-    controllers: [IndexerController]
+    providers: [Indexer],
+    exports: [Indexer]
 })
 export class IndexerModule {}

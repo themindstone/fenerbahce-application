@@ -3,7 +3,7 @@ import { ConfigModule } from "@nestjs/config";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { AuthModule } from "./auth/auth.module";
-import { ProductModule } from "./auction/auction.module";
+import { AuctionModule } from "./auction/auction.module";
 import { DatabaseModule } from "./shared/database.module";
 import { IndexerModule } from './indexer/indexer.module';
 import { EthersModule } from "nestjs-ethers";
@@ -14,7 +14,7 @@ import { ContractsModule } from "./contracts";
 @Module({
     imports: [
         AuthModule,
-        ProductModule,
+        AuctionModule,
         ConfigModule.forRoot({
             isGlobal: true,
             envFilePath: envPath,
@@ -26,7 +26,7 @@ import { ContractsModule } from "./contracts";
             useDefaultProvider: false,
           }),
         EventEmitterModule.forRoot(),
-        ContractsModule,
+        ContractsModule
     ],
     controllers: [AppController],
     providers: [AppService],

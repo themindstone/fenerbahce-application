@@ -1,5 +1,5 @@
 import { EventEmitter2 } from "@nestjs/event-emitter";
-import { InjectContractProvider, InjectSignerProvider, EthersContract, EthersSigner, Wallet, Contract } from "nestjs-ethers";
+import { InjectContractProvider, InjectSignerProvider, EthersContract, EthersSigner, Wallet, Contract, BigNumber } from "nestjs-ethers";
 import { auctionABI, auctionAddress } from "~/data";
 
 export class AuctionContract {
@@ -8,13 +8,13 @@ export class AuctionContract {
     private contract: Contract;
 
     constructor(
-        private readonly eventEmitter: EventEmitter2,
+        private eventEmitter: EventEmitter2,
         @InjectContractProvider()
         private readonly ethersContract: EthersContract,
         @InjectSignerProvider()
         private readonly ethersSigner: EthersSigner,
     ) {
-        
+        // this.eventEmitter = eventEmitter;
         this.wallet = this.ethersSigner.createWalletfromMnemonic(
             "test test test test test test test test test test test junk",
         );
@@ -29,34 +29,46 @@ export class AuctionContract {
         catch {
             throw new Error("Error connecting to the contract");
         }
-        this.contract.on("AuctionCreated", this.auctionCreated);
-        this.contract.on("AuctionDeposited", this.auctionDeposited);
-        this.contract.on("AuctionRefunded", this.auctionRefunded);
-        this.contract.on("AuctionProlonged", this.auctionProlonged);
+        this.contract.on("AuctionCreated", this.auctionCreated.bind(this));
+        this.contract.on("AuctionDeposited", this.auctionDeposited.bind(this));
+        this.contract.on("AuctionRefunded", this.auctionRefunded.bind(this));
+        this.contract.on("AuctionProlonged", this.auctionProlonged.bind(this));
     }
 
-    auctionCreated(...args: any[]) {
-        this.eventEmitter.emitAsync("auction.created", args);
+    private auctionCreated(...args: any[]) {
+        console.log("auction.created 1")
+        this.eventEmitter.emit("auction.created", args);
     }
 
-    auctionDeposited(...args: any[]) {
-        this.eventEmitter.emitAsync("auction.deposited", args);
+    private auctionDeposited(...args: any[]) {
+        this.eventEmitter.emit("auction.deposited", args);
     }
 
-    auctionRefunded(...args: any[]) {
-        this.eventEmitter.emitAsync("auction.refunded", args);
+    private auctionRefunded(...args: any[]) {
+        this.eventEmitter.emit("auction.refunded", args);
     }
 
-    auctionProlonged(...args: any[]) {
-        this.eventEmitter.emitAsync("auction.prolonged", args);
+    private auctionProlonged(...args: any[]) {
+        this.eventEmitter.emit("auction.prolonged", args);
     }
 
-    createAuction(...args: any[]) {
-        this.contract.create(...args);
+    async createAuction(auctionId: string, startDate: string, endDate: string, bidIncrement: number = 100) {
+        
+        const tx = await this.contract.createAuction(
+            // formatBytes32String(auctionId),
+            auctionId,
+            BigNumber.from(new Date(startDate).getTime()),
+            BigNumber.from(new Date(endDate).getTime()),
+            BigNumber.from(bidIncrement),
+        );
+        const res = await tx.wait();
+        console.log(res);
+
     }
 
-    refund(...args: any) {
-        this.contract.refund(...args);
+    async refund(...args: any) {
+        const tx = await this.contract.refund(...args);
+        return await tx.wait();
     }
 
 }
