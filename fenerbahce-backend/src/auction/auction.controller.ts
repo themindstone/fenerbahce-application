@@ -29,15 +29,15 @@ export class AuctionController {
 
         const isAuthenticated = this.authService.isAuthenticated(username, password);
 
-        if (isAuthenticated) {
-            await this.auctionService.create(createAuctionDto);
-            return {
-                message: "Auction Created"
-            };
-        }
-        else {
+        if (!isAuthenticated) {
             throw new UnauthorizedException();
         }
+
+        await this.auctionService.create(createAuctionDto);
+
+        return {
+            message: "Auction Created"
+        };
     }
 
     @Get("/page/:page")

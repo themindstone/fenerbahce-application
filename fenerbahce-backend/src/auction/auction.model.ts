@@ -29,7 +29,7 @@ export class Auction {
     photoUrls: string[];
 
     @IsArray()
-    offers: string[];
+    balances: number[];
 }
 
 export class CreateAuctionDto {

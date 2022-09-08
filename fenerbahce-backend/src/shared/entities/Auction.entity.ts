@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, Generated, JoinColumn, OneToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
-import { Offer } from "./Offer.entity";
+import { Balance } from "./Balance.entity";
 
 
 @Entity({
@@ -29,8 +29,8 @@ export class Auction {
     public bidIncrement: number;
 
     // TODO: cascade will be added to products table
-    @OneToMany(() => Offer, (offer) => offer.auction_id) @JoinColumn()
-    public offers: Offer[];
+    @OneToMany(() => Balance, (balance) => balance.auctionId) @JoinColumn()
+    public balances: Balance[];
 
     @Column({ name: "start_date", type: "timestamp with time zone", nullable: false })
     public startDate: Date;

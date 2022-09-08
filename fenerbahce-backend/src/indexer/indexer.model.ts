@@ -20,3 +20,24 @@ export class IndexerAuctionContractDepositedDTO {
     @IsNumber()
     value: number;
 }
+
+export class IndexerAuctionContractRefundedDTO {
+    @IsString()
+    auctionId: string;
+
+    @IsString()
+    toAddress: string;
+
+    @IsNumber()
+    value: number;
+}
+
+export class IndexerAuctionContractProlongedDTO {
+
+    @IsString()
+    auctionId: string;
+
+    @IsString()
+    endDate: string;
+
+}

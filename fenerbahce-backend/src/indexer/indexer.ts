@@ -1,14 +1,15 @@
 import { OnEvent } from "@nestjs/event-emitter";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Auction as AuctionRepository, Offer as OfferRepository } from "~/shared/entities";
+import { Auction as AuctionRepository, Balance as BalanceRepository } from "~/shared/entities";
 import { Repository } from "typeorm";
-import { IndexerAuctionContractCreatedDTO, IndexerAuctionContractDepositedDTO } from "./indexer.model";
+import { IndexerAuctionContractCreatedDTO, IndexerAuctionContractDepositedDTO, IndexerAuctionContractRefundedDTO, IndexerAuctionContractProlongedDTO } from "./indexer.model";
+import { v4 } from "uuid";
 
 export class Indexer {
 
     constructor(
         @InjectRepository(AuctionRepository) private readonly auctionRepository: Repository<AuctionRepository>,
-        @InjectRepository(OfferRepository) private readonly offerRepository: Repository<OfferRepository>,
+        @InjectRepository(BalanceRepository) private readonly balanceRepository: Repository<BalanceRepository>,
     ) {
     }
 
@@ -23,11 +24,30 @@ export class Indexer {
 
     @OnEvent("auction.deposited")
     async deposited({ auctionId, address, value }: IndexerAuctionContractDepositedDTO) {
-        // create a new offer
-        this.offerRepository.save({
-            auction_id: auctionId,
-            address,
-            value
-        });
+        console.log("address: ", address);
+        // this will switch to typeorm query builder
+        this.balanceRepository.query(`
+            insert into balances (id, auction_id, user_address, balance)
+            values ($1, $2, $3, $4)
+            on conflict ( user_address, auction_id )
+            do
+            update set balance = balances.balance + 100
+            where
+            balances.auction_id = $2 and
+            balances.user_address = $3;
+        `, [v4(), auctionId, address, value]);
     }
-}
+
+    @OnEvent("auction.refunded")
+    async refunded({ auctionId, toAddress, value }: IndexerAuctionContractRefundedDTO) {
+        this.balanceRepository.query(`
+            update balances set balance = balance - $1
+            where auction_id = $2 and user_address = $3
+        `, [value, auctionId, toAddress]);
+    }
+
+    @OnEvent("auction.refunded")
+    async prolonged({ auctionId, endDate }: IndexerAuctionContractProlongedDTO) {
+    }
+
+};

@@ -44,7 +44,7 @@ export class AuctionService {
 
     async getBySlug(slug: string): Promise<AuctionRepository> {
         const auction = await this.auctionRepository.findOne({
-            select: ["auctionImmediatePrice", "auctionStartPrice", "id", "offers", "photoUrls", "startDate", "slug", "endDate", "name"],
+            select: ["auctionImmediatePrice", "auctionStartPrice", "id", "balances", "photoUrls", "startDate", "slug", "endDate", "name"],
             where: {
                 slug
             },
