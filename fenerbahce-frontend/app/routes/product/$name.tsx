@@ -1,7 +1,7 @@
-import { Product } from "~/pages";
+import { Auction } from "~/pages";
 import { json, LinksFunction, LoaderFunction } from "@remix-run/node";
 import imageGalleryStyles from "react-image-gallery/styles/css/image-gallery.css";
-import { ProductClient } from "~/client";
+import { AuctionClient } from "~/client";
 
 export let links: LinksFunction = () => {
 	return [
@@ -14,11 +14,11 @@ export const loader: LoaderFunction = async ({ request }) => {
     const pathnames = url.pathname.split("/");
     const slug = pathnames[pathnames.length - 1];
 
-    const product = await ProductClient.getBySlug(slug);
+    const auction = await AuctionClient.getBySlug(slug);
 
 	return json({
-        product,
+        auction,
     });
 }
 
-export default () => <Product />;
+export default () => <Auction />;

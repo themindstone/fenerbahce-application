@@ -1,14 +1,14 @@
-import { Fragment } from "react";
 import type { ReactElement } from "react";
 import { ConnectWallet, Header, SideNav, Footer } from "~/components";
 import { Grid, useMediaQuery, VStack } from "@chakra-ui/react";
 import { Gallery, ProductInfo } from "./components";
+import { ContractsProvider } from "~/context";
 
-export const Product = (): ReactElement => {
+export const Auction = (): ReactElement => {
 	const [md] = useMediaQuery("(max-width: 900px)");
 
 	return (
-		<Fragment>
+		<ContractsProvider>
 			<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 			<ConnectWallet />
 			<Header />
@@ -24,6 +24,6 @@ export const Product = (): ReactElement => {
 				<ProductInfo />
 			</Grid>}
 			<Footer />
-		</Fragment>
+		</ContractsProvider>
 	);
 };

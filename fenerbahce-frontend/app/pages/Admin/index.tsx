@@ -4,27 +4,27 @@ import { Fragment, useMemo, useState } from "react";
 import { Footer, GoldenFizzButton, Header } from "~/components";
 
 export const Admin = () => {
-	const [productPhotosInputCount, setProductPhotosInputCount] = useState<number>(1);
+	const [auctionPhotosInputCount, setAuctionPhotosInputCount] = useState<number>(1);
 
 	const increase = () => {
-		setProductPhotosInputCount(productPhotosInputCount + 1);
+		setAuctionPhotosInputCount(auctionPhotosInputCount + 1);
 	};
 
 	const decrease = () => {
-		if (productPhotosInputCount === 1) {
+		if (auctionPhotosInputCount === 1) {
 			return;
 		}
-		setProductPhotosInputCount(productPhotosInputCount - 1);
+		setAuctionPhotosInputCount(auctionPhotosInputCount - 1);
 	};
 
 	const arr = useMemo(
 		() =>
-			Array(productPhotosInputCount)
+			Array(auctionPhotosInputCount)
 				.fill(0)
 				.map((item, index) => {
 					return index + 1;
 				}),
-		[productPhotosInputCount],
+		[auctionPhotosInputCount],
 	);
 
 	return (
@@ -34,14 +34,14 @@ export const Admin = () => {
 				<Form method="post">
 					<Flex direction="column" gap="10px" padding="40px">
 						<Heading>Ürün Ekle</Heading>
-						<Input type="hidden" name="_method" value="add_product" />
+						<Input type="hidden" name="_method" defaultValue="add_product" />
 						<FormLabel gap="5px" display="flex" flexDirection="column">
 							<Text>Kullanıcı Adı</Text>
-							<Input name="username" placeholder="username" />
+							<Input name="username" placeholder="username" defaultValue="fb-admin" />
 						</FormLabel>
 						<FormLabel gap="5px" display="flex" flexDirection="column">
 							<Text>Şifre</Text>
-							<Input name="password" placeholder="password" />
+							<Input name="password" placeholder="password" defaultValue="fb-admin" />
 						</FormLabel>
 						<FormLabel gap="5px" display="flex" flexDirection="column">
 							<Text>Ürün Adı</Text>
@@ -57,11 +57,10 @@ export const Admin = () => {
 								<Flex direction="column" gap="15px" flexGrow="1">
 									{arr.map(item => {
 										return (
-											<Input
+											<Input defaultValue="/build/_assets/uniform-W6QJQIUR.png"
 												placeholder="urun fotograflari"
 												name={`photoUrls[]`}
-												key={`product-photos-${item}`}
-											/>
+												key={`product-photos-${item}`} />
 										);
 									})}
 								</Flex>
@@ -73,19 +72,19 @@ export const Admin = () => {
 						</FormLabel>
 						<FormLabel gap="5px" display="flex" flexDirection="column">
 							<Text>Açık Artırma Başlangıç Fiyatı</Text>
-							<Input placeholder="urun baslangic fiyat" name="auctionStartPrice" />
+							<Input placeholder="urun baslangic fiyat" name="startPrice" defaultValue="1500" />
 						</FormLabel>
 						<FormLabel gap="5px" display="flex" flexDirection="column">
 							<Text>Açık Artırma Hemen Al Fiyatı</Text>
-							<Input placeholder="urun hemen al fiyat" name="auctionImmediatePrice" />
+							<Input placeholder="urun hemen al fiyat" name="buyNowPrice" defaultValue="15000" />
 						</FormLabel>
 						<FormLabel gap="5px" display="flex" flexDirection="column">
 							<Text>Açık Artırma Başlangıç Tarihi (ay-gun-yıl)</Text>
-							<Input placeholder="baslangic tarih (ay-gun-yil)" name="startDate" />
+							<Input placeholder="baslangic tarih (ay-gun-yil)" name="startDate" defaultValue="09-09-2022" />
 						</FormLabel>
 						<FormLabel gap="5px" display="flex" flexDirection="column">
 							<Text>Açık Artırma Bitiş Tarihi (ay-gun-yıl)</Text>
-							<Input placeholder="bitis tarih (ay-gun-yil)" name="endDate" />
+							<Input placeholder="bitis tarih (ay-gun-yil)" name="endDate" defaultValue="09-09-2023" />
 						</FormLabel>
 						<GoldenFizzButton alignSelf="start" type="submit">
 							Ekle

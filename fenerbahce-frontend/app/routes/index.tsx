@@ -1,7 +1,7 @@
 import { Utility } from "~/pages";
 import { json, LinksFunction, LoaderFunction } from "@remix-run/node";
 import carouselStyles from "react-owl-carousel2/lib/styles.css";
-import { ProductClient } from "~/client";
+import { AuctionClient } from "~/client";
 
 export let links: LinksFunction = () => {
 	return [
@@ -10,8 +10,8 @@ export let links: LinksFunction = () => {
 };
 
 export const loader: LoaderFunction = async ({ context }) => {
-	const highestOfferAuctions = await ProductClient.listHighestOfferAuctions();
-	const activeAuctions = await ProductClient.listActiveAuctions();
+	const highestOfferAuctions = await AuctionClient.listHighestOfferAuctions();
+	const activeAuctions = await AuctionClient.listActiveAuctions();
 
 	return json({
 		highestOfferAuctions,

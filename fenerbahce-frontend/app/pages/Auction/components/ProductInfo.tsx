@@ -1,5 +1,5 @@
-import { Box, Flex, Heading, Text, VStack } from "@chakra-ui/react";
-import { ReactElement } from "react";
+import { Box, Flex, Heading, Text } from "@chakra-ui/react";
+import { ReactElement, useCallback } from "react";
 import { GoldenFizzButton, WhiteButton } from "~/components";
 import { useCountdownTimer } from "~/hooks";
 import { useLoaderData } from "@remix-run/react";
@@ -7,16 +7,32 @@ import { OfferCard } from "./OfferCard";
 import { CollapsibleCard } from "./CollapsibleCard";
 import { TimeLeftBox } from "./TimeLeftBox";
 import { humanReadableNumber } from "~/utils";
+import { useAuctionContract } from "~/contracts";
 
 export const ProductInfo = (): ReactElement => {
-	const { product } = useLoaderData();
+	const { auction } = useLoaderData();
+	
+	const { days, hours, minutes } = useCountdownTimer(auction.endDate);
 
-	const { days, hours, minutes } = useCountdownTimer(product.endDate);
+	const auctionContract = useAuctionContract();
+
+	const deposit = useCallback(() => {
+		let maxOffer = auction.auctionStartPrice;
+		if (Array.isArray(auction.balances) && auction.balances.length > 0) {
+			const balancesArray = auction.balances.map((balance: any) => balance.balance);
+			maxOffer = Math.max(balancesArray);
+		}
+		const value = maxOffer + auction.bidIncrement;
+		auctionContract.deposit({
+			auctionId: auction.id,
+			value
+		});
+	}, [auctionContract]);
 
 	return (
 		<Box>
 			<Flex direction="column" maxW="400px" gap="30px">
-				<Heading>{product.name}</Heading>
+				<Heading>{auction.name}</Heading>
 				<Flex direction="column" gap="10px">
 					<Text>Kalan süre</Text>
 					<Flex gap="20px">
@@ -26,8 +42,8 @@ export const ProductInfo = (): ReactElement => {
 					</Flex>
 				</Flex>
 				<Flex gap="10px" direction="column" alignItems="stretch">
-					<WhiteButton>HEMEN AL {humanReadableNumber(product.auctionImmediatePrice)}₺</WhiteButton>
-					<GoldenFizzButton>TEKLİF VER</GoldenFizzButton>
+					<WhiteButton>HEMEN AL {humanReadableNumber(auction.auctionImmediatePrice)}₺</WhiteButton>
+					<GoldenFizzButton onClick={deposit}>TEKLİF VER</GoldenFizzButton>
 				</Flex>
 				<Flex direction="column" gap="10px">
 					<Text>En Yüksek Teklif</Text>

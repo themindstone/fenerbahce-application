@@ -1,6 +1,6 @@
 import { ActionFunction } from "@remix-run/node";
 import { Admin } from "~/pages";
-import { ProductClient } from "~/client";
+import { AuctionClient } from "~/client";
 import slugify from "slugify";
 
 
@@ -17,24 +17,24 @@ export const action: ActionFunction = async ({
         const photoUrls = formdata.getAll("photoUrls[]");
         const startDate = new Date(formdata.get("startDate") as string);
         const endDate = new Date(formdata.get("endDate") as string);
-        const auctionStartPrice = formdata.get("auctionStartPrice");
-        const auctionImmediatePrice = formdata.get("auctionImmediatePrice");
+        const startPrice = formdata.get("startPrice");
+        const buyNowPrice = formdata.get("buyNowPrice");
 
         try {
-            await ProductClient.create({
+            await AuctionClient.create({
                 username,
                 password,
                 name,
                 startDate,
                 endDate,
-                auctionStartPrice,
-                auctionImmediatePrice,
+                startPrice,
+                buyNowPrice,
                 photoUrls,
                 slug: slugify(name)
             });
 
             return {
-                message: "Product created"
+                message: "Auction created"
             };
         }
         catch (e) {

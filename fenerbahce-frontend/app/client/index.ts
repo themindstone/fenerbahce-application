@@ -1,6 +1,6 @@
-import ProductClient from "./product";
+import AuctionClient from "./auction";
 
 
 export {
-    ProductClient,
+    AuctionClient,
 };

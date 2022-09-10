@@ -1,7 +1,7 @@
 import { useConnectWallet, ConnectWalletProvider } from "./MetamaskConnectContext";
-import { useContract } from "./ContractsContext";
+import { useContract, ContractsProvider } from "./ContractsContext";
 
 export {
     useConnectWallet, ConnectWalletProvider,
-    useContract,
+    useContract, ContractsProvider
 };

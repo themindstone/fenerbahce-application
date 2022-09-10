@@ -11,9 +11,15 @@ export const auctionABI = [
 		inputs: [
 			{
 				indexed: false,
-				internalType: "bytes32",
+				internalType: "string",
 				name: "auctionId",
-				type: "bytes32",
+				type: "string",
+			},
+			{
+				indexed: false,
+				internalType: "uint256",
+				name: "bidIncrement",
+				type: "uint256",
 			},
 			{
 				indexed: false,
@@ -27,12 +33,6 @@ export const auctionABI = [
 				name: "auctionEndDate",
 				type: "uint256",
 			},
-			{
-				indexed: false,
-				internalType: "uint256",
-				name: "bidIncrement",
-				type: "uint256",
-			},
 		],
 		name: "AuctionCreated",
 		type: "event",
@@ -42,9 +42,9 @@ export const auctionABI = [
 		inputs: [
 			{
 				indexed: false,
-				internalType: "bytes32",
+				internalType: "string",
 				name: "auctionId",
-				type: "bytes32",
+				type: "string",
 			},
 			{
 				indexed: false,
@@ -67,9 +67,9 @@ export const auctionABI = [
 		inputs: [
 			{
 				indexed: false,
-				internalType: "bytes32",
+				internalType: "string",
 				name: "auctionId",
-				type: "bytes32",
+				type: "string",
 			},
 			{
 				indexed: false,
@@ -86,9 +86,9 @@ export const auctionABI = [
 		inputs: [
 			{
 				indexed: false,
-				internalType: "bytes32",
+				internalType: "string",
 				name: "auctionId",
-				type: "bytes32",
+				type: "string",
 			},
 			{
 				indexed: false,
@@ -128,9 +128,9 @@ export const auctionABI = [
 	{
 		inputs: [
 			{
-				internalType: "bytes32",
+				internalType: "string",
 				name: "_auctionId",
-				type: "bytes32",
+				type: "string",
 			},
 			{
 				internalType: "uint256",
@@ -156,9 +156,9 @@ export const auctionABI = [
 	{
 		inputs: [
 			{
-				internalType: "bytes32",
+				internalType: "string",
 				name: "_auctionId",
-				type: "bytes32",
+				type: "string",
 			},
 		],
 		name: "depositToAuction",
@@ -182,9 +182,9 @@ export const auctionABI = [
 	{
 		inputs: [
 			{
-				internalType: "bytes32",
+				internalType: "string",
 				name: "_auctionId",
-				type: "bytes32",
+				type: "string",
 			},
 			{
 				internalType: "address",

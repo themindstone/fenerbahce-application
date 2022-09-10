@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { auctionABI, auctionAddress } from "~/data";
 import { connectContracts } from "~/hooks/useContract";
 import { useConnectWallet } from "./MetamaskConnectContext";
@@ -19,6 +19,10 @@ interface ContractsContextInterface {
     contracts: ContractsStateType
 }
 
+interface ContractsProviderProps {
+    children: React.ReactNode;
+}
+
 const registry: IRegistry[] = [
     { name: "Auction", address: auctionAddress, abi: auctionABI },
 ];
@@ -32,7 +36,9 @@ const ContractsContext = React.createContext<ContractsContextInterface>({
 });
 
 
-export const ContractsProvider = () => {
+export const ContractsProvider = ({
+    children
+}: ContractsProviderProps) => {
 
     const { isConnected } = useConnectWallet();
 
@@ -74,16 +80,37 @@ export const ContractsProvider = () => {
     const value = { connectContractIfNotConnected, contracts };
 
     return (<ContractsContext.Provider value={value}>
-
+        {children}
     </ContractsContext.Provider>);
 };
 
-export const useContract = (contractName: ContractName): ethers.Contract | null => {
+export const useContract = (contractName: ContractName): {
+    contract: ethers.Contract | null,
+    error: any,
+} => {
     const { contracts, connectContractIfNotConnected } = useContext(ContractsContext);
+    const { isConnected } = useConnectWallet();
+    const [error, setError] = useState();
 
-    if (!contracts[contractName]) {
-        connectContractIfNotConnected(contractName);
-    }
+    useEffect(() => {
+        if (isConnected) {
+            connect();
+        }
+    }, [isConnected]);
 
-    return contracts[contractName];
+    const connect = useCallback(() => {
+        if (isConnected) {
+            try {
+                connectContractIfNotConnected(contractName);
+            }
+            catch (e: any) {
+                setError(e)
+            }
+        }
+    }, [isConnected]);
+
+    return {
+        contract: contracts[contractName],
+        error
+    };
 };

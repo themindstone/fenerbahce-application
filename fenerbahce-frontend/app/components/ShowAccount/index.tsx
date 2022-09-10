@@ -39,7 +39,7 @@ export const ShowAccount = (): ReactElement => {
     connectWalletEventBus.useListener("connectwallet.toggleaccountmodal", () => {
         setIsOpen(!isOpen);
     }, [isOpen]);
-
+    // TODO: useEffect deps
     useEffect(() => {
         connectWalletEventBus.publish("connectwallet.accountmodalchange", isOpen);
     });

@@ -32,7 +32,7 @@ export const useCountdownTimer = (date: string): TimeLeftInterface => {
         return () => {
             clearTimeout(timer);
         }
-    });
+    }, [timeLeft]);
 
 
     return timeLeft;

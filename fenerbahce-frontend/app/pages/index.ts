@@ -1,5 +1,5 @@
 import { Utility } from "./Utility";
-import { Product } from "./Product";
+import { Auction } from "./Auction";
 import { Admin } from "./Admin"
 
-export { Utility, Product, Admin };
+export { Utility, Auction, Admin };

@@ -24,7 +24,7 @@ const GalleryItem = (): ReactElement => {
 
 export const Gallery = (): ReactElement => {
 
-    const { product: { photoUrls } } = useLoaderData();
+    const { auction: { photoUrls } } = useLoaderData();
 
     const _photoUrls = photoUrls.map((item: string) => {
         return {
