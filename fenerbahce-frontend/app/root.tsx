@@ -7,6 +7,7 @@ import { MetaFunction, LinksFunction } from "@remix-run/node"; // Depends on the
 import { theme } from "./theme";
 import styles from "./styles/globals.css";
 import { ConnectWalletProvider } from "~/context";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 import { ServerStyleContext, ClientStyleContext } from "./_context";
 
@@ -75,14 +76,18 @@ const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) =>
 	);
 });
 
+const queryClient = new QueryClient();
+
 export default function App() {
 	return (
 		<Document>
-			<ConnectWalletProvider>
-				<ChakraProvider theme={theme}>
-					<Outlet />
-				</ChakraProvider>
-			</ConnectWalletProvider>
+			<QueryClientProvider client={queryClient}>
+				<ConnectWalletProvider>
+					<ChakraProvider theme={theme}>
+						<Outlet />
+					</ChakraProvider>
+				</ConnectWalletProvider>
+			</QueryClientProvider>
 		</Document>
 	);
 }

@@ -19,6 +19,7 @@ export const action: ActionFunction = async ({
         const endDate = new Date(formdata.get("endDate") as string);
         const startPrice = formdata.get("startPrice");
         const buyNowPrice = formdata.get("buyNowPrice");
+        const bidIncrement = formdata.get("bidIncrement");
 
         try {
             await AuctionClient.create({
@@ -30,6 +31,7 @@ export const action: ActionFunction = async ({
                 startPrice,
                 buyNowPrice,
                 photoUrls,
+                bidIncrement,
                 slug: slugify(name)
             });
 

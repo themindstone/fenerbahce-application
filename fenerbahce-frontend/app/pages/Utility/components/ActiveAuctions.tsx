@@ -24,14 +24,14 @@ const options = {
 
 interface ActiveAuctionsCardProps {
 	photoUrls: string[];
-	slug: string;
+	id: string;
 	offers: number[];
 }
 
 const ActiveAuctionsCard = ({
 	photoUrls,
 	offers,
-	slug
+	id
 }: ActiveAuctionsCardProps): ReactElement => {
 
 	const highestOffer = useMemo(() => {
@@ -41,7 +41,7 @@ const ActiveAuctionsCard = ({
 		return null;
 	}, [offers]);
 
-	return (<Link href={`/product/${slug}`}>
+	return (<Link href={`/product/${id}`}>
 		<Flex borderRadius="15px" overflow="hidden" bg="var(--governor-bay)" direction="column">
 			<Box style={{ aspectRatio: "13/16" }}
 				bgImage={`url(${photoUrls[0]})`}
@@ -71,12 +71,11 @@ export const ActiveAuctions = (): ReactElement => {
 			<Heading size="xl">Aktif acik artirmalar</Heading>
 			<Carousel options={options}>
 				{activeAuctions.map(((item: any) => {
-					console.log(item)
 					return <ActiveAuctionsCard
 								key={item.id}
 								photoUrls={item.photoUrls}
 								offers={item.offers}
-								slug={item.slug} />
+								id={item.id} />
 				}))}
 			</Carousel>
 		</VStack>

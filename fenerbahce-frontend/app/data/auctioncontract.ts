@@ -17,6 +17,43 @@ export const auctionABI = [
 			},
 			{
 				indexed: false,
+				internalType: "address",
+				name: "buyer",
+				type: "address",
+			},
+			{
+				indexed: false,
+				internalType: "uint256",
+				name: "value",
+				type: "uint256",
+			},
+		],
+		name: "AuctionBought",
+		type: "event",
+	},
+	{
+		anonymous: false,
+		inputs: [
+			{
+				indexed: false,
+				internalType: "string",
+				name: "auctionId",
+				type: "string",
+			},
+			{
+				indexed: false,
+				internalType: "uint256",
+				name: "startPrice",
+				type: "uint256",
+			},
+			{
+				indexed: false,
+				internalType: "uint256",
+				name: "buyNowPrice",
+				type: "uint256",
+			},
+			{
+				indexed: false,
 				internalType: "uint256",
 				name: "bidIncrement",
 				type: "uint256",
@@ -24,13 +61,13 @@ export const auctionABI = [
 			{
 				indexed: false,
 				internalType: "uint256",
-				name: "auctionStartDate",
+				name: "startDate",
 				type: "uint256",
 			},
 			{
 				indexed: false,
 				internalType: "uint256",
-				name: "auctionEndDate",
+				name: "endDate",
 				type: "uint256",
 			},
 		],
@@ -132,19 +169,42 @@ export const auctionABI = [
 				name: "_auctionId",
 				type: "string",
 			},
+		],
+		name: "buyNow",
+		outputs: [],
+		stateMutability: "payable",
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				internalType: "string",
+				name: "_auctionId",
+				type: "string",
+			},
 			{
 				internalType: "uint256",
-				name: "_auctionStartDate",
+				name: "_startDate",
 				type: "uint256",
 			},
 			{
 				internalType: "uint256",
-				name: "_auctionEndDate",
+				name: "_endDate",
 				type: "uint256",
 			},
 			{
 				internalType: "uint256",
 				name: "_bidIncrement",
+				type: "uint256",
+			},
+			{
+				internalType: "uint256",
+				name: "_startPrice",
+				type: "uint256",
+			},
+			{
+				internalType: "uint256",
+				name: "_buyNowPrice",
 				type: "uint256",
 			},
 		],
@@ -164,6 +224,30 @@ export const auctionABI = [
 		name: "depositToAuction",
 		outputs: [],
 		stateMutability: "payable",
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				internalType: "string",
+				name: "_auctionId",
+				type: "string",
+			},
+			{
+				internalType: "address",
+				name: "_address",
+				type: "address",
+			},
+		],
+		name: "getUserBalanceByAuctionId",
+		outputs: [
+			{
+				internalType: "uint256",
+				name: "",
+				type: "uint256",
+			},
+		],
+		stateMutability: "view",
 		type: "function",
 	},
 	{

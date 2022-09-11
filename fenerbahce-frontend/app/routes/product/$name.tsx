@@ -1,7 +1,8 @@
 import { Auction } from "~/pages";
 import { json, LinksFunction, LoaderFunction } from "@remix-run/node";
 import imageGalleryStyles from "react-image-gallery/styles/css/image-gallery.css";
-import { AuctionClient } from "~/client";
+import { AuctionClient, BalanceClient } from "~/client";
+import { config } from "~/configs";
 
 export let links: LinksFunction = () => {
 	return [
@@ -12,12 +13,21 @@ export let links: LinksFunction = () => {
 export const loader: LoaderFunction = async ({ request }) => {
 	const url = new URL(request.url)
     const pathnames = url.pathname.split("/");
-    const slug = pathnames[pathnames.length - 1];
+    const auctionId = pathnames[pathnames.length - 1];
 
-    const auction = await AuctionClient.getBySlug(slug);
+    const auctionReq = AuctionClient.getById(auctionId);
+    const auctionBalancesReq = BalanceClient.getHighestBalancesByAuctionId(auctionId);
+    const auction = await Promise.all([auctionReq, auctionBalancesReq])
+        .then(([auctionRes, auctionBalancesRes]) => {
+            return {
+                ...auctionRes,
+                balance: auctionBalancesRes
+            }
+        });
 
 	return json({
         auction,
+        config
     });
 }
 

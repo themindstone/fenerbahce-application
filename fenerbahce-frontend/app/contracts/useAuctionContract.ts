@@ -4,12 +4,12 @@ import { useContract } from "~/context";
 
 interface AuctionContractDepositDTO {
     auctionId: string;
-    value: number;
+    value: string;
 }
 
 interface AuctionContractBuyNowDTO {
     auctionId: string;
-    buyNowPrice: number;
+    buyNowPrice: string;
 }
 
 interface AuctionContractFunctions {
@@ -28,8 +28,9 @@ export const useAuctionContract = (): AuctionContractFunctions => {
         if (!contract) {
             throw new Error("First, you need to connect contract");
         }
+
         const tx = await contract.depositToAuction(auctionId, {
-            value: ethers.utils.parseUnits(value.toString(), "wei")
+            value: ethers.utils.parseUnits(value, "18")
         });
         return await tx.wait();
     }, [contract]);
@@ -45,13 +46,15 @@ export const useAuctionContract = (): AuctionContractFunctions => {
         }
 
         const tx = await contract.buyNow(auctionId, {
-            value: ethers.utils.parseUnits(buyNowPrice.toString(), "wei")
+            value: ethers.utils.parseUnits(buyNowPrice, "wei")
         });
 
         return await tx.wait();
     }, [contract]);
 
-
-    return { deposit, buyNow };
+    return {
+        deposit,
+        buyNow,
+    };
 };
 

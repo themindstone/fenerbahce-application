@@ -8,26 +8,54 @@ import { CollapsibleCard } from "./CollapsibleCard";
 import { TimeLeftBox } from "./TimeLeftBox";
 import { humanReadableNumber } from "~/utils";
 import { useAuctionContract } from "~/contracts";
+import { useConnectWallet } from "~/context";
+import { useQuery } from "react-query";
+import { useUserClient } from "~/client";
+import { ethers } from "ethers";
 
 export const ProductInfo = (): ReactElement => {
+
 	const { auction } = useLoaderData();
 	
 	const { days, hours, minutes } = useCountdownTimer(auction.endDate);
 
 	const auctionContract = useAuctionContract();
+	const connectWallet = useConnectWallet();
+
+	const userClient = useUserClient();
+
+	const userBalance = useQuery(["balance", connectWallet.address], () => {
+		return userClient.getBalanceByAuctionId(auction.id, connectWallet.address)
+			.then(res => res.data);
+	}, {
+		enabled: connectWallet.isConnected
+	});
 
 	const deposit = useCallback(() => {
-		let maxOffer = auction.auctionStartPrice;
+
+		if (!userBalance.isSuccess) {
+			window.alert("Cannot get your latest balance information, please make sure that you are connected to the internet");
+			return;
+		}
+
+		const balanceOfWallet = userBalance.data.length !== 0 ? userBalance.data : ethers.utils.parseUnits("0", "18");
+		console.log('balanceOfWallet:',balanceOfWallet.toString())
+
+		let maxOffer = Number(auction.startPrice)
+
 		if (Array.isArray(auction.balances) && auction.balances.length > 0) {
-			const balancesArray = auction.balances.map((balance: any) => balance.balance);
+			const balancesArray = auction.balances.map((balance: any) => Number(balance.balance));
 			maxOffer = Math.max(balancesArray);
 		}
-		const value = maxOffer + auction.bidIncrement;
+
+		const newOffer = (Array.isArray(auction.balances) && auction.balances.length > 0) ?
+			maxOffer + Number(auction.bidIncrement) - balanceOfWallet : auction.startPrice;
+
 		auctionContract.deposit({
 			auctionId: auction.id,
-			value
+			value: newOffer.toString()
 		});
-	}, [auctionContract]);
+	}, [auctionContract, userBalance]);
 
 	return (
 		<Box>
@@ -42,7 +70,7 @@ export const ProductInfo = (): ReactElement => {
 					</Flex>
 				</Flex>
 				<Flex gap="10px" direction="column" alignItems="stretch">
-					<WhiteButton>HEMEN AL {humanReadableNumber(auction.auctionImmediatePrice)}₺</WhiteButton>
+					<WhiteButton>HEMEN AL {humanReadableNumber(auction.buyNowPrice)}₺</WhiteButton>
 					<GoldenFizzButton onClick={deposit}>TEKLİF VER</GoldenFizzButton>
 				</Flex>
 				<Flex direction="column" gap="10px">

@@ -79,6 +79,10 @@ export const Admin = () => {
 							<Input placeholder="urun hemen al fiyat" name="buyNowPrice" defaultValue="15000" />
 						</FormLabel>
 						<FormLabel gap="5px" display="flex" flexDirection="column">
+							<Text>Açık Artırma Artış Fiyatı</Text>
+							<Input placeholder="urun hemen al fiyat" name="bidIncrement" defaultValue="100" />
+						</FormLabel>
+						<FormLabel gap="5px" display="flex" flexDirection="column">
 							<Text>Açık Artırma Başlangıç Tarihi (ay-gun-yıl)</Text>
 							<Input placeholder="baslangic tarih (ay-gun-yil)" name="startDate" defaultValue="09-09-2022" />
 						</FormLabel>
