@@ -1,7 +1,6 @@
 import { BFFClient } from "~/utils";
 
 async function create(data: any) {
-    console.log(data);
     const res = await BFFClient.post("auction/create", data);
     return res.data;
 }

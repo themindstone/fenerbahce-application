@@ -21,7 +21,7 @@ export const loader: LoaderFunction = async ({ request }) => {
         .then(([auctionRes, auctionBalancesRes]) => {
             return {
                 ...auctionRes,
-                balance: auctionBalancesRes
+                balances: auctionBalancesRes || []
             }
         });
 

@@ -72,15 +72,15 @@ export const Admin = () => {
 						</FormLabel>
 						<FormLabel gap="5px" display="flex" flexDirection="column">
 							<Text>Açık Artırma Başlangıç Fiyatı</Text>
-							<Input placeholder="urun baslangic fiyat" name="startPrice" defaultValue="1500" />
+							<Input placeholder="urun baslangic fiyat" name="startPrice" defaultValue="1.5" />
 						</FormLabel>
 						<FormLabel gap="5px" display="flex" flexDirection="column">
 							<Text>Açık Artırma Hemen Al Fiyatı</Text>
-							<Input placeholder="urun hemen al fiyat" name="buyNowPrice" defaultValue="15000" />
+							<Input placeholder="urun hemen al fiyat" name="buyNowPrice" defaultValue="15" />
 						</FormLabel>
 						<FormLabel gap="5px" display="flex" flexDirection="column">
 							<Text>Açık Artırma Artış Fiyatı</Text>
-							<Input placeholder="urun hemen al fiyat" name="bidIncrement" defaultValue="100" />
+							<Input placeholder="urun hemen al fiyat" name="bidIncrement" defaultValue="0.1" />
 						</FormLabel>
 						<FormLabel gap="5px" display="flex" flexDirection="column">
 							<Text>Açık Artırma Başlangıç Tarihi (ay-gun-yıl)</Text>

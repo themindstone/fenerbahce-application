@@ -46,7 +46,7 @@ export const useAuctionContract = (): AuctionContractFunctions => {
         }
 
         const tx = await contract.buyNow(auctionId, {
-            value: ethers.utils.parseUnits(buyNowPrice, "wei")
+            value: ethers.utils.parseUnits(buyNowPrice, "18")
         });
 
         return await tx.wait();

@@ -1,5 +1,5 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/react";
-import { ReactElement, useCallback } from "react";
+import { ReactElement, useCallback, useState } from "react";
 import { GoldenFizzButton, WhiteButton } from "~/components";
 import { useCountdownTimer } from "~/hooks";
 import { useLoaderData } from "@remix-run/react";
@@ -8,54 +8,41 @@ import { CollapsibleCard } from "./CollapsibleCard";
 import { TimeLeftBox } from "./TimeLeftBox";
 import { humanReadableNumber } from "~/utils";
 import { useAuctionContract } from "~/contracts";
-import { useConnectWallet } from "~/context";
-import { useQuery } from "react-query";
-import { useUserClient } from "~/client";
-import { ethers } from "ethers";
 
 export const ProductInfo = (): ReactElement => {
 
 	const { auction } = useLoaderData();
+
+	const [balances, setBalances] = useState(() => auction.balances);
 	
 	const { days, hours, minutes } = useCountdownTimer(auction.endDate);
 
 	const auctionContract = useAuctionContract();
-	const connectWallet = useConnectWallet();
-
-	const userClient = useUserClient();
-
-	const userBalance = useQuery(["balance", connectWallet.address], () => {
-		return userClient.getBalanceByAuctionId(auction.id, connectWallet.address)
-			.then(res => res.data);
-	}, {
-		enabled: connectWallet.isConnected
-	});
+	
+	// const userBalance = useQuery(["balance", connectWallet.address], () => {
+	// 	return userClient.getBalanceByAuctionId(auction.id, connectWallet.address)
+	// 		.then(res => res.data);
+	// }, {
+	// 	enabled: connectWallet.isConnected
+	// });
 
 	const deposit = useCallback(() => {
-
-		if (!userBalance.isSuccess) {
-			window.alert("Cannot get your latest balance information, please make sure that you are connected to the internet");
-			return;
-		}
-
-		const balanceOfWallet = userBalance.data.length !== 0 ? userBalance.data : ethers.utils.parseUnits("0", "18");
-		console.log('balanceOfWallet:',balanceOfWallet.toString())
-
-		let maxOffer = Number(auction.startPrice)
-
-		if (Array.isArray(auction.balances) && auction.balances.length > 0) {
-			const balancesArray = auction.balances.map((balance: any) => Number(balance.balance));
-			maxOffer = Math.max(balancesArray);
-		}
-
-		const newOffer = (Array.isArray(auction.balances) && auction.balances.length > 0) ?
-			maxOffer + Number(auction.bidIncrement) - balanceOfWallet : auction.startPrice;
+		const newOffer = balances.length === 0 ? auction.startPrice : auction.bidIncrement;
 
 		auctionContract.deposit({
 			auctionId: auction.id,
 			value: newOffer.toString()
 		});
-	}, [auctionContract, userBalance]);
+	}, [auctionContract]);
+
+
+	const buyNow = useCallback(() => {
+		console.log(auction.buyNowPrice)
+		auctionContract.buyNow({
+			auctionId: auction.id,
+			buyNowPrice: auction.buyNowPrice.toString()
+		});
+	}, [auctionContract])
 
 	return (
 		<Box>
@@ -70,20 +57,29 @@ export const ProductInfo = (): ReactElement => {
 					</Flex>
 				</Flex>
 				<Flex gap="10px" direction="column" alignItems="stretch">
-					<WhiteButton>HEMEN AL {humanReadableNumber(auction.buyNowPrice)}₺</WhiteButton>
+					<WhiteButton onClick={buyNow}>HEMEN AL {humanReadableNumber(auction.buyNowPrice)}₺</WhiteButton>
 					<GoldenFizzButton onClick={deposit}>TEKLİF VER</GoldenFizzButton>
 				</Flex>
 				<Flex direction="column" gap="10px">
 					<Text>En Yüksek Teklif</Text>
-					<OfferCard withToken={true} />
+					{balances.length > 0 && 
+						<OfferCard withToken={true} address={balances[0].address} numberOfTokens={balances[0].balance} />
+					}
 				</Flex>
-
+				{balances.length === 0 &&
                 <Flex direction="column" gap="10px">
 					<Text>Diğer Teklifler</Text>
-					<OfferCard withToken={false} />
-					<OfferCard withToken={false} />
-					<OfferCard withToken={false} />
+					{balances.length > 1 &&
+						<OfferCard withToken={false} address={balances[0].address} numberOfTokens={balances[0].balance} />
+					}
+					{balances.length > 2 &&
+						<OfferCard withToken={false} address={balances[1].address} numberOfTokens={balances[1].balance} />
+					}
+					{balances.length > 3 &&
+						<OfferCard withToken={false} address={balances[2].address} numberOfTokens={balances[2].balance} />
+					}
 				</Flex>
+				}
                 <Flex gap="15px" direction="column">
                     <CollapsibleCard title="Deneyimin detayları" content="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo officiis totam repellat odit eum accusamus blanditiis rem quod fugit, minus sapiente magni corporis qui beatae amet eligendi dolore cupiditate porro." />
                     <CollapsibleCard title="Deneyimin özellikleri" content="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo officiis totam repellat odit eum accusamus blanditiis rem quod fugit, minus sapiente magni corporis qui beatae amet eligendi dolore cupiditate porro." />

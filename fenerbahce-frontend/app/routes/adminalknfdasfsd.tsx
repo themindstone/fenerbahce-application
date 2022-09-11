@@ -28,10 +28,10 @@ export const action: ActionFunction = async ({
                 name,
                 startDate,
                 endDate,
-                startPrice,
-                buyNowPrice,
+                startPrice: startPrice,
+                buyNowPrice: buyNowPrice,
                 photoUrls,
-                bidIncrement,
+                bidIncrement: Number(bidIncrement),
                 slug: slugify(name)
             });
 
