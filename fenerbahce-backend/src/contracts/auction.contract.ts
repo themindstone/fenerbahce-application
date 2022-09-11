@@ -1,6 +1,18 @@
 import { Injectable } from "@nestjs/common";
 import { EventEmitter2 } from "@nestjs/event-emitter";
-import { InjectContractProvider, InjectSignerProvider, EthersContract, EthersSigner, Wallet, Contract, BigNumber, InjectEthersProvider, Provider, parseUnits, formatEther } from "nestjs-ethers";
+import {
+    InjectContractProvider,
+    InjectSignerProvider,
+    EthersContract,
+    EthersSigner,
+    Wallet,
+    Contract,
+    BigNumber,
+    InjectEthersProvider,
+    Provider,
+    parseUnits,
+    formatEther,
+} from "nestjs-ethers";
 import { auctionABI, auctionAddress } from "~/shared/data";
 
 interface AuctionContractCreateAuctionDto {
@@ -14,7 +26,6 @@ interface AuctionContractCreateAuctionDto {
 
 @Injectable()
 export class AuctionContract {
-
     private wallet: Wallet;
     private contract: Contract;
     private startBlockNumber: number;
@@ -26,7 +37,7 @@ export class AuctionContract {
         @InjectSignerProvider()
         private readonly ethersSigner: EthersSigner,
         @InjectEthersProvider()
-        private readonly provider: Provider
+        private readonly provider: Provider,
     ) {}
 
     async onModuleInit() {
@@ -38,10 +49,9 @@ export class AuctionContract {
             this.contract = this.ethersContract.create(
                 auctionAddress,
                 auctionABI,
-                this.wallet
+                this.wallet,
             );
-        }
-        catch {
+        } catch {
             throw new Error("Error connecting to the contract");
         }
         this.startBlockNumber = await this.provider.getBlockNumber();
@@ -76,8 +86,12 @@ export class AuctionContract {
     //     });
     // }
 
-    private async auctionDeposited(auctionId: string, address: string, value: BigNumber, e: any) {
-
+    private async auctionDeposited(
+        auctionId: string,
+        address: string,
+        value: BigNumber,
+        e: any,
+    ) {
         if (this.startBlockNumber >= e.blockNumber) {
             return;
         }
@@ -85,30 +99,33 @@ export class AuctionContract {
         this.eventEmitter.emit("auction.deposited", {
             auctionId,
             address,
-            value: formatEther(value)
+            value: formatEther(value),
         });
     }
 
     private async auctionSelled(auctionId: string, address: string, e: any) {
         this.eventEmitter.emit("auction.selled", {
             auctionId,
-            address
+            address,
         });
     }
 
-
-    private auctionRefunded(auctionId: string, toAddress: string, value: BigNumber) {
+    private auctionRefunded(
+        auctionId: string,
+        toAddress: string,
+        value: BigNumber,
+    ) {
         this.eventEmitter.emit("auction.refunded", {
             auctionId,
             toAddress,
-            value: value.toNumber()
+            value: value.toNumber(),
         });
     }
 
     private auctionProlonged(auctionId: string, endDate: BigNumber) {
         this.eventEmitter.emit("auction.prolonged", {
             auctionId,
-            endDate: new Date(endDate.toNumber())
+            endDate: (new Date(endDate.toNumber() * 1000)).toString(),
         });
     }
 
@@ -118,9 +135,8 @@ export class AuctionContract {
         endDate,
         bidIncrement = 100,
         startPrice,
-        buyNowPrice
+        buyNowPrice,
     }: AuctionContractCreateAuctionDto) {
- 
         const tx = await this.contract.createAuction(
             auctionId,
             BigNumber.from(Math.floor(new Date(startDate).getTime() / 1000)),
@@ -136,5 +152,4 @@ export class AuctionContract {
         const tx = await this.contract.refund(...args);
         return await tx.wait();
     }
-
 }

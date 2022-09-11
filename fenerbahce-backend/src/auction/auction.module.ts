@@ -7,13 +7,9 @@ import { AuctionService } from "./auction.service";
 
 @Global()
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([
-            Auction,
-        ]),
-    ],
+    imports: [TypeOrmModule.forFeature([Auction])],
     controllers: [AuctionController],
     providers: [AuctionService, AuthService],
-    exports: [AuctionService]
+    exports: [AuctionService],
 })
 export class AuctionModule {}

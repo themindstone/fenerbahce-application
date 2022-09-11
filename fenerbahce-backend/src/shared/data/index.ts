@@ -1,7 +1,13 @@
-import { auctionAddress, auctionABI, AuctionContractCreatedHash, AuctionContractDepositedHash } from "./auctioncontract";
-
-
+import {
+    auctionAddress,
+    auctionABI,
+    AuctionContractCreatedHash,
+    AuctionContractDepositedHash,
+} from "./auctioncontract";
 
 export {
-    auctionAddress, auctionABI, AuctionContractCreatedHash, AuctionContractDepositedHash
-}
+    auctionAddress,
+    auctionABI,
+    AuctionContractCreatedHash,
+    AuctionContractDepositedHash,
+};

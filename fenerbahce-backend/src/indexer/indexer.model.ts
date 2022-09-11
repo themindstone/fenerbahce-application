@@ -1,13 +1,11 @@
 import { IsNumber, IsString, IsUUID } from "class-validator";
 
 export class IndexerAuctionContractCreatedDTO {
-
     @IsUUID()
     auctionId: string;
 
     @IsNumber()
     bidIncrement: number;
-
 }
 
 export class IndexerAuctionContractDepositedDTO {
@@ -31,11 +29,9 @@ export class IndexerAuctionContractRefundedDTO {
 }
 
 export class IndexerAuctionContractProlongedDTO {
-
     @IsString()
     auctionId: string;
 
     @IsString()
     endDate: string;
-
 }

@@ -1,10 +1,11 @@
 import { Column, Entity, Generated, Index, PrimaryColumn } from "typeorm";
 
-
 @Entity({
-    name: "balances"
+    name: "balances",
 })
-@Index("idx_balance_user_address_auction_id", ["userAddress", "auctionId"], { unique: true })
+@Index("idx_balance_user_address_auction_id", ["userAddress", "auctionId"], {
+    unique: true,
+})
 export class Balance {
     @PrimaryColumn({ name: "id", type: "uuid" })
     @Generated("uuid")
@@ -19,4 +20,3 @@ export class Balance {
     @Column({ name: "balance", type: "float", nullable: false })
     public balance: number;
 }
-

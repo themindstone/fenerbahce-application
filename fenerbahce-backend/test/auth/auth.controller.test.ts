@@ -6,7 +6,6 @@ describe("Auth Controller", () => {
     let authController: AuthController;
     let authService: AuthService;
 
-
     beforeEach(() => {
         authService = new AuthService();
         authController = new AuthController(authService);
@@ -19,9 +18,11 @@ describe("Auth Controller", () => {
         });
 
         it("should return not found exception", () => {
-            const result = authController.login("invalid username", "invalid password");
+            const result = authController.login(
+                "invalid username",
+                "invalid password",
+            );
             expect(result).toThrowError(new NotFoundException());
         });
     });
-
 });

@@ -7,7 +7,7 @@ import { AuctionModule } from "./auction/auction.module";
 import { DatabaseModule } from "./shared/database.module";
 import { EthersModule } from "nestjs-ethers";
 import { envPath } from "~/shared/utils";
-import { EventEmitterModule } from '@nestjs/event-emitter';
+import { EventEmitterModule } from "@nestjs/event-emitter";
 import { IndexerModule } from "./indexer/indexer.module";
 import { ContractsModule } from "./contracts";
 import { BalanceModule } from "./balance/balance.module";

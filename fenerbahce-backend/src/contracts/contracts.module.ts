@@ -6,4 +6,4 @@ import { AuctionContract } from "./auction.contract";
     providers: [AuctionContract],
     exports: [AuctionContract],
 })
-export class ContractsModule {};
+export class ContractsModule {}

@@ -6,13 +6,7 @@ import { Auction, Balance } from "~/shared/entities";
 import { Indexer } from "./indexer";
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([
-            Auction,
-            Balance
-        ]),
-        AuctionModule
-    ],
+    imports: [TypeOrmModule.forFeature([Auction, Balance]), AuctionModule],
     providers: [Indexer, AuctionService],
 })
 export class IndexerModule {}

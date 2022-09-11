@@ -33,7 +33,11 @@ describe("Test Auction Controller", () => {
         auctionService = module.get(AuctionService);
         authService = new AuthService();
         balanceService = module.get(BalanceService);
-        auctionController = new AuctionController(auctionService, balanceService, authService);
+        auctionController = new AuctionController(
+            auctionService,
+            balanceService,
+            authService,
+        );
     });
 
     describe("Test Create Function", async () => {
@@ -46,7 +50,11 @@ describe("Test Auction Controller", () => {
             // slug: "name",
             buyNowPrice: 1500,
             startPrice: 150,
-            photoUrls: ["/build/_assets/uniform-W6QJQIUR.png", "/build/_assets/uniform-W6QJQIUR.png", "/build/_assets/uniform-W6QJQIUR.png"],
+            photoUrls: [
+                "/build/_assets/uniform-W6QJQIUR.png",
+                "/build/_assets/uniform-W6QJQIUR.png",
+                "/build/_assets/uniform-W6QJQIUR.png",
+            ],
             bidIncrement: 5,
         });
 
@@ -61,12 +69,14 @@ describe("Test Auction Controller", () => {
             // slug: "name",
             buyNowPrice: 1500,
             startPrice: 150,
-            photoUrls: ["/build/_assets/uniform-W6QJQIUR.png", "/build/_assets/uniform-W6QJQIUR.png", "/build/_assets/uniform-W6QJQIUR.png"],
+            photoUrls: [
+                "/build/_assets/uniform-W6QJQIUR.png",
+                "/build/_assets/uniform-W6QJQIUR.png",
+                "/build/_assets/uniform-W6QJQIUR.png",
+            ],
             bidIncrement: 5,
         });
 
-        expect(res2).toThrowError(new UnauthorizedException())
-
+        expect(res2).toThrowError(new UnauthorizedException());
     });
-
 });

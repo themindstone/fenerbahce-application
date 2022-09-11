@@ -21,7 +21,7 @@ export class Auction {
 
     @IsNumber()
     buyNowPrice: number;
-    
+
     @IsNumber()
     bidIncrement: number;
 

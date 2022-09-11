@@ -1,7 +1,9 @@
 export const auctionAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
-export const AuctionContractCreatedHash = "0xdd35a2153525a1db7a5910ede0a4472011a085d117f670872ffc6d09a20b9219";
-export const AuctionContractDepositedHash = "0xc0a07ea15e00ae72e10e7a70c93761d8ead6a0e5241a7b92ec040ee955debdbe"
+export const AuctionContractCreatedHash =
+    "0xdd35a2153525a1db7a5910ede0a4472011a085d117f670872ffc6d09a20b9219";
+export const AuctionContractDepositedHash =
+    "0xc0a07ea15e00ae72e10e7a70c93761d8ead6a0e5241a7b92ec040ee955debdbe";
 
 export const auctionABI = [
     {
