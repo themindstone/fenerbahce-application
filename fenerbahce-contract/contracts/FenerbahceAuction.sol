@@ -4,36 +4,70 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract FenerbahceAuction is Ownable {
-    
 
     struct Auction {
+        uint256 startPrice;
+        uint256 buyNowPrice;
+        uint256 bidIncrement;
         uint256 startDate;
         uint256 endDate;
-        uint256 bidIncrement;
+        bool isBought;
     }
 
-    mapping(bytes32 => Auction) idToAuctions;
+    mapping(string => Auction) idToAuctions;
+    mapping(string => mapping(address => uint256)) idToOffers;
+    mapping(string => uint256) idToMaxOffers;
 
-    event AuctionCreated(bytes32 auctionId, uint256 auctionStartDate, uint256 auctionEndDate, uint256 bidIncrement);
-    event AuctionDeposited(bytes32 auctionId, address from, uint256 value);
-    event AuctionRefunded(bytes32 auctionId, address to, uint256 value);
-    event AuctionProlonged(bytes32 auctionId, uint256 toDate);
+    event AuctionCreated(
+        string auctionId,
+        uint256 startPrice,
+        uint256 buyNowPrice,
+        uint256 bidIncrement,
+        uint256 startDate,
+        uint256 endDate
+        );
+    event AuctionDeposited(string auctionId, address from, uint256 value);
+    event AuctionSelled(string auctionId, address buyer);
+    event AuctionRefunded(string auctionId, address to, uint256 value);
+    event AuctionProlonged(string auctionId, uint256 toDate);
 
     constructor(
     ) {}
 
-    function createAuction(bytes32 _auctionId, uint256 _auctionStartDate, uint256 _auctionEndDate, uint256 _bidIncrement) onlyOwner public {
+    function createAuction(
+        string memory _auctionId,
+        uint256 _startDate,
+        uint256 _endDate,
+        uint256 _bidIncrement,
+        uint256 _startPrice,
+        uint256 _buyNowPrice
+    ) onlyOwner public {
         require(idToAuctions[_auctionId].startDate == 0, "An auction with this auctionId already exists.");
-        idToAuctions[_auctionId] = Auction(_auctionStartDate, _auctionEndDate, _bidIncrement);
+        idToAuctions[_auctionId] = Auction(_startPrice, _buyNowPrice, _bidIncrement, _startDate, _endDate, false);
+        idToMaxOffers[_auctionId] = 0;
 
-        emit AuctionCreated(_auctionId, _auctionStartDate, _auctionEndDate, _bidIncrement);
+        emit AuctionCreated(_auctionId, _startPrice, _buyNowPrice, _bidIncrement, _startDate, _endDate);
     }
 
-    function depositToAuction(bytes32 _auctionId) public payable {
+    function depositToAuction(string memory _auctionId) public payable {
+        require(idToAuctions[_auctionId].startDate != 0, "There is no auction like that");
+
         Auction memory auction = idToAuctions[_auctionId];
 
-        require(auction.endDate > block.timestamp, "Auction finished");
-        require(auction.startDate < block.timestamp, "Auction have not started yet");
+        uint256 userBalanceToAuction = msg.value + idToOffers[_auctionId][msg.sender];
+
+        require(auction.isBought == false, "This is already selled!");
+        require(auction.endDate > block.timestamp, "Auction finished!");
+        require(auction.startDate < block.timestamp, "Auction have not started yet!");
+        // require(userBalanceToAuction - (auction.startPrice % auction.bidIncrement) == 0 &&
+        //         idToMaxOffers[_auctionId] < userBalanceToAuction,
+        //         "You can only increase auction by bidIncrement!");
+        if (idToMaxOffers[_auctionId] == 0) {
+            require(msg.value == auction.startPrice, "You need to start auction with auction start price");
+        }
+        else {
+            require(userBalanceToAuction - idToMaxOffers[_auctionId] == auction.bidIncrement, "You can only increase auction by bidIncrement!");
+        }
 
         uint256 diff = auction.endDate - block.timestamp;
 
@@ -44,16 +78,39 @@ contract FenerbahceAuction is Ownable {
             emit AuctionProlonged(_auctionId, auction.endDate);
         }
 
-        emit AuctionDeposited(_auctionId, msg.sender, msg.value);
+        idToOffers[_auctionId][msg.sender] = idToOffers[_auctionId][msg.sender] + msg.value;
+        idToMaxOffers[_auctionId] = userBalanceToAuction;
+
+        emit AuctionDeposited(_auctionId, msg.sender, userBalanceToAuction);
     }
 
-    function refund(bytes32 _auctionId, address _to, uint256 _value) onlyOwner public payable {
-        require(block.timestamp > idToAuctions[_auctionId].endDate, "Auction have not finished yet");
+    function buyNow(string memory _auctionId) public payable {
+        require(idToAuctions[_auctionId].startDate != 0, "There is no auction like that");
+
+        Auction memory auction = idToAuctions[_auctionId];
+
+        require(auction.isBought == false, "This is already selled!");
+        require(auction.buyNowPrice == msg.value, "This is not the price!");
+        require(auction.endDate > block.timestamp, "Auction finished!");
+        require(auction.startDate < block.timestamp, "Auction have not started yet!");
+
+        idToAuctions[_auctionId].isBought = true;
+        // you can buy it now
+        emit AuctionSelled(_auctionId, msg.sender);
+    }
+
+    function refund(string memory _auctionId, address _to, uint256 _value) onlyOwner public payable {
+        require(block.timestamp > idToAuctions[_auctionId].endDate, "Auction have not finished yet!");
 
         (bool sent, bytes memory data) = payable(_to).call{ value: _value }("");
         require(sent, "Failed to refund balance");
 
         emit AuctionRefunded(_auctionId, _to, _value);
+    }
+
+
+    function getUserBalanceByAuctionId(string memory _auctionId, address _address) public view returns(uint256) {
+        return idToOffers[_auctionId][_address];
     }
 
 }
