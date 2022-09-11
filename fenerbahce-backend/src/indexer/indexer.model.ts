@@ -17,8 +17,7 @@ export class IndexerAuctionContractDepositedDTO {
     @IsString()
     address: string;
 
-    @IsNumber()
-    value: number;
+    value: string;
 }
 
 export class IndexerAuctionContractRefundedDTO {
@@ -28,7 +27,6 @@ export class IndexerAuctionContractRefundedDTO {
     @IsString()
     toAddress: string;
 
-    @IsNumber()
     value: number;
 }
 

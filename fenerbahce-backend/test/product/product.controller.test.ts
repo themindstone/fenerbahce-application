@@ -5,13 +5,15 @@ import { AuthService } from "~/auth/auth.service";
 import { AuctionController } from "~/auction/auction.controller";
 import { AuctionService } from "~/auction/auction.service";
 import { Auction } from "~/shared/entities";
+import { BalanceService } from "~/balance/balance.service";
 
 describe("Test Auction Controller", () => {
     let auctionController: AuctionController;
     let auctionService: AuctionService;
     let authService: AuthService;
+    let balanceService: BalanceService;
 
-    const mockedRepo = {
+    const mockedAuctionRepo = {
         create: jest.fn((id) => Promise.resolve("resolve")),
         save: jest.fn((id) => Promise.resolve("resolve")),
     };
@@ -20,16 +22,18 @@ describe("Test Auction Controller", () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 AuctionService,
+                BalanceService,
                 {
                     provide: getRepositoryToken(Auction),
-                    useValue: mockedRepo,
+                    useValue: mockedAuctionRepo,
                 },
             ],
         }).compile();
 
         auctionService = module.get(AuctionService);
         authService = new AuthService();
-        auctionController = new AuctionController(auctionService, authService);
+        balanceService = module.get(BalanceService);
+        auctionController = new AuctionController(auctionService, balanceService, authService);
     });
 
     describe("Test Create Function", async () => {
@@ -39,9 +43,9 @@ describe("Test Auction Controller", () => {
             startDate: new Date("09-09-2022").toString(),
             endDate: new Date("09-09-2022").toString(),
             name: "name",
-            slug: "name",
-            auctionImmediatePrice: 1500,
-            auctionStartPrice: 150,
+            // slug: "name",
+            buyNowPrice: 1500,
+            startPrice: 150,
             photoUrls: ["/build/_assets/uniform-W6QJQIUR.png", "/build/_assets/uniform-W6QJQIUR.png", "/build/_assets/uniform-W6QJQIUR.png"],
             bidIncrement: 5,
         });
@@ -54,9 +58,9 @@ describe("Test Auction Controller", () => {
             startDate: new Date("09-09-2022").toString(),
             endDate: new Date("09-09-2022").toString(),
             name: "name",
-            slug: "name",
-            auctionImmediatePrice: 1500,
-            auctionStartPrice: 150,
+            // slug: "name",
+            buyNowPrice: 1500,
+            startPrice: 150,
             photoUrls: ["/build/_assets/uniform-W6QJQIUR.png", "/build/_assets/uniform-W6QJQIUR.png", "/build/_assets/uniform-W6QJQIUR.png"],
             bidIncrement: 5,
         });

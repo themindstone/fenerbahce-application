@@ -13,14 +13,14 @@ export class Auction {
     @IsString()
     endDate: string;
 
-    @IsString()
-    slug: string;
+    // @IsString()
+    // slug: string;
 
     @IsNumber()
-    auctionStartPrice: number;
+    startPrice: number;
 
     @IsNumber()
-    auctionImmediatePrice: number;
+    buyNowPrice: number;
     
     @IsNumber()
     bidIncrement: number;
@@ -42,14 +42,14 @@ export class CreateAuctionDto {
     @IsString()
     endDate: string;
 
-    @IsString()
-    slug: string;
+    // @IsString()
+    // slug: string;
 
     @IsNumber()
-    auctionStartPrice: number;
+    startPrice: number;
 
     @IsNumber()
-    auctionImmediatePrice: number;
+    buyNowPrice: number;
 
     @IsNumber()
     bidIncrement: number;

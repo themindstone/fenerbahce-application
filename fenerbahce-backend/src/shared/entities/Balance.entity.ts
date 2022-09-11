@@ -10,13 +10,13 @@ export class Balance {
     @Generated("uuid")
     public id: string;
 
-    @Column({ name: "auction_id", type: "uuid" })
+    @Column({ name: "auction_id", type: "uuid", nullable: false })
     public auctionId: string;
 
-    @Column({ name: "user_address", type: "varchar" })
+    @Column({ name: "user_address", type: "varchar", nullable: false })
     public userAddress: string;
 
-    @Column({ name: "balance", type: "int" })
-    public balance: string;
+    @Column({ name: "balance", type: "float", nullable: false })
+    public balance: number;
 }
 

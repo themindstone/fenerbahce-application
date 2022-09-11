@@ -1,5 +1,8 @@
 export const auctionAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
+export const AuctionContractCreatedHash = "0xdd35a2153525a1db7a5910ede0a4472011a085d117f670872ffc6d09a20b9219";
+export const AuctionContractDepositedHash = "0xc0a07ea15e00ae72e10e7a70c93761d8ead6a0e5241a7b92ec040ee955debdbe"
+
 export const auctionABI = [
     {
         inputs: [],
@@ -17,6 +20,37 @@ export const auctionABI = [
             },
             {
                 indexed: false,
+                internalType: "address",
+                name: "buyer",
+                type: "address",
+            },
+            {
+                indexed: false,
+                internalType: "uint256",
+                name: "value",
+                type: "uint256",
+            },
+        ],
+        name: "AuctionBought",
+        type: "event",
+    },
+    {
+        anonymous: false,
+        inputs: [
+            {
+                indexed: false,
+                internalType: "string",
+                name: "auctionId",
+                type: "string",
+            },
+            {
+                indexed: false,
+                internalType: "uint256",
+                name: "buyNowPrice",
+                type: "uint256",
+            },
+            {
+                indexed: false,
                 internalType: "uint256",
                 name: "bidIncrement",
                 type: "uint256",
@@ -24,13 +58,13 @@ export const auctionABI = [
             {
                 indexed: false,
                 internalType: "uint256",
-                name: "auctionStartDate",
+                name: "startDate",
                 type: "uint256",
             },
             {
                 indexed: false,
                 internalType: "uint256",
-                name: "auctionEndDate",
+                name: "endDate",
                 type: "uint256",
             },
         ],
@@ -132,19 +166,42 @@ export const auctionABI = [
                 name: "_auctionId",
                 type: "string",
             },
+        ],
+        name: "buyNow",
+        outputs: [],
+        stateMutability: "payable",
+        type: "function",
+    },
+    {
+        inputs: [
+            {
+                internalType: "string",
+                name: "_auctionId",
+                type: "string",
+            },
             {
                 internalType: "uint256",
-                name: "_auctionStartDate",
+                name: "_startDate",
                 type: "uint256",
             },
             {
                 internalType: "uint256",
-                name: "_auctionEndDate",
+                name: "_endDate",
                 type: "uint256",
             },
             {
                 internalType: "uint256",
                 name: "_bidIncrement",
+                type: "uint256",
+            },
+            {
+                internalType: "uint256",
+                name: "_startPrice",
+                type: "uint256",
+            },
+            {
+                internalType: "uint256",
+                name: "_buyNowPrice",
                 type: "uint256",
             },
         ],

@@ -24,18 +24,27 @@ export class Indexer {
 
     @OnEvent("auction.deposited")
     async deposited({ auctionId, address, value }: IndexerAuctionContractDepositedDTO) {
-        console.log("address: ", address);
-        // this will switch to typeorm query builder
-        this.balanceRepository.query(`
+        // console.log("okey aslanim")
+
+        await this.balanceRepository.query(`
             insert into balances (id, auction_id, user_address, balance)
             values ($1, $2, $3, $4)
             on conflict ( user_address, auction_id )
             do
-            update set balance = balances.balance + 100
+            update set balance = $4
             where
             balances.auction_id = $2 and
             balances.user_address = $3;
         `, [v4(), auctionId, address, value]);
+        // console.log("db deposited")
+    }
+
+    @OnEvent("auction.selled")
+    async selled({ auctionId, address }: any) {
+        await this.auctionRepository.createQueryBuilder()
+            .update({ isSelled: true, selledToAddress: address })
+            .where({ id: auctionId })
+            .execute();
     }
 
     @OnEvent("auction.refunded")

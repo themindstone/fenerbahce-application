@@ -10,6 +10,7 @@ import { envPath } from "~/shared/utils";
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { IndexerModule } from "./indexer/indexer.module";
 import { ContractsModule } from "./contracts";
+import { BalanceModule } from "./balance/balance.module";
 
 @Module({
     imports: [
@@ -25,6 +26,7 @@ import { ContractsModule } from "./contracts";
         EventEmitterModule.forRoot(),
         AuthModule,
         AuctionModule,
+        BalanceModule,
         ContractsModule,
         IndexerModule,
     ],

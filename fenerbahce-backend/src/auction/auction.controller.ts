@@ -4,6 +4,7 @@ import { AuthService } from "~/auth/auth.service";
 import { CreateAuctionDto, Auction } from "./auction.model";
 import { AuctionService } from "./auction.service";
 import { IsString } from "class-validator";
+import { BalanceService } from "~/balance/balance.service";
 
 class CreateAuctionDtoWithCred extends CreateAuctionDto {
 
@@ -21,6 +22,7 @@ export class AuctionController {
 
     constructor(
         private readonly auctionService: AuctionService,
+        private readonly balanceService: BalanceService,
         private readonly authService: AuthService,
         ) {}
 
@@ -33,21 +35,12 @@ export class AuctionController {
             throw new UnauthorizedException();
         }
 
+
         await this.auctionService.create(createAuctionDto);
 
         return {
             message: "Auction Created"
         };
-    }
-
-    @Get("/page/:page")
-    listByPage(@Param("page") page: number): Auction[] {
-        const auctions = this.auctionService.listByPage(page);
-        if (!auctions) {
-            throw new NotFoundException();
-        }
-
-        return auctions;
     }
 
     @Get("/list")
@@ -65,17 +58,19 @@ export class AuctionController {
         return await this.auctionService.listHighestOfferAuctions();
     }
 
-    @Get("/slug/:slug")
-    async getBySlug(@Param("slug") slug: string): Promise<AuctionRepository> {
-        return await this.auctionService.getBySlug(slug);
+    @Get("/:auctionId/highest-offers")
+    async getHighestOffersByAuctionId(@Param("auctionId") auctionId: string) {
+        return await this.balanceService.getHighestBalancesByAuctionId(auctionId);
+    }
+
+    @Get("/:auctionId/address/:userAddress/balance")
+    async getUserBalanceByAuctionId(@Param("auctionId") auctionId: string, @Param("userAddress") userAddress: string) {
+        return await this.balanceService.getUserBalanceByAuctionId(auctionId, userAddress);
     }
 
     @Get("/:auctionId")
-    get(@Param("auctionId") auctionId: string): any {
-        this.auctionService.get(auctionId);
-        return {
-            message: "Auction"
-        }
+    async getById(@Param("auctionId") auctionId: string): Promise<AuctionRepository> {
+        return await this.auctionService.getById(auctionId);
     }
 
 }
