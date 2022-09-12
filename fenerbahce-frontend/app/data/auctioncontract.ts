@@ -17,31 +17,6 @@ export const auctionABI = [
 			},
 			{
 				indexed: false,
-				internalType: "address",
-				name: "buyer",
-				type: "address",
-			},
-			{
-				indexed: false,
-				internalType: "uint256",
-				name: "value",
-				type: "uint256",
-			},
-		],
-		name: "AuctionBought",
-		type: "event",
-	},
-	{
-		anonymous: false,
-		inputs: [
-			{
-				indexed: false,
-				internalType: "string",
-				name: "auctionId",
-				type: "string",
-			},
-			{
-				indexed: false,
 				internalType: "uint256",
 				name: "startPrice",
 				type: "uint256",
@@ -141,6 +116,25 @@ export const auctionABI = [
 			},
 		],
 		name: "AuctionRefunded",
+		type: "event",
+	},
+	{
+		anonymous: false,
+		inputs: [
+			{
+				indexed: false,
+				internalType: "string",
+				name: "auctionId",
+				type: "string",
+			},
+			{
+				indexed: false,
+				internalType: "address",
+				name: "buyer",
+				type: "address",
+			},
+		],
+		name: "AuctionSelled",
 		type: "event",
 	},
 	{
