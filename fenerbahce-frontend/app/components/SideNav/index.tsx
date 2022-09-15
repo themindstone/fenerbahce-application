@@ -1,13 +1,13 @@
-import { Flex, Heading, Image, useOutsideClick, Link, Text, useMediaQuery, Button } from "@chakra-ui/react";
+import { Flex, Heading, Image, useOutsideClick, Link, Text, useMediaQuery } from "@chakra-ui/react";
 import { ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import React from "react";
-import { connectWalletEventBus, sideNavEventBus } from "~/eventbus";
+import { sideNavEventBus } from "~/eventbus";
 import { motion } from "framer-motion";
 import { TokenLogoImage, UserIcon } from "~/assets";
 import { ISideNavLink, ISocialMediaIcon } from "~/interfaces";
 import { sidenavlink } from "~/data";
-import { GoldenFizzButton } from "~/components/Button";
-import { socialmediaicons } from "~/data/socialmediaicons";
+import { GoldenFizzButton } from "~/components";
+import { socialmediaicons } from "~/data";
 import { useConnectWallet } from "~/context";
 import { useConnectWalletModal } from "~/hooks";
 

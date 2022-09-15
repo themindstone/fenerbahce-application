@@ -1,7 +1,7 @@
 import { Flex, Heading, VStack, Link } from "@chakra-ui/react";
 import type { ReactElement } from "react";
 import type { ISocialMediaIcon } from "~/interfaces";
-import { socialmediaicons } from "~/data/socialmediaicons";
+import { socialmediaicons } from "~/data";
 
 interface SocialMediaIconProps extends ISocialMediaIcon {}
 

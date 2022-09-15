@@ -10,6 +10,15 @@ import type {
 	AuctionContractFunctionReturnType,
 	AuctionContractFunctions,
 } from "./contracts";
+import {
+	IRegistry,
+	ContractsContextInterface,
+	ContractsProviderProps,
+	ContractName,
+	ContractsStateType,
+	ConnectWalletProviderInterface,
+	ConnectWalletContextInterface,
+} from "./context";
 
 export type {
 	IHomeUtility,
@@ -24,4 +33,11 @@ export type {
 	AuctionContractErrors,
 	AuctionContractFunctionReturnType,
 	AuctionContractFunctions,
+	IRegistry,
+	ContractsContextInterface,
+	ContractsProviderProps,
+	ContractName,
+	ContractsStateType,
+	ConnectWalletProviderInterface,
+	ConnectWalletContextInterface,
 };

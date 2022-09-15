@@ -1,7 +1,4 @@
-import { homeutility } from "./homeutility";
-import { faq } from "./faq";
-import { sidenavlink } from "./sidenavlink";
-import { auctionAddress, auctionABI } from "./auctioncontract";
-import { fbTokenAddress, fbTokenABI } from "./fbtokencontract";
+import { homeutility, faq, sidenavlink, socialmediaicons } from "./pages";
+import { auctionAddress, auctionABI, fbTokenAddress, fbTokenABI } from "./contracts";
 
-export { homeutility, faq, sidenavlink, auctionAddress, auctionABI, fbTokenAddress, fbTokenABI };
+export { homeutility, faq, sidenavlink, auctionAddress, auctionABI, fbTokenAddress, fbTokenABI, socialmediaicons };

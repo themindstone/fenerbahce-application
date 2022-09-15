@@ -3,117 +3,96 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { auctionABI, auctionAddress, fbTokenAddress, fbTokenABI } from "~/data";
 import { connectContracts } from "~/hooks/useContract";
 import { useConnectWallet } from "./MetamaskConnectContext";
-
-type ContractName = "Auction" | "FBToken";
-
-type ContractsStateType = { [key in ContractName]: ethers.Contract | null };
-
-interface IRegistry {
-    name: ContractName;
-    address: string;
-    abi: ethers.ContractInterface;
-}
-
-interface ContractsContextInterface {
-    connectContractIfNotConnected: (contractName: ContractName) => void;
-    contracts: ContractsStateType
-}
-
-interface ContractsProviderProps {
-    children: React.ReactNode;
-}
+import {
+	IRegistry,
+	ContractsContextInterface,
+	ContractsProviderProps,
+	ContractName,
+	ContractsStateType,
+} from "~/interfaces";
 
 const registry: IRegistry[] = [
-    { name: "Auction", address: auctionAddress, abi: auctionABI },
-    { name: "FBToken", address: fbTokenAddress, abi: fbTokenABI },
+	{ name: "Auction", address: auctionAddress, abi: auctionABI },
+	{ name: "FBToken", address: fbTokenAddress, abi: fbTokenABI },
 ];
 
-
 const ContractsContext = React.createContext<ContractsContextInterface>({
-    connectContractIfNotConnected: (contractName: ContractName) => {},
-    contracts: {
-        Auction: null,
-        FBToken: null,
-    }
+	connectContractIfNotConnected: (contractName: ContractName) => {},
+	contracts: {
+		Auction: null,
+		FBToken: null,
+	},
 });
 
+export const ContractsProvider = ({ children }: ContractsProviderProps) => {
+	const { isConnected } = useConnectWallet();
 
-export const ContractsProvider = ({
-    children
-}: ContractsProviderProps) => {
+	const [contracts, setContracts] = useState<ContractsStateType>({
+		Auction: null,
+		FBToken: null,
+	});
 
-    const { isConnected } = useConnectWallet();
+	const [contractQueue, setContractQueue] = useState<ContractName[]>([]);
 
-    const [contracts, setContracts] = useState<ContractsStateType>({
-        Auction: null,
-        FBToken: null
-    });
+	const connectContractIfNotConnected = (contractName: ContractName) => {
+		if (!isConnected && !contractQueue.includes(contractName)) {
+			setContractQueue(prev => [...prev, contractName]);
+			throw new Error("First, you need to connect your wallet");
+		} else if (!isConnected) {
+			throw new Error("First, you need to connect your wallet");
+		}
 
-    const [contractQueue, setContractQueue] = useState<ContractName[]>([]);
+		const contractInfo = registry.find(item => item.name === contractName);
 
-    const connectContractIfNotConnected = (contractName: ContractName) => {
-        if (!isConnected &&
-            !contractQueue.includes(contractName)) {
-            setContractQueue(prev => [...prev, contractName]);
-            throw new Error("First, you need to connect your wallet")
-        }
-        else if (!isConnected) {
-            throw new Error("First, you need to connect your wallet");
-        }
+		if (!contractInfo) {
+			throw new Error(`There is no contract in the contract registry with ${contractName} name`);
+		}
 
-        const contractInfo = registry.find(item => item.name === contractName);
+		const contract = connectContracts(contractInfo.address, contractInfo.abi);
 
-        if (!contractInfo) {
-            throw new Error(`There is no contract in the contract registry with ${contractName} name`);
-        }
+		if (!contract) {
+			return;
+		}
 
-        const contract = connectContracts(contractInfo.address, contractInfo.abi);
+		setContracts(prev => ({
+			...prev,
+			[contractName]: contract,
+		}));
+	};
 
-        if (!contract) {
-            return;
-        }
+	const value = { connectContractIfNotConnected, contracts };
 
-        setContracts(prev => ({
-            ...prev,
-            [contractName]: contract
-        }));
-    };
-
-
-    const value = { connectContractIfNotConnected, contracts };
-
-    return (<ContractsContext.Provider value={value}>
-        {children}
-    </ContractsContext.Provider>);
+	return <ContractsContext.Provider value={value}>{children}</ContractsContext.Provider>;
 };
 
-export const useContract = (contractName: ContractName): {
-    contract: ethers.Contract | null,
-    error: any,
+export const useContract = (
+	contractName: ContractName,
+): {
+	contract: ethers.Contract | null;
+	error: any;
 } => {
-    const { contracts, connectContractIfNotConnected } = useContext(ContractsContext);
-    const { isConnected } = useConnectWallet();
-    const [error, setError] = useState();
+	const { contracts, connectContractIfNotConnected } = useContext(ContractsContext);
+	const { isConnected } = useConnectWallet();
+	const [error, setError] = useState();
 
-    useEffect(() => {
-        if (isConnected) {
-            connect();
-        }
-    }, [isConnected]);
+	useEffect(() => {
+		if (isConnected) {
+			connect();
+		}
+	}, [isConnected]);
 
-    const connect = useCallback(() => {
-        if (isConnected) {
-            try {
-                connectContractIfNotConnected(contractName);
-            }
-            catch (e: any) {
-                setError(e)
-            }
-        }
-    }, [isConnected]);
+	const connect = useCallback(() => {
+		if (isConnected) {
+			try {
+				connectContractIfNotConnected(contractName);
+			} catch (e: any) {
+				setError(e);
+			}
+		}
+	}, [isConnected]);
 
-    return {
-        contract: contracts[contractName],
-        error
-    };
+	return {
+		contract: contracts[contractName],
+		error,
+	};
 };
