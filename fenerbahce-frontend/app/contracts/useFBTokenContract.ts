@@ -1,12 +1,35 @@
 import { ethers } from "ethers";
+import { useCallback } from "react";
 import { useContract } from "~/context";
 import { auctionAddress } from "~/data";
-import { FBTokenContractFunctions, FBTokenContractReturnType } from "~/interfaces";
+import { FBTokenContractFunctions, FBTokenContractErrors, FBTokenGetAuctionContractAllowanceDTO } from "~/interfaces";
+
+export const FBTokenContractErrorsEnglish: FBTokenContractErrors = {
+	UnknownError: "An error occured",
+};
+
+export const FBTokenContractErrorsTurkish: FBTokenContractErrors = {
+	UnknownError: "Bilinmeyen bir hata oluştu.",
+};
+
+export const getFBTokenContractErrorMessage = (e: string | null) => {
+	if (typeof e !== "string") {
+		return;
+	}
+
+	for (const [k, v] of Object.entries(FBTokenContractErrorsEnglish)) {
+		if (e.includes(v)) {
+			return FBTokenContractErrorsTurkish[k as keyof FBTokenContractErrors];
+		}
+	}
+
+	return FBTokenContractErrorsTurkish.UnknownError;
+};
 
 export const useFBTokenContract = (): FBTokenContractFunctions => {
 	const { contract } = useContract("FBToken");
-    
-	const approveAuctionContract = async (): Promise<FBTokenContractReturnType> => {
+
+	const approveAuctionContract = useCallback(async () => {
 		if (!contract) {
 			return {
 				isError: true,
@@ -14,16 +37,53 @@ export const useFBTokenContract = (): FBTokenContractFunctions => {
 			};
 		}
 
-		const transaction = await contract.approve(auctionAddress, ethers.constants.MaxUint256);
-        const tx = await transaction.wait();
+		try {
+			const transaction = await contract.approve(auctionAddress, ethers.constants.MaxUint256);
+			const tx = await transaction.wait();
 
-		return {
-            tx,
-			isError: false,
-		};
-	};
+			return {
+				tx,
+				isError: false,
+			};
+		} catch (e: any) {
+			return {
+				isError: true,
+				errorMessage: getFBTokenContractErrorMessage(e.message),
+			};
+		}
+	}, [contract]);
+
+	const getAuctionContractAllowance = useCallback(
+		async ({ address }: FBTokenGetAuctionContractAllowanceDTO) => {
+			console.log(contract);
+			if (!contract) {
+				return {
+					isError: true,
+					errorMessage: "İşlem yapabilmek için cüzdanınızı bağlamanız gerekiyor.",
+				};
+			}
+
+			try {
+				const res = await contract.allowance(address, auctionAddress);
+				const allowance = Number(ethers.utils.formatEther(res));
+
+				return {
+					allowance,
+					isError: false,
+				};
+			} catch (e: any) {
+				console.log(e);
+				return {
+					isError: true,
+				};
+			}
+		},
+		[contract],
+	);
 
 	return {
 		approveAuctionContract,
+		getAuctionContractAllowance,
+		isConnected: !!contract,
 	};
 };

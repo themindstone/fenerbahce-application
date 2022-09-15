@@ -3,7 +3,7 @@ import { ParibuWallet } from "./ParibuWallet";
 
 
 
-export const wallets  = {
+export const wallets = {
     MetamaskWallet,
     ParibuWallet,
 };

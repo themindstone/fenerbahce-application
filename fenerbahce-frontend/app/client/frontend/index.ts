@@ -9,7 +9,7 @@ interface AuctionFunctions {
     getHighestBalancesByAuctionId: (auctionId: string) => Promise<any>;
 }
 
-const useAuctionClient = (): AuctionFunctions => {
+export const useAuctionClient = (): AuctionFunctions => {
     const ClientInstance = useClientInstance();
 
     const getHighestBalancesByAuctionId = async (auctionId: string) => {
@@ -21,7 +21,7 @@ const useAuctionClient = (): AuctionFunctions => {
     };
 }
 
-const useBalanceClient = (): BalanceFunctions => {
+export const useBalanceClient = (): BalanceFunctions => {
     const ClientInstance = useClientInstance();
 
     const getBalanceByAuctionId = async (auctionId: string, address: string) => {
@@ -31,10 +31,4 @@ const useBalanceClient = (): BalanceFunctions => {
     return {
         getBalanceByAuctionId,
     };
-};
-
-
-export {
-    useBalanceClient,
-    useAuctionClient,
 };

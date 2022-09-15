@@ -1,7 +1,2 @@
-import { useAuctionContract } from "./useAuctionContract";
-import { useFBTokenContract } from "./useFBTokenContract";
-
-export {
-    useAuctionContract,
-    useFBTokenContract,
-};
+export * from "./useAuctionContract";
+export * from "./useFBTokenContract";

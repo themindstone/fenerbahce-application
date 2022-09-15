@@ -1,7 +1,2 @@
-import { Gallery } from "./Gallery";
-import { ProductInfo } from "./ProductInfo";
-
-export {
-    Gallery,
-    ProductInfo,
-};
+export * from "./Gallery";
+export * from "./ProductInfo";

@@ -6,7 +6,7 @@ const getHighestBalancesByAuctionId = async (auctionId: string) => {
 }
 
 
-export default {
+export {
     getHighestBalancesByAuctionId
 };
 

@@ -14,6 +14,7 @@ import { useAuctionClient, useBalanceClient } from "~/client";
 import { Modal1907 } from "./Modal1907";
 import { auctionResultModalEventBus } from "~/eventbus";
 
+
 export const ProductInfo = (): ReactElement => {
 	const { auction } = useLoaderData();
 
@@ -27,50 +28,83 @@ export const ProductInfo = (): ReactElement => {
 	const balanceClient = useBalanceClient();
 	const auctionClient = useAuctionClient();
 
-	const userBalance = useQuery(["balance", connectWallet.address], () => {
-		return balanceClient.getBalanceByAuctionId(auction.id, connectWallet.address)
-			.then(res => res.data);
+	const userBalance = useQuery(
+		["balance", connectWallet.address],
+		() => {
+			return balanceClient.getBalanceByAuctionId(auction.id, connectWallet.address).then(res => res.data);
+		},
+		{
+			enabled: connectWallet.isConnected,
+		},
+	);
+
+	const userAllowance = useQuery(["allowance", connectWallet.address], () => {
+		return fbTokenContract.getAuctionContractAllowance({
+			address: connectWallet.address,
+		});
 	}, {
-		enabled: connectWallet.isConnected
+		enabled: fbTokenContract.isConnected
 	});
 
-	const auctionHighestBalances = useQuery(["balances", auction.id], () => {
-		return auctionClient.getHighestBalancesByAuctionId(auction.id)
-			.then(res => res.data);
-	}, {
-		enabled: auction.isActive && !auction.isSelled
-	});
+	const auctionHighestBalances = useQuery(
+		["balances", auction.id],
+		() => {
+			return auctionClient.getHighestBalancesByAuctionId(auction.id).then(res => res.data);
+		},
+		{
+			enabled: auction.isActive && !auction.isSelled,
+		},
+	);
+
+	useEffect(() => {
+		if (!fbTokenContract.isConnected) {
+			return
+		}
+		fbTokenContract.getAuctionContractAllowance({
+			address: connectWallet.address,
+		}).then(res => {
+			console.log(res)
+		})
+	}, [fbTokenContract.isConnected])
 
 	const deposit = useCallback(async () => {
+		if (!userAllowance.data) {
+			return;
+		}
+		if (userAllowance.data.isError) {
+			return;
+		}
+
+		if (userAllowance.data.allowance === 0) {
+			const res = await fbTokenContract.approveAuctionContract();
+			console.log(res)
+		}
 		const balance = Number((userBalance as any).data?.balance?.toFixed?.(2)) || 0;
 
 		let newOffer;
 		const getMaxOffer = () => {
 			const balanceArr: number[] = balances.map((x: any) => x.balance);
 			return MathUtils.max(balanceArr) + auction.bidIncrement;
-		}
+		};
 
 		if (balances.length === 0) {
 			newOffer = auction.startPrice;
-		}
-		else if (balance) {
+		} else if (balance) {
 			newOffer = getMaxOffer() - balance;
-		}
-		else {
+		} else {
 			newOffer = getMaxOffer();
 		}
-		newOffer = newOffer.toFixed(2)
+		newOffer = newOffer.toFixed(2);
 
-		const { tx, errorMessage, isError } = await  auctionContract.deposit({
+		const { tx, errorMessage, isError } = await auctionContract.deposit({
 			auctionId: auction.id,
 			value: newOffer.toString(),
 		});
 
-		console.log(tx, errorMessage, isError)
-	}, [auctionContract, balances, userBalance]);
+		console.log(tx, errorMessage, isError);
+	}, [auctionContract, fbTokenContract, balances, userBalance, userAllowance]);
 
 	const buyNow = useCallback(async () => {
-
 		let { isError, errorMessage } = await auctionContract.buyNow({
 			auctionId: auction.id,
 			buyNowPrice: auction.buyNowPrice.toString(),
@@ -78,12 +112,16 @@ export const ProductInfo = (): ReactElement => {
 
 		if (isError && errorMessage) {
 			// show modal with error message
-			auctionResultModalEventBus.publish("auctionresultmodal.open", { isSucceed: !isError, description: errorMessage })
+			auctionResultModalEventBus.publish("auctionresultmodal.open", {
+				isSucceed: !isError,
+				description: errorMessage,
+			});
+		} else {
+			auctionResultModalEventBus.publish("auctionresultmodal.open", {
+				isSucceed: true,
+				description: "İşleminiz başarıyla tamamlandı.",
+			});
 		}
-		else {
-			auctionResultModalEventBus.publish("auctionresultmodal.open", { isSucceed: true, description: "İşleminiz başarıyla tamamlandı." })
-		}
-
 	}, [auctionContract]);
 
 	// refetch auction highest balance in every 2 minutes
@@ -131,7 +169,7 @@ export const ProductInfo = (): ReactElement => {
 							{balances.length > 0 && (
 								<OfferCard
 									withToken={true}
-									address={balances[0].address}
+									address={balances[0].userAddress}
 									numberOfTokens={balances[0].balance}
 								/>
 							)}
@@ -142,21 +180,21 @@ export const ProductInfo = (): ReactElement => {
 								{balances.length > 1 && (
 									<OfferCard
 										withToken={false}
-										address={balances[0].address}
+										address={balances[0].userAddress}
 										numberOfTokens={balances[1].balance}
 									/>
 								)}
 								{balances.length > 2 && (
 									<OfferCard
 										withToken={false}
-										address={balances[1].address}
+										address={balances[1].userAddress}
 										numberOfTokens={balances[2].balance}
 									/>
 								)}
 								{balances.length > 3 && (
 									<OfferCard
 										withToken={false}
-										address={balances[2].address}
+										address={balances[2].userAddress}
 										numberOfTokens={balances[3].balance}
 									/>
 								)}

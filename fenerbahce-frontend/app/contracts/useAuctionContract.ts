@@ -40,7 +40,7 @@ export const getAuctionContractErrorMessage = (e: string | null) => {
 		}
 	}
 
-	return AuctionContractErrorsEnglish.UnknownError;
+	return AuctionContractErrorsTurkish.UnknownError;
 };
 
 export const useAuctionContract = (): AuctionContractFunctions => {
@@ -77,7 +77,6 @@ export const useAuctionContract = (): AuctionContractFunctions => {
 	const buyNow = useCallback(
 		async ({ auctionId, buyNowPrice }: AuctionContractBuyNowDTO): Promise<AuctionContractFunctionReturnType> => {
 			if (!contract) {
-				// throw new Error("First, you need to connect contract");
 				return {
 					isError: true,
 					errorMessage: "İşlem yapabilmek için cüzdanınızı bağlamanız gerekiyor.",

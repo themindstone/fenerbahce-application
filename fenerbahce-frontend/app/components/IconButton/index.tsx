@@ -1,1 +1,1 @@
-import { GoldenFizzIconButton } from "./GoldenFizzIconButton";
+export * from "./GoldenFizzIconButton";

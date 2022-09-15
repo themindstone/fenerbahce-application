@@ -35,7 +35,7 @@ const max = (arr: number[]): number => {
 }
 
 
-export default {
+export {
     min,
     max
 };

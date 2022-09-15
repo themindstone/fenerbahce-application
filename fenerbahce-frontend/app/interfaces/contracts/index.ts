@@ -1,18 +1,3 @@
-import { FBTokenContractFunctions, FBTokenContractReturnType } from "./fbtoken.interface";
-import {
-	AuctionContractBuyNowDTO,
-	AuctionContractDepositDTO,
-	AuctionContractErrors,
-	AuctionContractFunctionReturnType,
-	AuctionContractFunctions,
-} from "./auction.interface";
-
-export type {
-	FBTokenContractFunctions,
-	FBTokenContractReturnType,
-	AuctionContractBuyNowDTO,
-	AuctionContractDepositDTO,
-	AuctionContractErrors,
-	AuctionContractFunctionReturnType,
-	AuctionContractFunctions,
-};
+export * from "./auction.interface";
+export * from "./fbtoken.interface";
+export * from "./wallet.interface";

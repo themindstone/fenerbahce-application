@@ -45,7 +45,7 @@ const sort = (arr: ethers.BigNumber[]) => {
 
 
 
-export default {
+export {
     max,
     min
 };
