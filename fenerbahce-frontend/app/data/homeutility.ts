@@ -1,4 +1,4 @@
-import type { IHomeUtility } from "~/interfaces/homeutility.interface";
+import type { IHomeUtility } from "~/interfaces";
 
 export const homeutility: IHomeUtility[] = [
 	{

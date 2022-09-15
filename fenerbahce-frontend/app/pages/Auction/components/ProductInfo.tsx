@@ -1,5 +1,5 @@
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
-import { Fragment, ReactElement, useCallback, useState } from "react";
+import { Box, Flex, Heading, Text, useInterval } from "@chakra-ui/react";
+import { Fragment, ReactElement, useCallback, useEffect, useState } from "react";
 import { GoldenFizzButton, WhiteButton } from "~/components";
 import { useCountdownTimer } from "~/hooks";
 import { useLoaderData } from "@remix-run/react";
@@ -7,10 +7,12 @@ import { OfferCard } from "./OfferCard";
 import { CollapsibleCard } from "./CollapsibleCard";
 import { TimeLeftBox } from "./TimeLeftBox";
 import { MathUtils, humanReadableNumber } from "~/utils";
-import { useAuctionContract } from "~/contracts";
+import { useAuctionContract, useFBTokenContract } from "~/contracts";
 import { useConnectWallet } from "~/context";
 import { useQuery } from "react-query";
-import { useUserClient } from "~/client";
+import { useAuctionClient, useBalanceClient } from "~/client";
+import { Modal1907 } from "./Modal1907";
+import { auctionResultModalEventBus } from "~/eventbus";
 
 export const ProductInfo = (): ReactElement => {
 	const { auction } = useLoaderData();
@@ -20,47 +22,80 @@ export const ProductInfo = (): ReactElement => {
 	const { days, hours, minutes } = useCountdownTimer(auction.endDate);
 
 	const auctionContract = useAuctionContract();
+	const fbTokenContract = useFBTokenContract();
 	const connectWallet = useConnectWallet();
-	const userClient = useUserClient();
+	const balanceClient = useBalanceClient();
+	const auctionClient = useAuctionClient();
 
 	const userBalance = useQuery(["balance", connectWallet.address], () => {
-		return userClient.getBalanceByAuctionId(auction.id, connectWallet.address)
+		return balanceClient.getBalanceByAuctionId(auction.id, connectWallet.address)
 			.then(res => res.data);
 	}, {
 		enabled: connectWallet.isConnected
 	});
 
-	const deposit = useCallback(() => {
+	const auctionHighestBalances = useQuery(["balances", auction.id], () => {
+		return auctionClient.getHighestBalancesByAuctionId(auction.id)
+			.then(res => res.data);
+	}, {
+		enabled: auction.isActive && !auction.isSelled
+	});
+
+	const deposit = useCallback(async () => {
 		const balance = Number((userBalance as any).data?.balance?.toFixed?.(2)) || 0;
 
 		let newOffer;
-		const balanceArr: number[] = balances.map((x: any) => x.balance);
-		const maxOffer = MathUtils.max(balanceArr) + auction.bidIncrement;
+		const getMaxOffer = () => {
+			const balanceArr: number[] = balances.map((x: any) => x.balance);
+			return MathUtils.max(balanceArr) + auction.bidIncrement;
+		}
 
 		if (balances.length === 0) {
 			newOffer = auction.startPrice;
 		}
 		else if (balance) {
-			newOffer = maxOffer - balance;
+			newOffer = getMaxOffer() - balance;
 		}
 		else {
-			newOffer = maxOffer;
+			newOffer = getMaxOffer();
 		}
 		newOffer = newOffer.toFixed(2)
 
-		auctionContract.deposit({
+		const { tx, errorMessage, isError } = await  auctionContract.deposit({
 			auctionId: auction.id,
 			value: newOffer.toString(),
 		});
+
+		console.log(tx, errorMessage, isError)
 	}, [auctionContract, balances, userBalance]);
 
-	const buyNow = useCallback(() => {
+	const buyNow = useCallback(async () => {
 
-		auctionContract.buyNow({
+		let { isError, errorMessage } = await auctionContract.buyNow({
 			auctionId: auction.id,
 			buyNowPrice: auction.buyNowPrice.toString(),
 		});
+
+		if (isError && errorMessage) {
+			// show modal with error message
+			auctionResultModalEventBus.publish("auctionresultmodal.open", { isSucceed: !isError, description: errorMessage })
+		}
+		else {
+			auctionResultModalEventBus.publish("auctionresultmodal.open", { isSucceed: true, description: "İşleminiz başarıyla tamamlandı." })
+		}
+
 	}, [auctionContract]);
+
+	// refetch auction highest balance in every 2 minutes
+	useInterval(() => {
+		auctionHighestBalances.refetch();
+	}, 1000 * 60 * 2);
+
+	useEffect(() => {
+		if (auctionHighestBalances.data) {
+			setBalances(auctionHighestBalances.data);
+		}
+	}, [auctionHighestBalances]);
 
 	return (
 		<Box>
@@ -144,6 +179,7 @@ export const ProductInfo = (): ReactElement => {
 					/>
 				</Flex>
 			</Flex>
+			<Modal1907></Modal1907>
 		</Box>
 	);
 };

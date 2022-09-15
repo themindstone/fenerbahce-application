@@ -10,4 +10,18 @@ import { SideNav } from "./SideNav";
 import { ConnectWallet } from "./ConnectWallet";
 import { Slideshow } from "./Slideshow";
 
-export { Header, Footer, GoldenFizzButton, WhiteButton, ColorfulBorderButton, Carousel, FAQ, JoinCommunity, ShowAccount, GoldenFizzIconButton, SideNav, ConnectWallet, Slideshow };
+export {
+	Header,
+	Footer,
+	GoldenFizzButton,
+	WhiteButton,
+	ColorfulBorderButton,
+	Carousel,
+	FAQ,
+	JoinCommunity,
+	ShowAccount,
+	GoldenFizzIconButton,
+	SideNav,
+	ConnectWallet,
+	Slideshow,
+};

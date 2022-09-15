@@ -1,9 +1,10 @@
 import AuctionClient from "./bff/auction";
 import BalanceClient from "./bff/balance";
-import { useUserClient } from "./user";
+import { useBalanceClient, useAuctionClient } from "./frontend";
 
 export {
     AuctionClient,
     BalanceClient,
-    useUserClient
+    useBalanceClient,
+    useAuctionClient,
 };

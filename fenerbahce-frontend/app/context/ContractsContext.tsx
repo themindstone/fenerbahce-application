@@ -1,10 +1,10 @@
 import { ethers } from "ethers";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { auctionABI, auctionAddress } from "~/data";
+import { auctionABI, auctionAddress, fbTokenAddress, fbTokenABI } from "~/data";
 import { connectContracts } from "~/hooks/useContract";
 import { useConnectWallet } from "./MetamaskConnectContext";
 
-type ContractName = "Auction";
+type ContractName = "Auction" | "FBToken";
 
 type ContractsStateType = { [key in ContractName]: ethers.Contract | null };
 
@@ -25,13 +25,15 @@ interface ContractsProviderProps {
 
 const registry: IRegistry[] = [
     { name: "Auction", address: auctionAddress, abi: auctionABI },
+    { name: "FBToken", address: fbTokenAddress, abi: fbTokenABI },
 ];
 
 
 const ContractsContext = React.createContext<ContractsContextInterface>({
     connectContractIfNotConnected: (contractName: ContractName) => {},
     contracts: {
-        Auction: null
+        Auction: null,
+        FBToken: null,
     }
 });
 
@@ -43,7 +45,8 @@ export const ContractsProvider = ({
     const { isConnected } = useConnectWallet();
 
     const [contracts, setContracts] = useState<ContractsStateType>({
-        Auction: null
+        Auction: null,
+        FBToken: null
     });
 
     const [contractQueue, setContractQueue] = useState<ContractName[]>([]);

@@ -3,14 +3,14 @@ import axios, { AxiosInstance } from "axios";
 import { useMemo } from "react";
 
 
-export const useUserClientInstance = (): AxiosInstance => {
+export const useClientInstance = (): AxiosInstance => {
     const { config } = useLoaderData();
 
-    const UserClient = useMemo(() => axios.create({
+    const Client = useMemo(() => axios.create({
         baseURL: config.BACKEND_URL
     }), []);
 
 
-    return UserClient;
+    return Client;
 };
 
