@@ -12,12 +12,18 @@ export interface AuctionContractDepositDTO {
 
 export interface AuctionContractBuyNowDTO {
     auctionId: string;
-    buyNowPrice: string;
+}
+
+export interface AuctionContractUpdateBuyNowPriceDTO {
+    auctionId: string;
+    newBuyNowPrice: string;
 }
 
 export interface AuctionContractFunctions {
     deposit: (args: AuctionContractDepositDTO) => Promise<AuctionContractFunctionReturnType>;
     buyNow: (args: AuctionContractBuyNowDTO) => Promise<AuctionContractFunctionReturnType>;
+    updateBuyNowPrice: (args: AuctionContractUpdateBuyNowPriceDTO) => Promise<AuctionContractFunctionReturnType>;
+    isConnected: boolean;
 }
 
 export interface AuctionContractErrors {

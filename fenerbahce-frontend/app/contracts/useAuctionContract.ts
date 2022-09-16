@@ -7,6 +7,7 @@ import {
 	AuctionContractErrors,
 	AuctionContractFunctionReturnType,
 	AuctionContractFunctions,
+	AuctionContractUpdateBuyNowPriceDTO,
 } from "~/interfaces";
 
 export const AuctionContractErrorsEnglish: AuctionContractErrors = {
@@ -46,6 +47,8 @@ export const getAuctionContractErrorMessage = (e: string | null) => {
 export const useAuctionContract = (): AuctionContractFunctions => {
 	const { contract } = useContract("Auction");
 
+	console.log(contract)
+
 	const deposit = useCallback(
 		async ({ auctionId, value }: AuctionContractDepositDTO): Promise<AuctionContractFunctionReturnType> => {
 			if (!contract) {
@@ -75,7 +78,7 @@ export const useAuctionContract = (): AuctionContractFunctions => {
 	);
 
 	const buyNow = useCallback(
-		async ({ auctionId, buyNowPrice }: AuctionContractBuyNowDTO): Promise<AuctionContractFunctionReturnType> => {
+		async ({ auctionId }: AuctionContractBuyNowDTO): Promise<AuctionContractFunctionReturnType> => {
 			if (!contract) {
 				return {
 					isError: true,
@@ -87,9 +90,7 @@ export const useAuctionContract = (): AuctionContractFunctions => {
 			let transaction;
 
 			try {
-				const tx = await contract.buyNow(auctionId, {
-					value: ethers.utils.parseUnits(buyNowPrice, "18"),
-				});
+				const tx = await contract.buyNow(auctionId);
 
 				transaction = await tx.wait();
 			} catch (e: any) {
@@ -105,8 +106,41 @@ export const useAuctionContract = (): AuctionContractFunctions => {
 		[contract],
 	);
 
+	const updateBuyNowPrice = useCallback(
+		async ({
+			auctionId,
+			newBuyNowPrice,
+		}: AuctionContractUpdateBuyNowPriceDTO): Promise<AuctionContractFunctionReturnType> => {
+			if (!contract) {
+				return {
+					isError: true,
+					errorMessage: "İşlem yapabilmek için cüzdanınızı bağlamanız gerekiyor.",
+				};
+			}
+
+			let error, transaction;
+
+			try {
+				const tx = await contract.updateBuyNowPrice(auctionId, ethers.utils.parseUnits(newBuyNowPrice, "18"));
+
+				transaction = await tx.wait();
+			} catch (e: any) {
+				error = getAuctionContractErrorMessage(e.message as string);
+			}
+
+			return {
+				tx: transaction,
+				isError: false,
+				errorMessage: error,
+			};
+		},
+		[contract],
+	);
+
 	return {
 		deposit,
 		buyNow,
+		updateBuyNowPrice,
+		isConnected: !!contract,
 	};
 };

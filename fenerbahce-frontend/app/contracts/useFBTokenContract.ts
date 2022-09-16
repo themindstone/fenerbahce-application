@@ -55,7 +55,6 @@ export const useFBTokenContract = (): FBTokenContractFunctions => {
 
 	const getAuctionContractAllowance = useCallback(
 		async ({ address }: FBTokenGetAuctionContractAllowanceDTO) => {
-			console.log(contract);
 			if (!contract) {
 				return {
 					isError: true,

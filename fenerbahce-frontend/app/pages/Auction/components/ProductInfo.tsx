@@ -31,7 +31,8 @@ export const ProductInfo = (): ReactElement => {
 	const userBalance = useQuery(
 		["balance", connectWallet.address],
 		() => {
-			return balanceClient.getBalanceByAuctionId(auction.id, connectWallet.address).then(res => res.data);
+			return balanceClient.getBalanceByAuctionId(auction.id, connectWallet.address)
+				.then(res => res.data);
 		},
 		{
 			enabled: connectWallet.isConnected,
@@ -56,17 +57,6 @@ export const ProductInfo = (): ReactElement => {
 		},
 	);
 
-	useEffect(() => {
-		if (!fbTokenContract.isConnected) {
-			return
-		}
-		fbTokenContract.getAuctionContractAllowance({
-			address: connectWallet.address,
-		}).then(res => {
-			console.log(res)
-		})
-	}, [fbTokenContract.isConnected])
-
 	const deposit = useCallback(async () => {
 		if (!userAllowance.data) {
 			return;
@@ -77,7 +67,7 @@ export const ProductInfo = (): ReactElement => {
 
 		if (userAllowance.data.allowance === 0) {
 			const res = await fbTokenContract.approveAuctionContract();
-			console.log(res)
+			// console.log(res)
 		}
 		const balance = Number((userBalance as any).data?.balance?.toFixed?.(2)) || 0;
 
@@ -101,13 +91,12 @@ export const ProductInfo = (): ReactElement => {
 			value: newOffer.toString(),
 		});
 
-		console.log(tx, errorMessage, isError);
+		// console.log(tx, errorMessage, isError);
 	}, [auctionContract, fbTokenContract, balances, userBalance, userAllowance]);
 
 	const buyNow = useCallback(async () => {
 		let { isError, errorMessage } = await auctionContract.buyNow({
 			auctionId: auction.id,
-			buyNowPrice: auction.buyNowPrice.toString(),
 		});
 
 		if (isError && errorMessage) {
