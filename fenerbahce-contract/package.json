@@ -1,9 +1,9 @@
 {
   "name": "hardhat-project",
   "scripts": {
-    "deploy:local": "NODE_ENV=local npx hardhat run scripts/deploy.ts --network localhost",
-    "deploy:fuji": "NODE_ENV=fuji npx hardhat run scripts/deploy.ts --network fuji",
-    "deploy:mainnet": "NODE_ENV=mainnet npx hardhat run scripts/deploy.ts --network mainnet"
+    "deploy:local": "env-cmd -f .env.local npx hardhat run scripts/deploy.ts --network localhost",
+    "deploy:fuji": "env-cmd -f .env.fuji npx hardhat run scripts/deploy.ts --network fuji",
+    "deploy:mainnet": "env-cmd -f .env npx hardhat run scripts/deploy.ts --network mainnet"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^1.0.2",
@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.7.3",
-    "dotenv": "^16.0.2"
+    "dotenv": "^16.0.2",
+    "env-cmd": "^10.1.0"
   }
 }
