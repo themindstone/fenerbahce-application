@@ -19,4 +19,7 @@ export class Balance {
 
     @Column({ name: "balance", type: "float", nullable: false })
     public balance: number;
+
+    @Column({ name: "is_refunded", type: "boolean", nullable: false, default: false })
+    public isRefunded: boolean;
 }

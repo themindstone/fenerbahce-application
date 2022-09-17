@@ -1,0 +1,1 @@
+export const MoralisAPIModuleOptions = "MORALIS API MODULE OPTIONS";

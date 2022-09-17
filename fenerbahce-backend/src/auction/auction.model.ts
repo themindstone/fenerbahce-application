@@ -57,3 +57,8 @@ export class CreateAuctionDto {
     @IsArray()
     photoUrls: string[];
 }
+
+
+export class FinishAuctionDto {
+    auctionId: string;
+}

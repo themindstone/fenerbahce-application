@@ -21,7 +21,7 @@ export class Auction {
     @Column({ name: "name", type: "varchar", nullable: false })
     public name: string;
 
-    @Column({ name: "selled_to_address", type: "varchar", nullable: false })
+    @Column({ name: "selled_to_address", type: "varchar", nullable: true })
     public selledToAddress: string;
 
     // @Column({ name: "slug", type: "varchar", nullable: false })

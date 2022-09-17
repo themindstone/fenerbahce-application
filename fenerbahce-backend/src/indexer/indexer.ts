@@ -10,9 +10,10 @@ import {
     IndexerAuctionContractDepositedDTO,
     IndexerAuctionContractRefundedDTO,
     IndexerAuctionContractProlongedDTO,
+    IndexerAuctionContractBuyNowPriceUpdatedDTO,
 } from "./indexer.model";
 import { v4 } from "uuid";
-import { formatEther } from "nestjs-ethers";
+// import { formatEther } from "nestjs-ethers";
 
 export class Indexer {
     constructor(
@@ -79,13 +80,26 @@ export class Indexer {
         );
     }
 
-    @OnEvent("auction.refunded")
+    @OnEvent("auction.prolonged")
     async prolonged({
         auctionId,
         endDate,
     }: IndexerAuctionContractProlongedDTO) {
-        await this.auctionRepository.createQueryBuilder()
+        await this.auctionRepository
+            .createQueryBuilder()
             .update({ endDate })
+            .where({ id: auctionId })
+            .execute();
+    }
+
+    @OnEvent("auction.buynowpriceupdated")
+    async buyNowPriceUpdated({
+        auctionId,
+        newBuyNowPrice,
+    }: IndexerAuctionContractBuyNowPriceUpdatedDTO) {
+        await this.auctionRepository
+            .createQueryBuilder()
+            .update({ buyNowPrice: newBuyNowPrice })
             .where({ id: auctionId })
             .execute();
     }

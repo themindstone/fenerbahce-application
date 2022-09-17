@@ -35,3 +35,11 @@ export class IndexerAuctionContractProlongedDTO {
     @IsString()
     endDate: string;
 }
+
+export class IndexerAuctionContractBuyNowPriceUpdatedDTO {
+    @IsString()
+    auctionId: string;
+
+    @IsNumber()
+    newBuyNowPrice: number;
+}

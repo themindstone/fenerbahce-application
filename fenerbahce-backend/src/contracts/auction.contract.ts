@@ -12,6 +12,7 @@ import {
     Provider,
     parseUnits,
     formatEther,
+    Transaction,
 } from "nestjs-ethers";
 import { auctionABI, auctionAddress } from "~/shared/data";
 
@@ -56,35 +57,22 @@ export class AuctionContract {
         }
         this.startBlockNumber = await this.provider.getBlockNumber();
 
-        // this.contract.on("AuctionCreated", this.auctionCreated.bind(this));
-        this.contract.on("AuctionBought", this.auctionSelled.bind(this));
+        // subscribing for events from contract's provider
+        this.contract.on("AuctionSelled", this.auctionSelled.bind(this));
         this.contract.on("AuctionDeposited", this.auctionDeposited.bind(this));
         this.contract.on("AuctionRefunded", this.auctionRefunded.bind(this));
         this.contract.on("AuctionProlonged", this.auctionProlonged.bind(this));
+        this.contract.on("AuctionBuyNowPriceUpdated", this.auctionBuyNowPriceUpdated.bind(this));
     }
 
     onModuleDestroy() {
-        // this.contract.off("AuctionCreated", this.auctionCreated.bind(this));
-        this.contract.on("AuctionBought", this.auctionSelled.bind(this));
+        // unsubscribing for events from contract's provider
+        this.contract.off("AuctionSelled", this.auctionSelled.bind(this));
         this.contract.off("AuctionDeposited", this.auctionDeposited.bind(this));
         this.contract.off("AuctionRefunded", this.auctionRefunded.bind(this));
         this.contract.off("AuctionProlonged", this.auctionProlonged.bind(this));
+        this.contract.off("AuctionBuyNowPriceUpdated", this.auctionBuyNowPriceUpdated.bind(this));
     }
-
-    // private auctionCreated(...args: any[]) {
-    //     const [auctionId, buyNowPrice, bidIncrement] = args;
-    //     const e = args[args.length - 1];
-
-    //     if (this.startBlockNumber >= e.blockNumber) {
-    //         return;
-    //     }
-
-    //     this.eventEmitter.emit("auction.created", {
-    //         auctionId,
-    //         buyNowPrice: formatEther(buyNowPrice),
-    //         bidIncrement: formatEther(bidIncrement),
-    //     });
-    // }
 
     private async auctionDeposited(
         auctionId: string,
@@ -104,6 +92,10 @@ export class AuctionContract {
     }
 
     private async auctionSelled(auctionId: string, address: string, e: any) {
+        if (this.startBlockNumber >= e.blockNumber) {
+            return;
+        }
+
         this.eventEmitter.emit("auction.selled", {
             auctionId,
             address,
@@ -114,7 +106,12 @@ export class AuctionContract {
         auctionId: string,
         toAddress: string,
         value: BigNumber,
+        e: any
     ) {
+        if (this.startBlockNumber >= e.blockNumber) {
+            return;
+        }
+
         this.eventEmitter.emit("auction.refunded", {
             auctionId,
             toAddress,
@@ -122,10 +119,24 @@ export class AuctionContract {
         });
     }
 
-    private auctionProlonged(auctionId: string, endDate: BigNumber) {
+    async auctionBuyNowPriceUpdated(auctionId: string, newBuyNowPrice: BigNumber, e: any) {
+        if (this.startBlockNumber >= e.blockNumber) {
+            return;
+        }
+
+        this.eventEmitter.emit("auction.buynowpriceupdated", {
+            auctionId,
+            newBuyNowPrice: formatEther(newBuyNowPrice)
+        });
+    }
+
+    private auctionProlonged(auctionId: string, endDate: BigNumber, e: any) {
+        if (this.startBlockNumber >= e.blockNumber) {
+            return;
+        }
         this.eventEmitter.emit("auction.prolonged", {
             auctionId,
-            endDate: (new Date(endDate.toNumber() * 1000)).toString(),
+            endDate: (new Date(endDate.toNumber() * 1000)),
         });
     }
 
@@ -148,8 +159,9 @@ export class AuctionContract {
         return await tx.wait();
     }
 
-    async refund(...args: any) {
-        const tx = await this.contract.refund(...args);
+    async finishAuction(auctionId: string, addresses: string[]): Promise<any> {
+        const tx = await this.contract.finishAuction(auctionId, addresses);
         return await tx.wait();
     }
+
 }
