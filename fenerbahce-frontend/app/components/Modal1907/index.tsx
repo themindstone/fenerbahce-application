@@ -1,21 +1,28 @@
 import { Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, VStack, Image, Heading, Flex, Text, useDisclosure } from "@chakra-ui/react"
-import { useState } from "react";
 import { TokenLogoImage } from "~/assets"
 import { GoldenFizzButton } from "~/components";
 import { auctionResultModalEventBus } from "~/eventbus";
 
-export const Modal1907 = () => {
 
-	const { isOpen, onClose, onOpen } = useDisclosure();
+interface Modal1907Props {
+	description: string;
+	isSucceed: boolean;
+	isOpen: boolean;
+	onClose: () => void;
+}
 
-	const [isSucceed, setIsSucceed] = useState<boolean>(false);
-	const [description, setDescription] = useState<string>("");
+export const Modal1907 = ({ description, isSucceed, isOpen, onClose }: Modal1907Props) => {
 
-	auctionResultModalEventBus.useListener("auctionresultmodal.open", ({ isSucceed, description }) => {
-		setIsSucceed(isSucceed);
-		setDescription(description);
-		onOpen();
-	}, []);
+	// const { isOpen, onClose } = useDisclosure();
+
+	// const [isSucceed, setIsSucceed] = useState<boolean>(false);
+	// const [description, setDescription] = useState<string>("");
+
+	// auctionResultModalEventBus.useListener("auctionresultmodal.open", ({ isSucceed, description }) => {
+	// 	// setIsSucceed(isSucceed);
+	// 	// setDescription(description);
+	// 	onOpen();
+	// }, []);
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>

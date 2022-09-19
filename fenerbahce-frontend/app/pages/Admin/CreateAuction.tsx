@@ -95,7 +95,7 @@ export const CreateAuction = () => {
 						</FormLabel>
 						<FormLabel gap="5px" display="flex" flexDirection="column">
 							<Text>Açık Artırma Bitiş Tarihi (ay-gun-yıl)</Text>
-							<Input placeholder="bitis tarih (ay-gun-yil)" name="endDate" defaultValue="09-09-2023" />
+							<Input placeholder="bitis tarih (ay-gun-yil)" name="endDate" defaultValue="09/18/2022 01:24:11" />
 						</FormLabel>
 						<GoldenFizzButton alignSelf="start" type="submit">
 							Ekle

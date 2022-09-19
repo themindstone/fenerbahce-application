@@ -9,9 +9,16 @@ interface GetAuctionsByPageParams {
 	auctionByPage: number;
 }
 
+interface FinishAuctionParams {
+	username: string;
+	password: string;
+	auctionId: string;
+}
+
 interface AuctionFunctions {
 	getHighestBalancesByAuctionId: (auctionId: string) => Promise<any>;
 	getAuctionsByPage: ({ page, auctionByPage }: GetAuctionsByPageParams) => Promise<any>;
+	finishAuction: (params: FinishAuctionParams) => Promise<any>;
 }
 
 export const useAuctionClient = (): AuctionFunctions => {
@@ -27,9 +34,16 @@ export const useAuctionClient = (): AuctionFunctions => {
         });
     };
 
+
+	const finishAuction = async ({ auctionId, username, password }: FinishAuctionParams) => {
+		return await ClientInstance.post(`auction/finish`, { auctionId, username, password });
+	}
+
+
 	return {
 		getHighestBalancesByAuctionId,
 		getAuctionsByPage,
+		finishAuction
 	};
 };
 

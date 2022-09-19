@@ -1,4 +1,3 @@
-import { Box, Grid } from "@chakra-ui/react";
 import { ReactElement } from "react";
 import { Layout } from "~/admincomponents";
 

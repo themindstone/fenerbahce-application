@@ -30,8 +30,10 @@ export interface AuctionContractErrors {
     AlreadySelledError: string;
     AuctionNotFoundError: string;
     AuctionFinishedError: string;
+    AuctionNotFinishedError: string;
     AuctionNotStartedError: string;
     AuctionStartPriceError: string;
     IncreaseByBidIncrementError: string;
     UnknownError: string;
+    OwnableError: string;
 }

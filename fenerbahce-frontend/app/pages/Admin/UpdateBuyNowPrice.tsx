@@ -11,29 +11,44 @@ import {
 	Input,
 } from "@chakra-ui/react";
 import { ReactElement, useCallback, useState } from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { Layout } from "~/admincomponents";
 import { useAuctionClient } from "~/client";
 import { GoldenFizzButton, WhiteButton } from "~/components";
 import { useAuctionContract } from "~/contracts";
 import { useForm } from "react-hook-form";
-import { useConnectWallet } from "~/context";
+import moment from "moment";
+import { adminResultEventBus } from "~/eventbus";
+import { AdminModal } from "./components";
 
-const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoUrls }: any): ReactElement => {
+const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoUrls, endDate }: any): ReactElement => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const { register, handleSubmit } = useForm();
 
 	const auctionContract = useAuctionContract();
+	const auctionClient = useAuctionClient();
 
-	const updateBuyNowPrice = useCallback(async ({ newBuyNowPrice }: any) => {
-		const { isError, errorMessage } = await auctionContract.updateBuyNowPrice({ auctionId, newBuyNowPrice });
-		if (isError) {
-			console.log(errorMessage);
-			// we need to show a modal in case of errors to the user
-			return;
-		}
-	}, [auctionContract]);
+
+	const updateBuyNowPrice = useCallback(
+		async ({ newBuyNowPrice }: any) => {
+			const { isError, errorMessage } = await auctionContract.updateBuyNowPrice({ auctionId, newBuyNowPrice });
+			console.log(isError, errorMessage)
+			if (isError && errorMessage) {
+				console.log("herhalde oluyor")
+				adminResultEventBus.publish("adminresult.open", { isSucceed: false, description: errorMessage })
+				// we need to show a modal in case of errors to the user
+				return;
+			}
+
+			onClose();
+		},
+		[auctionContract],
+	);
+
+	const finishAuctionMutation = useMutation(() => {
+		return auctionClient.finishAuction({ username: "fb-admin", password: "fb-admin", auctionId });
+	});
 
 	return (
 		<Flex bg="var(--governor-bay)" p="10px" borderRadius="10px" direction="column" gap="10px">
@@ -44,8 +59,9 @@ const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoUrls }: 
 				borderRadius="5px"
 				style={{ aspectRatio: "1" }}></Box>
 			<Heading size="md">{name}</Heading>
-			<Text>{buyNowPrice} TL</Text>
-			<WhiteButton>Refund</WhiteButton>
+			<Text>Hemen Al Fiyat: {buyNowPrice} TL</Text>
+			<Text>Bitiş Tarihi: {moment(new Date(endDate).getTime()).locale("tr").format("MMMM Do YYYY, h:mm:ss a")}</Text>
+			<WhiteButton onClick={() => finishAuctionMutation.mutate()}>Finish Auction and Refund Money</WhiteButton>
 			<GoldenFizzButton onClick={onOpen}>Update Buy Now Price</GoldenFizzButton>
 			<Modal isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay></ModalOverlay>
@@ -68,9 +84,6 @@ export const UpdateBuyNowPrice = (): ReactElement => {
 	const [auctionByPage, setAuctionByPage] = useState<number>(10);
 
 	const auctionClient = useAuctionClient();
-
-	const connectWallet = useConnectWallet()
-	console.log(connectWallet.isConnected)
 
 	const auctions = useQuery(["auctionsByPage", pageNumber, auctionByPage], () => {
 		return auctionClient
@@ -96,10 +109,12 @@ export const UpdateBuyNowPrice = (): ReactElement => {
 							name={product.name}
 							buyNowPrice={product.buyNowPrice}
 							photoUrls={product.photoUrls}
-							highestOffer={product.highestOffer}></ProductCard>
+							highestOffer={product.highestOffer}
+							endDate={product.endDate}></ProductCard>
 					);
 				})}
 			</Grid>
+			<AdminModal></AdminModal>
 		</Layout>
 	);
 };

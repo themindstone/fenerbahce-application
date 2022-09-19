@@ -1,6 +1,6 @@
-import { Box, Flex, Heading, Text, useInterval } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text, useDisclosure, useInterval } from "@chakra-ui/react";
 import { Fragment, ReactElement, useCallback, useEffect, useState } from "react";
-import { GoldenFizzButton, WhiteButton } from "~/components";
+import { GoldenFizzButton, WhiteButton, Modal1907 } from "~/components";
 import { useCountdownTimer } from "~/hooks";
 import { useLoaderData } from "@remix-run/react";
 import { OfferCard } from "./OfferCard";
@@ -11,9 +11,25 @@ import { useAuctionContract, useFBTokenContract } from "~/contracts";
 import { useConnectWallet } from "~/context";
 import { useQuery } from "react-query";
 import { useAuctionClient, useBalanceClient } from "~/client";
-import { Modal1907 } from "./Modal1907";
 import { auctionResultModalEventBus } from "~/eventbus";
 
+
+const Modal = () => {
+	
+	const { isOpen, onOpen, onClose } = useDisclosure()
+
+	const [description, setDescription] = useState<string>("");
+	const [isSucceed, setIsSucceed] = useState<boolean>(false);
+
+	auctionResultModalEventBus.useListener("auctionresultmodal.open", ({ isSucceed, description }) => {
+		setIsSucceed(isSucceed);
+		setDescription(description);
+		onOpen();
+	}, []);
+
+
+	return <Modal1907 isOpen={isOpen} onClose={onClose} description={description} isSucceed={isSucceed}></Modal1907>
+}
 
 export const ProductInfo = (): ReactElement => {
 	const { auction } = useLoaderData();
@@ -65,9 +81,9 @@ export const ProductInfo = (): ReactElement => {
 			return;
 		}
 
+		console.log(userAllowance.data)
 		if (userAllowance.data.allowance === 0) {
 			const res = await fbTokenContract.approveAuctionContract();
-			// console.log(res)
 		}
 		const balance = Number((userBalance as any).data?.balance?.toFixed?.(2)) || 0;
 
@@ -90,6 +106,10 @@ export const ProductInfo = (): ReactElement => {
 			auctionId: auction.id,
 			value: newOffer.toString(),
 		});
+
+		setTimeout(() => {
+			auctionHighestBalances.refetch();
+		}, 5000)
 
 		// console.log(tx, errorMessage, isError);
 	}, [auctionContract, fbTokenContract, balances, userBalance, userAllowance]);
@@ -169,7 +189,7 @@ export const ProductInfo = (): ReactElement => {
 								{balances.length > 1 && (
 									<OfferCard
 										withToken={false}
-										address={balances[0].userAddress}
+										address={balances[1].userAddress}
 										numberOfTokens={balances[1].balance}
 									/>
 								)}
@@ -206,7 +226,7 @@ export const ProductInfo = (): ReactElement => {
 					/>
 				</Flex>
 			</Flex>
-			<Modal1907></Modal1907>
+			<Modal></Modal>
 		</Box>
 	);
 };

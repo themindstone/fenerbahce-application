@@ -9,3 +9,4 @@ export * from "./SideNav";
 export * from "./ConnectWallet";
 export * from "./Slideshow";
 export * from "./Button";
+export * from "./Modal1907";
