@@ -74,6 +74,7 @@ export const ProductInfo = (): ReactElement => {
 	);
 
 	const deposit = useCallback(async () => {
+		console.log(userAllowance)
 		if (!userAllowance.data) {
 			return;
 		}
@@ -84,6 +85,7 @@ export const ProductInfo = (): ReactElement => {
 		if (userAllowance.data.allowance === 0) {
 			await fbTokenContract.approveAuctionContract();
 		}
+		console.log("approved")
 		const balance = Number((userBalance as any).data?.balance?.toFixed?.(2)) || 0;
 
 		let newOffer;
@@ -100,11 +102,15 @@ export const ProductInfo = (): ReactElement => {
 			newOffer = getMaxOffer();
 		}
 		newOffer = newOffer.toFixed(2);
+		console.log("new offer:", newOffer)
 
 		const { tx, errorMessage, isError } = await auctionContract.deposit({
 			auctionId: auction.id,
 			value: newOffer.toString(),
 		});
+		const message = balance ? "Açık artırma ücretiniz güncellendi" : "Açık artırmaya başarıyla katıldınız.";
+
+		auctionResultModalEventBus.publish("auctionresultmodal.open", { isSucceed: true, description: message });
 
 		setTimeout(() => {
 			auctionHighestBalances.refetch();
@@ -142,8 +148,6 @@ export const ProductInfo = (): ReactElement => {
 			setBalances(auctionHighestBalances.data);
 		}
 	}, [auctionHighestBalances]);
-
-	console.log(!!days, !!hours, !!minutes)
 
 	return (
 		<Box>

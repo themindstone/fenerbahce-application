@@ -1,3 +1,3 @@
 export * from "./pages";
-export * from "./contracts";
+export * from "./blockchain";
 export * from "./context";

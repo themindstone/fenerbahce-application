@@ -6,12 +6,9 @@ import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from "@re
 import { MetaFunction, LinksFunction } from "@remix-run/node"; // Depends on the runtime you choose
 import { theme } from "./theme";
 import styles from "./styles/globals.css";
-import { ConnectWalletProvider } from "~/context";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import { ServerStyleContext, ClientStyleContext } from "./_context";
-
-// import fontStyles from "@fontsource/cairo";
 
 export const meta: MetaFunction = () => ({
 	charset: "utf-8",
@@ -82,11 +79,9 @@ export default function App() {
 	return (
 		<Document>
 			<QueryClientProvider client={queryClient}>
-				<ConnectWalletProvider>
-					<ChakraProvider theme={theme}>
-						<Outlet />
-					</ChakraProvider>
-				</ConnectWalletProvider>
+				<ChakraProvider theme={theme}>
+					<Outlet />
+				</ChakraProvider>
 			</QueryClientProvider>
 		</Document>
 	);

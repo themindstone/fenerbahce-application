@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useContract } from "~/context";
+import { useChainConfig } from "~/hooks";
 import {
 	AuctionContractBuyNowDTO,
 	AuctionContractDepositDTO,
@@ -13,6 +14,10 @@ import { getAuctionContractErrorMessage } from "~/utils";
 export const useAuctionContract = (): AuctionContractFunctions => {
 	const { contract } = useContract("Auction");
 
+
+	const { switchToNetwork } = useChainConfig()
+
+
 	const deposit = useCallback(
 		async ({ auctionId, value }: AuctionContractDepositDTO): Promise<AuctionContractFunctionReturnType> => {
 			if (!contract) {
@@ -21,6 +26,8 @@ export const useAuctionContract = (): AuctionContractFunctions => {
 					errorMessage: "İşlem yapabilmek için cüzdanınızı bağlamanız gerekiyor.",
 				};
 			}
+
+			switchToNetwork();
 
 			let error, transaction;
 
@@ -48,6 +55,8 @@ export const useAuctionContract = (): AuctionContractFunctions => {
 					errorMessage: "İşlem yapabilmek için cüzdanınızı bağlamanız gerekiyor.",
 				};
 			}
+			
+			switchToNetwork();
 
 			let error;
 			let transaction;
@@ -80,6 +89,8 @@ export const useAuctionContract = (): AuctionContractFunctions => {
 					errorMessage: "İşlem yapabilmek için cüzdanınızı bağlamanız gerekiyor.",
 				};
 			}
+			
+			switchToNetwork();
 
 			let error, transaction;
 

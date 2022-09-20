@@ -1,4 +1,4 @@
-export const fbTokenAddress = "0x76Eaa3E698C1A374afF8c7441436e9d79AE3d18C";
+export const fbTokenAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
 export const fbTokenABI = [
 	{

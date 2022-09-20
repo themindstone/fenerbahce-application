@@ -1,6 +1,14 @@
 import { ActionFunction } from "@remix-run/node";
 import { CreateAuction } from "~/pages";
 import { AuctionClient } from "~/client";
+import { json, LoaderFunction } from "@remix-run/node";
+import { config } from "~/configs";
+
+export const loader: LoaderFunction = () => {
+	return json({
+		config,
+	});
+};
 
 export const action: ActionFunction = async ({ request }) => {
 	const formdata = await request.formData();

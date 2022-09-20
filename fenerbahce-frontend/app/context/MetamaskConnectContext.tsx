@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import type { ReactElement } from "react";
 import { wallets } from "~/wallets";
 import { IWallet, ConnectWalletProviderInterface, ConnectWalletContextInterface } from "~/interfaces";
+import { useLoaderData } from "@remix-run/react";
+import { localChain, testnetChain, mainnetChain } from "~/constants";
+import { switchToNetwork } from "~/utils";
 
 const ConnectWalletContext = React.createContext<ConnectWalletContextInterface>({
 	initialize: (name: keyof typeof wallets) => {},
@@ -17,7 +20,7 @@ const ConnectWalletContext = React.createContext<ConnectWalletContextInterface>(
 export const ConnectWalletProvider = ({ children }: ConnectWalletProviderInterface): ReactElement => {
 	// fetch last default wallet from local storage
 	const [defaultWallet, setDefaultWallet] = useState<IWallet>(() => wallets.MetamaskWallet);
-
+	
 	useEffect(() => {
 		// check every wallet and show connected ones
 		async function handler() {
