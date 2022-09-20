@@ -1,4 +1,5 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import {
     InjectContractProvider,
@@ -12,9 +13,9 @@ import {
     Provider,
     parseUnits,
     formatEther,
-    Transaction,
 } from "nestjs-ethers";
-import { auctionABI, auctionAddress } from "~/shared/data";
+import { auctionABI } from "~/shared/data";
+const Moralis = require("moralis-v1/node");
 
 interface AuctionContractCreateAuctionDto {
     auctionId: string;
@@ -39,11 +40,46 @@ export class AuctionContract {
         private readonly ethersSigner: EthersSigner,
         @InjectEthersProvider()
         private readonly provider: Provider,
+        private readonly configService: ConfigService,
     ) {}
 
     async onModuleInit() {
+        const auctionAddress = this.configService.get("AUCTION_CONTRACT_ADDRESS");
+        const wallet = this.configService.get<string>("WALLET")
+        if (!auctionAddress) {
+            throw new Error("You need to provide auction contract address")
+        }
+        if (!wallet) {
+            throw new Error("Wallet does not exist");
+        }
+        Moralis.start({ appId: "TQbbsjto3Rbo2ZUkHZtpx6mD9Pj8pMRNcnL7GNUc", serverUrl: "https://rfkyqvw4bkox.usemoralis.com:2053/server", masterKey: "uyCmaY0URZL3DJfZFzsv1i1GZx6Gf90sPejaAGWx" });
+        
+        const auctionCreatedEventClient = new Moralis.Query("auction_created_events");
+        const auctionCreatedEventSubscription = await auctionCreatedEventClient.subscribe();
+
+        auctionCreatedEventSubscription.on("create", (object: any) => {
+            console.log("object created");
+            console.log(object);
+        });
+
+        auctionCreatedEventSubscription.on("open", () => {
+            console.log("opened")
+        });
+
+        auctionCreatedEventSubscription.on("error", () => {
+            console.log("error")
+        });
+
+        auctionCreatedEventSubscription.on("update", (object: any) => {
+            console.log("update: ", object)
+        });
+
+        auctionCreatedEventSubscription.on("close", () => {
+            console.log("closed");
+        });
+
         this.wallet = this.ethersSigner.createWalletfromMnemonic(
-            "test test test test test test test test test test test junk",
+            wallet
         );
 
         try {
@@ -62,7 +98,10 @@ export class AuctionContract {
         this.contract.on("AuctionDeposited", this.auctionDeposited.bind(this));
         this.contract.on("AuctionRefunded", this.auctionRefunded.bind(this));
         this.contract.on("AuctionProlonged", this.auctionProlonged.bind(this));
-        this.contract.on("AuctionBuyNowPriceUpdated", this.auctionBuyNowPriceUpdated.bind(this));
+        this.contract.on(
+            "AuctionBuyNowPriceUpdated",
+            this.auctionBuyNowPriceUpdated.bind(this),
+        );
     }
 
     onModuleDestroy() {
@@ -71,7 +110,10 @@ export class AuctionContract {
         this.contract.off("AuctionDeposited", this.auctionDeposited.bind(this));
         this.contract.off("AuctionRefunded", this.auctionRefunded.bind(this));
         this.contract.off("AuctionProlonged", this.auctionProlonged.bind(this));
-        this.contract.off("AuctionBuyNowPriceUpdated", this.auctionBuyNowPriceUpdated.bind(this));
+        this.contract.off(
+            "AuctionBuyNowPriceUpdated",
+            this.auctionBuyNowPriceUpdated.bind(this),
+        );
     }
 
     private async auctionDeposited(
@@ -106,7 +148,7 @@ export class AuctionContract {
         auctionId: string,
         toAddress: string,
         value: BigNumber,
-        e: any
+        e: any,
     ) {
         if (this.startBlockNumber >= e.blockNumber) {
             return;
@@ -119,14 +161,18 @@ export class AuctionContract {
         });
     }
 
-    async auctionBuyNowPriceUpdated(auctionId: string, newBuyNowPrice: BigNumber, e: any) {
+    async auctionBuyNowPriceUpdated(
+        auctionId: string,
+        newBuyNowPrice: BigNumber,
+        e: any,
+    ) {
         if (this.startBlockNumber >= e.blockNumber) {
             return;
         }
 
         this.eventEmitter.emit("auction.buynowpriceupdated", {
             auctionId,
-            newBuyNowPrice: formatEther(newBuyNowPrice)
+            newBuyNowPrice: formatEther(newBuyNowPrice),
         });
     }
 
@@ -136,7 +182,7 @@ export class AuctionContract {
         }
         this.eventEmitter.emit("auction.prolonged", {
             auctionId,
-            endDate: (new Date(endDate.toNumber() * 1000)),
+            endDate: new Date(endDate.toNumber() * 1000),
         });
     }
 
@@ -163,5 +209,4 @@ export class AuctionContract {
         const tx = await this.contract.finishAuction(auctionId, addresses);
         return await tx.wait();
     }
-
 }

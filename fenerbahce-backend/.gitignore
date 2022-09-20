@@ -40,3 +40,4 @@ lerna-debug.log*
 !.yarn/plugins
 .pnp.*
 
+envs/*

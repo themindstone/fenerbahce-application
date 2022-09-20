@@ -6,8 +6,12 @@ import {
     Balance as BalanceRepository,
 } from "~/shared/entities";
 import { InjectRepository } from "@nestjs/typeorm";
-import { DeepPartial, NoConnectionForRepositoryError, Repository } from "typeorm";
+import { DeepPartial, Repository } from "typeorm";
 import { AuctionContract } from "~/contracts/auction.contract";
+import {
+    AuctionContractErrorsEnglish,
+    getAuctionContractErrorMessage,
+} from "~/shared/utils";
 
 @Injectable()
 export class AuctionService {
@@ -23,7 +27,8 @@ export class AuctionService {
 
     async create(auction: CreateAuctionDto) {
         const auctionId = v4();
-        await this.auctionContract.createAuction({
+        console.log("merhaba dunya");
+        const res = await this.auctionContract.createAuction({
             auctionId,
             startDate: auction.startDate,
             endDate: auction.endDate,
@@ -32,6 +37,8 @@ export class AuctionService {
             buyNowPrice: auction.buyNowPrice,
         });
 
+        console.log("merhaba dunya2");
+        console.log(res);
         const newAuction: DeepPartial<AuctionRepository> = {
             ...auction,
             id: auctionId,
@@ -40,7 +47,6 @@ export class AuctionService {
 
         const createdAuction = this.auctionRepository.create(newAuction);
         await this.auctionRepository.save(createdAuction);
-        // this.eventEmitter.emit("auction.created", {});
     }
 
     listByPage(page = 1): Auction[] | null {
@@ -125,33 +131,71 @@ export class AuctionService {
         );
     }
 
-    async finishAuction(auctionId: string) {
-        console.log(auctionId);
-        const res = await this.balanceRepository.find({
-            select: ["userAddress"],
-            where: { auctionId },
-            order: { balance: "DESC" },
-        });
+    async finishAuction(
+        auctionId: string,
+    ): Promise<{ message?: string; error?: string }> {
+        let balances, auction;
+        try {
+            const balancePromise = this.balanceRepository.find({
+                select: ["userAddress", "isRefunded"],
+                where: { auctionId },
+                order: { balance: "DESC" },
+            });
+            const auctionPromise = this.auctionRepository.findOne({
+                select: ["endDate"],
+                where: { id: auctionId },
+            });
 
-        if (res.length === 0) {
-            return { message: "There is no user paying that auction" };
+            [balances, auction] = await Promise.all([
+                balancePromise,
+                auctionPromise,
+            ]);
+            balances = balances.filter((balance) => !balance.isRefunded);
+        } catch (e: any) {
+            console.log(e);
+            return {
+                error: "An error occured, you need to try again",
+            };
         }
 
-        const [maxOffer, ...allOtherOffers] = res;
-        // we need to send MaxOffer with address to paribu and burn it
+        if (!auction) {
+            return { error: AuctionContractErrorsEnglish.AuctionNotFoundError };
+        }
+
+        if (new Date(auction.endDate) >= new Date()) {
+            // this auction have yet not to be finished
+            return {
+                error: AuctionContractErrorsEnglish.AuctionNotFinishedError,
+            };
+        }
+
+        if (balances.length === 0) {
+            try {
+                await this.auctionContract.finishAuction(auctionId, []);
+                return { message: "There is no user paying that auction" };
+            } catch (e: any) {
+                return { error: getAuctionContractErrorMessage(e.message) };
+            }
+        }
+        const [maxOffer, ...allOtherOffers] = balances;
+        // TODO: we need to send MaxOffer with address to paribu and burn it
 
         if (allOtherOffers.length === 0) {
-            return { message: "Auction max offer refunded" };
+            return { message: "Auction max offer will be burnt in Paribu" };
         }
 
         const addresses = allOtherOffers.map((offer) => {
             return offer.userAddress;
         });
 
-        await this.auctionContract.finishAuction(
-            auctionId,
-            addresses,
-        );
+        try {
+            await this.auctionContract.finishAuction(auctionId, addresses);
+        } catch (e: any) {
+            console.log(e);
+            return {
+                error: getAuctionContractErrorMessage(e.message),
+            };
+        }
 
         await this.balanceRepository
             .createQueryBuilder()

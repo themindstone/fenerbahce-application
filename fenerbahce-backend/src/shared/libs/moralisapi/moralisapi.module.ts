@@ -1,4 +1,4 @@
-import { DynamicModule, Module } from "@nestjs/common";
+import { DynamicModule, Global, Module } from "@nestjs/common";
 import { MoralisAPIModuleOptions } from "./moralisapi.constants";
 import { MoralisAPIService } from "./moralisapi.service";
 import type { Moralis } from "./interface";

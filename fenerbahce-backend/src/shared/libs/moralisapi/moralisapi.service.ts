@@ -1,23 +1,29 @@
 import { Inject, Injectable } from "@nestjs/common";
-import MoralisAPI from "moralis-v1/node";
+// import { Moral as MoralisAPI } from "moralis-v1/node";
 import { MoralisAPIModuleOptions } from "./moralisapi.constants";
-import { Moralis } from "./interface";
+import { Moralis as MoralisInterface } from "./interface";
+import * as Moralis from "moralis-v1/node";
+
+
+// const MoralisAPI = require("moralis/node");
 
 @Injectable()
 export class MoralisAPIService {
 
     constructor(
         @Inject(MoralisAPIModuleOptions)
-        private readonly options: Moralis.Options
+        private readonly options: MoralisInterface.Options
     ) {
     }
 
     async onModuleInit() {
-        await MoralisAPI.start(this.options);
+        console.log(Moralis)
+        // start(this.options);
     }
 
-    static client() {
-        return MoralisAPI;
+    public getClient() {
+        // console.log("merhaba dunya")
+        return Moralis;
     }
 
 }

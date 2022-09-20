@@ -64,11 +64,9 @@ export class AuctionController {
         if (!this.authService.isAuthenticated(username, password)) {
             throw new UnauthorizedException();
         }
-        const res= await this.auctionService.finishAuction(auctionId);
+        const res = await this.auctionService.finishAuction(auctionId);
         console.log(res);
-        return {
-            message: 'success'
-        }
+        return res;
     }
 
     @Get("/list")
