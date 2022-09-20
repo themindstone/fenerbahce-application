@@ -23,6 +23,7 @@ contract FenerbahceAuction is Ownable {
     mapping(string => Auction) idToAuctions;
     mapping(string => mapping(address => uint256)) idToOffers;
     mapping(string => uint256) idToMaxOffers;
+    mapping(string => bool) idToAuctionRefundDone;
 
     event AuctionCreated(
         string auctionId,
@@ -118,8 +119,9 @@ contract FenerbahceAuction is Ownable {
 
         // if a user deposit to an auction half an hour before the auction is finished,
         // The auction end time will be prolonged to half an hour
-        if (diff < 30 * 60 * 1000) {
-            auction.endDate += 30 * 60 * 1000 - diff;
+        uint256 maxLeftTime = 2 * 60;
+        if (diff < maxLeftTime) {
+            auction.endDate += maxLeftTime - diff;
             emit AuctionProlonged(_auctionId, auction.endDate);
         }
 
@@ -167,9 +169,7 @@ contract FenerbahceAuction is Ownable {
         emit AuctionSelled(_auctionId, msg.sender);
     }
 
-    function refund(string memory _auctionId, address _to)
-        internal
-    {
+    function refund(string memory _auctionId, address _to) public {
         require(
             block.timestamp > idToAuctions[_auctionId].endDate,
             "Auction have not finished yet!"
@@ -177,6 +177,8 @@ contract FenerbahceAuction is Ownable {
 
         uint256 value = idToOffers[_auctionId][_to];
 
+        // fbToken.safeTransferFrom(address(this), _to, value);
+        fbToken.approve(address(this), value);
         fbToken.safeTransferFrom(address(this), _to, value);
 
         emit AuctionRefunded(_auctionId, _to, value);
@@ -204,14 +206,26 @@ contract FenerbahceAuction is Ownable {
         emit AuctionBuyNowPriceUpdated(_auctionId, _newPrice);
     }
 
+    function finishAuction(
+        string memory _auctionId,
+        address[] memory _addresses
+    ) external onlyOwner {
+        require(
+            block.timestamp > idToAuctions[_auctionId].endDate,
+            "Auction have not finished yet!"
+        );
 
-    function finishAuction(string memory _auctionId, address[] memory _addresses) external onlyOwner {
-        Auction memory auction = idToAuctions[_auctionId];
+        require(
+            idToAuctionRefundDone[_auctionId] == false,
+            "Auction refund done!"
+        );
 
-        require(auction.endDate > block.timestamp, "Auction finished!");
-        for (uint i = 0; i < _addresses.length; i++) {
+        for (uint256 i = 0; i < _addresses.length; i++) {
             refund(_auctionId, _addresses[i]);
         }
+
+        idToAuctionRefundDone[_auctionId] = true;
+
         emit AuctionFinished(_auctionId);
     }
 }

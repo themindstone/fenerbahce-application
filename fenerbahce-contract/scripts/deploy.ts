@@ -10,7 +10,9 @@ async function main() {
 		const FenerbahceToken = await ethers.getContractFactory("FBToken");
 		const fenerbahceToken = await FenerbahceToken.connect(accounts[0]).deploy([
 			"0x1070cF71bEFe2D83faE5CfD337f5A118F61F227f",
-			"0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+			"0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+			"0x1dD359fAdfB0c86a89362AF845bd3dCF416Efc92",
+			"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
 		]);
 		await fenerbahceToken.deployed();
 

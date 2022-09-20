@@ -1,5 +1,6 @@
 node_modules
 .env
+.env.fuji
 coverage
 coverage.json
 typechain

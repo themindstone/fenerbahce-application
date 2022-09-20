@@ -16,6 +16,7 @@ const getConfig = (): ENV => {
 
 const env = getConfig();
 
+// console.log(env.DEPLOYER_PRIVATE_KEY)
 const config: HardhatUserConfig = {
 	solidity: "0.8.9",
 	networks: {

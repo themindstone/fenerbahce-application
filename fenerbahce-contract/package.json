@@ -1,9 +1,9 @@
 {
   "name": "hardhat-project",
   "scripts": {
-    "deploy:local": "env-cmd -f .env.local npx hardhat run scripts/deploy.ts --network localhost",
-    "deploy:fuji": "env-cmd -f .env.fuji npx hardhat run scripts/deploy.ts --network fuji",
-    "deploy:mainnet": "env-cmd -f .env npx hardhat run scripts/deploy.ts --network mainnet"
+    "deploy:local": "env-cmd -f ./.env.local npx hardhat run scripts/deploy.ts --network local",
+    "deploy:fuji": "env-cmd -f ./.env.fuji npx hardhat run scripts/deploy.ts --network fuji",
+    "deploy:mainnet": "env-cmd -f ./.env npx hardhat run scripts/deploy.ts --network mainnet"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^1.0.2",
