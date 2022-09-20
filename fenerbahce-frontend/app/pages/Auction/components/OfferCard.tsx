@@ -18,7 +18,7 @@ export const OfferCard = ({ withToken = false, address, numberOfTokens }: OfferC
 				<Text fontSize={withToken ? "22px" : "18px"} fontWeight="bold">
 					{humanReadableNumber(numberOfTokens * 36.05)}0 ₺
 				</Text>
-				{withToken && <Text>{numberOfTokens} KNRY</Text>}
+				{withToken && <Text>{numberOfTokens} FB</Text>}
 			</Flex>
 		</Flex>
 	);

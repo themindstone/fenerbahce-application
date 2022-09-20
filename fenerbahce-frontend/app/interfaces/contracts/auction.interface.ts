@@ -36,4 +36,6 @@ export interface AuctionContractErrors {
     IncreaseByBidIncrementError: string;
     UnknownError: string;
     OwnableError: string;
+    BelowBuyNowPriceError: string;
+    AuctionRefundAlreadyDoneError: string;
 }

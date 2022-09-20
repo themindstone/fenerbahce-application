@@ -4,3 +4,4 @@ export * from "./user-client.axios";
 export * from "./getShortAddress";
 export * as BigNumberUtils from "./bignumber-utils";
 export * as MathUtils from "./math-utils";
+export * from "./auctionContractErrorMessages";

@@ -20,6 +20,7 @@ import { useForm } from "react-hook-form";
 import moment from "moment";
 import { adminResultEventBus } from "~/eventbus";
 import { AdminModal } from "./components";
+import { getAuctionContractErrorMessage } from "~/utils";
 
 const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoUrls, endDate }: any): ReactElement => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -47,8 +48,33 @@ const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoUrls, en
 	);
 
 	const finishAuctionMutation = useMutation(() => {
-		return auctionClient.finishAuction({ username: "fb-admin", password: "fb-admin", auctionId });
+		return auctionClient.finishAuction({ username: "fb-admin", password: "fb-admin", auctionId }).then(res => res.data);
+	}, {
+		onSuccess: (data) => {
+			// console.log("options:", options)
+			console.log(data)
+			if (data.error) {
+				const e = getAuctionContractErrorMessage(data.error)
+				console.log(data.error, e)
+				if (!e) {
+					return;
+				}
+				adminResultEventBus.publish("adminresult.open", { isSucceed: false, description: e });
+			}
+			else if (data.message) {
+				if (data.message === "Auction max offer will be burnt in Paribu") {
+					adminResultEventBus.publish("adminresult.open", { isSucceed: true, description: "En yüksek teklif paribuda yakılıyor" });
+				}
+				else if (data.message === "There is no user paying that auction") {
+					adminResultEventBus.publish("adminresult.open", { isSucceed: true, description: "Bu açık artırma için teklif veren henüz kimse yok" });
+				}
+				else if (data.message === "success") {
+					adminResultEventBus.publish("adminresult.open", { isSucceed: true, description: "Açık artırma başarıyla sonlandı." });
+				}
+			}
+		}
 	});
+
 
 	return (
 		<Flex bg="var(--governor-bay)" p="10px" borderRadius="10px" direction="column" gap="10px">
@@ -59,18 +85,18 @@ const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoUrls, en
 				borderRadius="5px"
 				style={{ aspectRatio: "1" }}></Box>
 			<Heading size="md">{name}</Heading>
-			<Text>Hemen Al Fiyat: {buyNowPrice} TL</Text>
+			<Text>Hemen Al Fiyat: {buyNowPrice} FB</Text>
 			<Text>Bitiş Tarihi: {moment(new Date(endDate).getTime()).locale("tr").format("MMMM Do YYYY, h:mm:ss a")}</Text>
-			<WhiteButton onClick={() => finishAuctionMutation.mutate()}>Finish Auction and Refund Money</WhiteButton>
-			<GoldenFizzButton onClick={onOpen}>Update Buy Now Price</GoldenFizzButton>
+			<WhiteButton onClick={() => finishAuctionMutation.mutate()}>Açık Artırmayı Bitir</WhiteButton>
+			<GoldenFizzButton onClick={onOpen}>Hemen Al Fiyatını Güncelle</GoldenFizzButton>
 			<Modal isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay></ModalOverlay>
 				<ModalContent p="20px">
 					<form onSubmit={handleSubmit(updateBuyNowPrice)}>
 						<Flex direction="column" gap="10px" color="black">
 							<Heading size="md">{name}</Heading>
-							<Input type="text" placeholder="new buy now price" {...register("newBuyNowPrice")} />
-							<GoldenFizzButton type="submit">Update</GoldenFizzButton>
+							<Input type="text" placeholder="Yeni hemen al fiyatı" {...register("newBuyNowPrice")} />
+							<GoldenFizzButton type="submit">Güncelle</GoldenFizzButton>
 						</Flex>
 					</form>
 				</ModalContent>

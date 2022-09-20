@@ -1,8 +1,8 @@
 import { Box, Flex, FormLabel, Heading, Input, Text } from "@chakra-ui/react";
 import { Form } from "@remix-run/react";
-import { Fragment, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { GoldenFizzButton } from "~/components";
-import { Header, Layout } from "~/admincomponents";
+import { Layout } from "~/admincomponents";
 
 // we need to list products in this page
 export const CreateAuction = () => {
@@ -49,7 +49,7 @@ export const CreateAuction = () => {
 							<Input
 								placeholder="urun adi"
 								name="name"
-								defaultValue="Ömer Faruk Beyazın İlk Lig Maçı Forması"
+								defaultValue="Maçta Giyilmiş Fenerbahçe - Hull City Özel Fenerbahçe Token Forması"
 							/>
 						</FormLabel>
 						<FormLabel gap="5px" display="flex" flexDirection="column">
@@ -59,7 +59,7 @@ export const CreateAuction = () => {
 									{arr.map(item => {
 										return (
 											<Input
-												defaultValue="/build/_assets/uniform-W6QJQIUR.png"
+												defaultValue="https://fenerbahce-auction-bucket.s3.eu-central-1.amazonaws.com/forma1.jpg"
 												placeholder="urun fotograflari"
 												name={`photoUrls[]`}
 												key={`product-photos-${item}`}
@@ -68,8 +68,8 @@ export const CreateAuction = () => {
 									})}
 								</Flex>
 								<Flex gap="10px">
-									<GoldenFizzButton onClick={increase}>Plus</GoldenFizzButton>
-									<GoldenFizzButton onClick={decrease}>Minus</GoldenFizzButton>
+									<GoldenFizzButton onClick={increase}>Ekle</GoldenFizzButton>
+									<GoldenFizzButton onClick={decrease}>Çıkar</GoldenFizzButton>
 								</Flex>
 							</Flex>
 						</FormLabel>
@@ -95,7 +95,7 @@ export const CreateAuction = () => {
 						</FormLabel>
 						<FormLabel gap="5px" display="flex" flexDirection="column">
 							<Text>Açık Artırma Bitiş Tarihi (ay-gun-yıl)</Text>
-							<Input placeholder="bitis tarih (ay-gun-yil)" name="endDate" defaultValue="09/18/2022 01:24:11" />
+							<Input placeholder="bitis tarih (ay-gun-yil)" name="endDate" defaultValue="09/19/2022 14:24:11" />
 						</FormLabel>
 						<GoldenFizzButton alignSelf="start" type="submit">
 							Ekle

@@ -5,6 +5,7 @@ interface TimeLeftInterface {
 	hours: string;
 	minutes: string;
 	seconds: string;
+    status: "loading" | "success" | "undefined"
 }
 
 const timeLeftInitialValue: TimeLeftInterface = {
@@ -12,6 +13,7 @@ const timeLeftInitialValue: TimeLeftInterface = {
 	hours: "",
 	minutes: "",
 	seconds: "",
+    status: "loading"
 };
 
 export const useCountdownTimer = (date: string): TimeLeftInterface => {
@@ -20,13 +22,20 @@ export const useCountdownTimer = (date: string): TimeLeftInterface => {
     useEffect(() => {
         const timer = setTimeout(() => {
             let difference = +new Date(date) - +new Date();
-            let timeLeft = {
+            if (difference < 0) {
+                setTimeLeft((prev) => ({
+                    ...prev,
+                    status: "undefined"
+                }));
+                return;
+            }
+            setTimeLeft({
                 days: Math.floor(difference / (1000 * 60 * 60 * 24)).toString().padStart(2, "0"),
                 hours: Math.floor((difference / (1000 * 60 * 60)) % 24).toString().padStart(2, "0"),
                 minutes: Math.floor((difference / 1000 / 60) % 60).toString().padStart(2, "0"),
                 seconds: Math.floor((difference / 1000) % 60).toString().padStart(2, "0"),
-            };
-            setTimeLeft(timeLeft);
+                status: "success",
+            });
         }, 1000);
 
         return () => {

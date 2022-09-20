@@ -36,7 +36,7 @@ export const ProductInfo = (): ReactElement => {
 
 	const [balances, setBalances] = useState(() => auction.balances);
 
-	const { days, hours, minutes } = useCountdownTimer(auction.endDate);
+	const { days, hours, minutes, status } = useCountdownTimer(auction.endDate);
 
 	const auctionContract = useAuctionContract();
 	const fbTokenContract = useFBTokenContract();
@@ -81,9 +81,8 @@ export const ProductInfo = (): ReactElement => {
 			return;
 		}
 
-		console.log(userAllowance.data)
 		if (userAllowance.data.allowance === 0) {
-			const res = await fbTokenContract.approveAuctionContract();
+			await fbTokenContract.approveAuctionContract();
 		}
 		const balance = Number((userBalance as any).data?.balance?.toFixed?.(2)) || 0;
 
@@ -109,7 +108,7 @@ export const ProductInfo = (): ReactElement => {
 
 		setTimeout(() => {
 			auctionHighestBalances.refetch();
-		}, 5000)
+		}, 5000);
 
 		// console.log(tx, errorMessage, isError);
 	}, [auctionContract, fbTokenContract, balances, userBalance, userAllowance]);
@@ -144,6 +143,8 @@ export const ProductInfo = (): ReactElement => {
 		}
 	}, [auctionHighestBalances]);
 
+	console.log(!!days, !!hours, !!minutes)
+
 	return (
 		<Box>
 			<Flex direction="column" maxW="400px" gap="30px">
@@ -158,6 +159,7 @@ export const ProductInfo = (): ReactElement => {
 					</Text>
 				)}
 				<Heading>{auction.name}</Heading>
+				{status === "success" &&
 				<Flex direction="column" gap="10px">
 					<Text>Kalan süre</Text>
 					<Flex gap="20px">
@@ -165,7 +167,8 @@ export const ProductInfo = (): ReactElement => {
 						<TimeLeftBox left={hours} text="SAAT"></TimeLeftBox>
 						<TimeLeftBox left={minutes} text="DAKİKA"></TimeLeftBox>
 					</Flex>
-				</Flex>
+				</Flex>}
+				{status === "undefined" && "Açık artırmanın süresi doldu"}
 				<Flex gap="10px" direction="column" alignItems="stretch">
 					<WhiteButton onClick={buyNow}>HEMEN AL {humanReadableNumber(auction.buyNowPrice)}₺</WhiteButton>
 					<GoldenFizzButton onClick={deposit}>TEKLİF VER</GoldenFizzButton>
