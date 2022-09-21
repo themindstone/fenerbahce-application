@@ -23,7 +23,7 @@ export class IndexerAuctionContractRefundedDTO {
     auctionId: string;
 
     @IsString()
-    toAddress: string;
+    to: string;
 
     value: number;
 }

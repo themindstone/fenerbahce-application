@@ -15,7 +15,7 @@ import {
     formatEther,
 } from "nestjs-ethers";
 import { auctionABI } from "~/shared/data";
-const Moralis = require("moralis-v1/node");
+import { MoralisAPIService } from "~/shared/libs";
 
 interface AuctionContractCreateAuctionDto {
     auctionId: string;
@@ -41,49 +41,39 @@ export class AuctionContract {
         @InjectEthersProvider()
         private readonly provider: Provider,
         private readonly configService: ConfigService,
+        private readonly moralisApiService: MoralisAPIService,
     ) {}
 
     async onModuleInit() {
-        const auctionAddress = this.configService.get("AUCTION_CONTRACT_ADDRESS");
-        const moralisAppId = this.configService.get("MORALIS_APP_ID");
-        const moralisServerUrl = this.configService.get("MORALIS_SERVER_URL");
-        const moralisMasterKey = this.configService.get("MORALIS_MASTER_KEY");
-        const wallet = this.configService.get<string>("WALLET")
+        const auctionAddress = this.configService.get(
+            "AUCTION_CONTRACT_ADDRESS",
+        );
+        const wallet = this.configService.get<string>("WALLET");
         if (!auctionAddress) {
-            throw new Error("You need to provide auction contract address")
+            throw new Error("You need to provide auction contract address");
         }
         if (!wallet) {
             throw new Error("Wallet does not exist");
         }
-        Moralis.start({ appId: moralisAppId, serverUrl: moralisServerUrl, masterKey: moralisMasterKey });
-        
-        const auctionCreatedEventClient = new Moralis.Query("AuctionCreated");
-        const auctionCreatedEventSubscription = await auctionCreatedEventClient.subscribe();
 
-        auctionCreatedEventSubscription.on("create", (object: any) => {
-            console.log("object created");
-            console.log(object);
-        });
-
-        auctionCreatedEventSubscription.on("open", () => {
-            console.log("opened")
-        });
-
-        auctionCreatedEventSubscription.on("error", () => {
-            console.log("error")
-        });
-
-        auctionCreatedEventSubscription.on("update", (object: any) => {
-            console.log("update: ", object)
-        });
-
-        auctionCreatedEventSubscription.on("close", () => {
-            console.log("closed");
-        });
-
-        this.wallet = this.ethersSigner.createWalletfromMnemonic(
-            wallet
+        this.moralisApiService.LiveQuery("AuctionDeposited", (object) =>
+            this.auctionDeposited(object.attributes),
         );
+        this.moralisApiService.LiveQuery("AuctionSelled", (object) =>
+            this.auctionSelled(object.attributes),
+        );
+        this.moralisApiService.LiveQuery("AuctionRefunded", (object) =>
+            this.auctionRefunded(object.attributes),
+        );
+        this.moralisApiService.LiveQuery("AuctionProlonged", (object) =>
+            this.auctionProlonged(object.attributes),
+        );
+        this.moralisApiService.LiveQuery(
+            "AuctionBuyNowPriceUpdated",
+            (object) => this.auctionBuyNowPriceUpdated(object.attributes),
+        );
+
+        this.wallet = this.ethersSigner.createWalletfromMnemonic(wallet);
 
         try {
             this.contract = this.ethersContract.create(
@@ -95,38 +85,15 @@ export class AuctionContract {
             throw new Error("Error connecting to the contract");
         }
         this.startBlockNumber = await this.provider.getBlockNumber();
-
-        // subscribing for events from contract's provider
-        this.contract.on("AuctionSelled", this.auctionSelled.bind(this));
-        this.contract.on("AuctionDeposited", this.auctionDeposited.bind(this));
-        this.contract.on("AuctionRefunded", this.auctionRefunded.bind(this));
-        this.contract.on("AuctionProlonged", this.auctionProlonged.bind(this));
-        this.contract.on(
-            "AuctionBuyNowPriceUpdated",
-            this.auctionBuyNowPriceUpdated.bind(this),
-        );
     }
 
-    onModuleDestroy() {
-        // unsubscribing for events from contract's provider
-        this.contract.off("AuctionSelled", this.auctionSelled.bind(this));
-        this.contract.off("AuctionDeposited", this.auctionDeposited.bind(this));
-        this.contract.off("AuctionRefunded", this.auctionRefunded.bind(this));
-        this.contract.off("AuctionProlonged", this.auctionProlonged.bind(this));
-        this.contract.off(
-            "AuctionBuyNowPriceUpdated",
-            this.auctionBuyNowPriceUpdated.bind(this),
-        );
-    }
-
-    private async auctionDeposited(
-        auctionId: string,
-        address: string,
-        value: BigNumber,
-        e: any,
-    ) {
-        console.log("merhaba dunya2")
-        if (this.startBlockNumber >= e.blockNumber) {
+    private async auctionDeposited({
+        auctionId,
+        address,
+        value,
+        block_number,
+    }: any) {
+        if (this.startBlockNumber >= block_number) {
             return;
         }
 
@@ -137,40 +104,35 @@ export class AuctionContract {
         });
     }
 
-    private async auctionSelled(auctionId: string, address: string, e: any) {
-        if (this.startBlockNumber >= e.blockNumber) {
+    private async auctionSelled({ auctionId, buyer, block_number }: any) {
+        if (this.startBlockNumber >= block_number) {
             return;
         }
 
         this.eventEmitter.emit("auction.selled", {
             auctionId,
-            address,
+            buyer,
         });
     }
 
-    private auctionRefunded(
-        auctionId: string,
-        toAddress: string,
-        value: BigNumber,
-        e: any,
-    ) {
-        if (this.startBlockNumber >= e.blockNumber) {
+    private auctionRefunded({ auctionId, to, value, block_number }: any) {
+        if (this.startBlockNumber >= block_number) {
             return;
         }
 
         this.eventEmitter.emit("auction.refunded", {
             auctionId,
-            toAddress,
+            to,
             value: formatEther(value),
         });
     }
 
-    async auctionBuyNowPriceUpdated(
-        auctionId: string,
-        newBuyNowPrice: BigNumber,
-        e: any,
-    ) {
-        if (this.startBlockNumber >= e.blockNumber) {
+    async auctionBuyNowPriceUpdated({
+        auctionId,
+        newBuyNowPrice,
+        block_number,
+    }: any) {
+        if (this.startBlockNumber >= block_number) {
             return;
         }
 
@@ -180,8 +142,8 @@ export class AuctionContract {
         });
     }
 
-    private auctionProlonged(auctionId: string, endDate: BigNumber, e: any) {
-        if (this.startBlockNumber >= e.blockNumber) {
+    private auctionProlonged({ auctionId, endDate, block_number }: any) {
+        if (this.startBlockNumber >= block_number) {
             return;
         }
         this.eventEmitter.emit("auction.prolonged", {
@@ -210,9 +172,11 @@ export class AuctionContract {
     }
 
     async refundTokensToUsers(auctionId: string, losers: string[]) {
-        return await Promise.all(losers.map(async loser => {
-            const tx = await this.contract.refund(auctionId, loser);
-            await tx.wait();
-        }));
+        return await Promise.all(
+            losers.map(async (loser) => {
+                const tx = await this.contract.refund(auctionId, loser);
+                await tx.wait();
+            }),
+        );
     }
 }

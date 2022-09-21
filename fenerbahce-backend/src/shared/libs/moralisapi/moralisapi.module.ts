@@ -4,6 +4,7 @@ import { MoralisAPIService } from "./moralisapi.service";
 import type { Moralis } from "./interface";
 
 
+@Global()
 @Module({})
 export class MoralisAPIModule {
     static forRoot(options: Moralis.Options): DynamicModule {

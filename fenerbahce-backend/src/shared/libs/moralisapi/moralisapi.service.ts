@@ -1,11 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
-// import { Moral as MoralisAPI } from "moralis-v1/node";
 import { MoralisAPIModuleOptions } from "./moralisapi.constants";
 import { Moralis as MoralisInterface } from "./interface";
-import * as Moralis from "moralis-v1/node";
+const Moralis = require("moralis-v1/node");
+import IMoralis from "moralis-v1/types";
 
-
-// const MoralisAPI = require("moralis/node");
 
 @Injectable()
 export class MoralisAPIService {
@@ -14,16 +12,16 @@ export class MoralisAPIService {
         @Inject(MoralisAPIModuleOptions)
         private readonly options: MoralisInterface.Options
     ) {
-    }
-
-    async onModuleInit() {
-        console.log(Moralis)
-        // start(this.options);
+        Moralis.start(this.options);
     }
 
     public getClient() {
-        // console.log("merhaba dunya")
         return Moralis;
+    }
+
+    public async LiveQuery(event: string, listener: (obj: IMoralis.Object<IMoralis.Attributes>) => void) {
+        const subs = await new Moralis.Query(event).subscribe();
+        subs.on("update", listener);
     }
 
 }

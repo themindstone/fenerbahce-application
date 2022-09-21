@@ -11,7 +11,7 @@ import { EventEmitterModule } from "@nestjs/event-emitter";
 import { IndexerModule } from "~/indexer/indexer.module";
 import { ContractsModule } from "~/contracts";
 import { BalanceModule } from "~/balance/balance.module";
-// import { MoralisAPIModule } from "./shared/libs";
+import { MoralisAPIModule } from "./shared/libs";
 
 const localEthersConfig: EthersModuleOptions = {
     custom: "http://localhost:8545",
@@ -20,15 +20,15 @@ const localEthersConfig: EthersModuleOptions = {
 
 const goerliEthersConfig: EthersModuleOptions = {
     network: GOERLI_NETWORK,
-    // useDefaultProvider: false,
-    // custom: { url: `https://eth-goerli.alchemyapi.io/v2/KyAueXqubNej0IIqd6CCqTujIQg1y3B7` },
 };
 
 @Module({
     imports: [
-        // MoralisAPIModule.forRoot({
-        // appId: "TQbbsjto3Rbo2ZUkHZtpx6mD9Pj8pMRNcnL7GNUc", serverUrl: "https://rfkyqvw4bkox.usemoralis.com:2053/server", masterKey: "uyCmaY0URZL3DJfZFzsv1i1GZx6Gf90sPejaAGWx"
-        // }),
+        MoralisAPIModule.forRoot({
+            appId: "AWcjcv7yXDtXE5xnBab8nJriGDYeiOORlBoIVcfc",
+            serverUrl: "https://ou5qzymisfzs.usemoralis.com:2053/server",
+            masterKey: "KNEbIJandZZZ6MBNZF4gYhx0ExPeXVdt73bRsrN0"
+        }),
         ConfigModule.forRoot({
             isGlobal: true,
             envFilePath: envPath,

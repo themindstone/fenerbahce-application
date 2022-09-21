@@ -23,18 +23,6 @@ export class Indexer {
         private readonly balanceRepository: Repository<BalanceRepository>,
     ) {}
 
-    @OnEvent("auction.created")
-    async created({
-        auctionId,
-        bidIncrement,
-    }: IndexerAuctionContractCreatedDTO) {
-        await this.auctionRepository
-            .createQueryBuilder()
-            .update({ isActive: true, bidIncrement: bidIncrement })
-            .where({ id: auctionId })
-            .execute();
-    }
-
     @OnEvent("auction.deposited")
     async deposited({
         auctionId,
@@ -57,10 +45,10 @@ export class Indexer {
     }
 
     @OnEvent("auction.selled")
-    async selled({ auctionId, address }: any) {
+    async selled({ auctionId, buyer }: any) {
         await this.auctionRepository
             .createQueryBuilder()
-            .update({ isSelled: true, selledToAddress: address })
+            .update({ isSelled: true, selledToAddress: buyer })
             .where({ id: auctionId })
             .execute();
     }
@@ -68,7 +56,7 @@ export class Indexer {
     @OnEvent("auction.refunded")
     async refunded({
         auctionId,
-        toAddress,
+        to,
         value,
     }: IndexerAuctionContractRefundedDTO) {
         this.balanceRepository.query(
@@ -76,7 +64,7 @@ export class Indexer {
             update balances set balance = balance - $1
             where auction_id = $2 and user_address = $3
         `,
-            [value, auctionId, toAddress],
+            [value, auctionId, to],
         );
     }
 
