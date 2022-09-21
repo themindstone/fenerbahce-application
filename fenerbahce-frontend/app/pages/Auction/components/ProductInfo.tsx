@@ -104,7 +104,7 @@ export const ProductInfo = (): ReactElement => {
 		newOffer = newOffer.toFixed(2);
 		console.log("new offer:", newOffer)
 
-		const { tx, errorMessage, isError } = await auctionContract.deposit({
+		await auctionContract.deposit({
 			auctionId: auction.id,
 			value: newOffer.toString(),
 		});

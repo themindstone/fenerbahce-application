@@ -1,10 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { ReactElement } from "react";
 import { wallets } from "~/wallets";
 import { IWallet, ConnectWalletProviderInterface, ConnectWalletContextInterface } from "~/interfaces";
-import { useLoaderData } from "@remix-run/react";
-import { localChain, testnetChain, mainnetChain } from "~/constants";
-import { switchToNetwork } from "~/utils";
 
 const ConnectWalletContext = React.createContext<ConnectWalletContextInterface>({
 	initialize: (name: keyof typeof wallets) => {},

@@ -1,4 +1,3 @@
-import { ethers } from "ethers";
 import { IChain } from "~/interfaces";
 
 export const switchToNetwork = async (chain: IChain) => {

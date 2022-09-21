@@ -1,5 +1,6 @@
 import { Utility } from "~/pages";
-import { json, LinksFunction, LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
+import type { LinksFunction, LoaderFunction } from "@remix-run/node";
 import carouselStyles from "react-owl-carousel2/lib/styles.css";
 import { AuctionClient } from "~/client";
 import { config } from "~/configs";

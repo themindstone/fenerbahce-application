@@ -10,7 +10,8 @@ import {
 	useDisclosure,
 	Input,
 } from "@chakra-ui/react";
-import { ReactElement, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
+import type { ReactElement } from "react";
 import { useMutation, useQuery } from "react-query";
 import { Layout } from "~/admincomponents";
 import { useAuctionClient } from "~/client";
@@ -106,8 +107,8 @@ const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoUrls, en
 };
 
 export const UpdateBuyNowPrice = (): ReactElement => {
-	const [pageNumber, setPageNumber] = useState<number>(1);
-	const [auctionByPage, setAuctionByPage] = useState<number>(10);
+	const [pageNumber] = useState<number>(1);
+	const [auctionByPage] = useState<number>(10);
 
 	const auctionClient = useAuctionClient();
 

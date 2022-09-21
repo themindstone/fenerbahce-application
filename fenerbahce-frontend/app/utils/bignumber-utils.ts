@@ -33,15 +33,15 @@ const min = (arr: ethers.BigNumber[]): ethers.BigNumber => {
     return minValue;
 };
 
-const sort = (arr: ethers.BigNumber[]) => {
-    if (arr.length === 0) {
-        throw new Error("arr is empty");
-    }
+// const sort = (arr: ethers.BigNumber[]) => {
+//     if (arr.length === 0) {
+//         throw new Error("arr is empty");
+//     }
 
     
 
-    // return maxValue;
-}
+//     // return maxValue;
+// }
 
 
 

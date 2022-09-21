@@ -3,7 +3,7 @@ import React, { useContext, useEffect } from "react";
 import { withEmotionCache } from "@emotion/react";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from "@remix-run/react";
-import { MetaFunction, LinksFunction } from "@remix-run/node"; // Depends on the runtime you choose
+import type { MetaFunction, LinksFunction } from "@remix-run/node"; // Depends on the runtime you choose
 import { theme } from "./theme";
 import styles from "./styles/globals.css";
 import { QueryClient, QueryClientProvider } from "react-query";

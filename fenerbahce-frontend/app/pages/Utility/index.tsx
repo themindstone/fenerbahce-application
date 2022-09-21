@@ -1,4 +1,4 @@
-import { Fragment, ReactElement } from "react";
+import { ReactElement } from "react";
 import { FAQ, Footer, Header, JoinCommunity, SideNav } from "~/components";
 import { ActiveAuctions, Hero, HighestOffers, MobileApplication } from "./components";
 import { ConnectWallet } from "~/components/ConnectWallet";

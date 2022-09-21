@@ -5,7 +5,6 @@ import { Flex, Image, Text, Box } from "@chakra-ui/react";
 import { NavLink, FBTokenText } from "./utils";
 import { GoldenFizzButton, ShowAccount } from "~/components";
 import { UserIcon } from "~/assets";
-import { useHeader } from "../../hooks/useHeader";
 import { useConnectWalletModal, useWalletModal } from "~/hooks";
 
 export const DesktopHeader = (): ReactElement => {

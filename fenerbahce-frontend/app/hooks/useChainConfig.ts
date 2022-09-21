@@ -10,9 +10,6 @@ export const useChainConfig = () => {
 
     const { config } = useLoaderData();
 
-
-	
-
 	const chainConfig: IChain = useMemo(() => {
 		if (config.NODE_ENV === "development") {
 			return testnetChain;

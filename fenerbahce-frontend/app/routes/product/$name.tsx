@@ -1,5 +1,6 @@
 import { Auction } from "~/pages";
-import { json, LinksFunction, LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
+import type { LinksFunction, LoaderFunction } from "@remix-run/node";
 import imageGalleryStyles from "react-image-gallery/styles/css/image-gallery.css";
 import { AuctionClient, BalanceClient } from "~/client";
 import { config } from "~/configs";

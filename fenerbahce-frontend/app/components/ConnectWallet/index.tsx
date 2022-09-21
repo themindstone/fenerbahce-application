@@ -1,5 +1,6 @@
-import { ReactElement, useEffect } from "react";
-import { ButtonProps, Flex, Heading, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Text, useDisclosure, VStack } from "@chakra-ui/react";
+import { ReactElement } from "react";
+import { Flex, Heading, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Text, useDisclosure, VStack } from "@chakra-ui/react";
+import type { ButtonProps } from "@chakra-ui/react";
 import { connectWalletEventBus } from "~/eventbus";
 import { TokenLogoImage, MetamaskLogoImage, ParibuLogoImage } from "~/assets";
 import { ColorfulBorderButton } from "~/components";

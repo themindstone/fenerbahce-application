@@ -3,7 +3,6 @@ import { ConnectWallet, Header, SideNav, Footer } from "~/components";
 import { Grid, useMediaQuery, VStack } from "@chakra-ui/react";
 import { Gallery, ProductInfo } from "./components";
 import { ConnectWalletProvider, ContractsProvider } from "~/context";
-import { useLoaderData } from "@remix-run/react";
 
 export const Auction = (): ReactElement => {
 	const [md] = useMediaQuery("(max-width: 900px)");

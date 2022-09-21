@@ -1,4 +1,5 @@
-import { Box, ButtonProps, Flex, Heading, Text, useOutsideClick, Link, Icon } from "@chakra-ui/react";
+import { Flex, Heading, Text, useOutsideClick, Link, Icon } from "@chakra-ui/react";
+import type { ButtonProps } from "@chakra-ui/react";
 import { LegacyRef, ReactElement, useEffect, useReducer, useRef } from "react";
 import React from "react";
 import { connectWalletEventBus } from "~/eventbus";

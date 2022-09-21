@@ -1,4 +1,5 @@
-import { IconButton, IconButtonProps } from "@chakra-ui/react";
+import { IconButton } from "@chakra-ui/react";
+import type { IconButtonProps } from "@chakra-ui/react";
 import type { ReactElement } from "react";
 
 

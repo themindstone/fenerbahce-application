@@ -1,5 +1,6 @@
-import { ReactElement, SVGProps } from "react";
-import { Image, ImageProps } from "@chakra-ui/react";
+import type { ReactElement, SVGProps } from "react";
+import { Image } from "@chakra-ui/react";
+import type { ImageProps } from "@chakra-ui/react";
 import Telegram from "~/assets/icons/telegram.svg";
 import Facebook from "~/assets/icons/facebook.svg";
 import Instagram from "~/assets/icons/instagram.svg";

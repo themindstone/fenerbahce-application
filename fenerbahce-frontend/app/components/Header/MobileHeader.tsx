@@ -1,7 +1,6 @@
 import type { ReactElement } from "react";
-import { useState } from "react";
 import { Flex, Image, Box } from "@chakra-ui/react";
-import { GoldenFizzIconButton, ShowAccount, GoldenFizzButton } from "~/components";
+import { GoldenFizzIconButton, ShowAccount } from "~/components";
 import { MenuIcon, UserIcon } from "~/assets";
 import { FBTokenText } from "./utils";
 import { useConnectWalletModal, useWalletModal } from "~/hooks";

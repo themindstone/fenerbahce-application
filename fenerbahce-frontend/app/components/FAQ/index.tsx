@@ -1,8 +1,7 @@
 import type { ReactElement } from "react";
-import { Box, Flex, Heading, Icon, Image, Link, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, Heading, Link, Text, VStack } from "@chakra-ui/react";
 import { IFAQ } from "~/interfaces";
 import { faq } from "~/data";
-import React from "react";
 import { ArrowForwardIcon } from "~/assets";
 
 interface FAQItemProps extends IFAQ {}

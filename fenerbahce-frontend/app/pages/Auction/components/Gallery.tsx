@@ -1,4 +1,4 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { useLoaderData } from "@remix-run/react";
 import { ReactElement } from "react";
 import { Slideshow } from "~/components";
@@ -9,18 +9,18 @@ const options = {
     slideBy: 1,
 };
 
-const GalleryThumbnail = () => {
-};
+// const GalleryThumbnail = () => {
+// };
 
-const GalleryItem = (): ReactElement => {
+// const GalleryItem = (): ReactElement => {
 
-    return <Flex borderRadius="15px"
-                overflow="hidden"
-                bg="var(--governor-bay)"
-                direction="column" style={{ aspectRatio: "1" }}>
-                    nernbaaasdfas
-                </Flex>
-};
+//     return <Flex borderRadius="15px"
+//                 overflow="hidden"
+//                 bg="var(--governor-bay)"
+//                 direction="column" style={{ aspectRatio: "1" }}>
+//                     nernbaaasdfas
+//                 </Flex>
+// };
 
 export const Gallery = (): ReactElement => {
 
