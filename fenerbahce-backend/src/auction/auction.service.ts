@@ -1,10 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateAuctionDto, Auction } from "./auction.model";
 import { v4 } from "uuid";
-import {
-    Auction as AuctionRepository,
-    Balance as BalanceRepository,
-} from "~/shared/entities";
+import { Auction as AuctionRepository } from "~/shared/entities";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DeepPartial, Repository } from "typeorm";
 import { AuctionContract } from "~/contracts/auction.contract";
@@ -12,6 +9,7 @@ import {
     AuctionContractErrorsEnglish,
     getAuctionContractErrorMessage,
 } from "~/shared/utils";
+import { BalanceService } from "~/balance/balance.service";
 
 @Injectable()
 export class AuctionService {
@@ -20,14 +18,12 @@ export class AuctionService {
     constructor(
         @InjectRepository(AuctionRepository)
         private readonly auctionRepository: Repository<AuctionRepository>,
-        @InjectRepository(BalanceRepository)
-        private readonly balanceRepository: Repository<BalanceRepository>,
         private readonly auctionContract: AuctionContract,
+        private readonly balanceService: BalanceService,
     ) {}
 
     async create(auction: CreateAuctionDto) {
         const auctionId = v4();
-        console.log("merhaba dunya");
         const res = await this.auctionContract.createAuction({
             auctionId,
             startDate: auction.startDate,
@@ -37,8 +33,6 @@ export class AuctionService {
             buyNowPrice: auction.buyNowPrice,
         });
 
-        console.log("merhaba dunya2");
-        console.log(res);
         const newAuction: DeepPartial<AuctionRepository> = {
             ...auction,
             id: auctionId,
@@ -136,13 +130,21 @@ export class AuctionService {
     ): Promise<{ message?: string; error?: string }> {
         let balances, auction;
         try {
-            const balancePromise = this.balanceRepository.find({
-                select: ["userAddress", "isRefunded"],
-                where: { auctionId },
-                order: { balance: "DESC" },
-            });
+            const balancePromise = this.balanceService.getBalancesByAuctionId(
+                auctionId,
+                {
+                    select: ["userAddress", "isRefunded", "balance"],
+                    where: { isRefunded: false },
+                    order: { balance: "DESC" },
+                },
+            );
             const auctionPromise = this.auctionRepository.findOne({
-                select: ["endDate"],
+                select: [
+                    "endDate",
+                    "isSelled",
+                    "selledToAddress",
+                    "buyNowPrice",
+                ],
                 where: { id: auctionId },
             });
 
@@ -169,41 +171,31 @@ export class AuctionService {
             };
         }
 
-        if (balances.length === 0) {
-            try {
-                await this.auctionContract.finishAuction(auctionId, []);
-                return { message: "There is no user paying that auction" };
-            } catch (e: any) {
-                return { error: getAuctionContractErrorMessage(e.message) };
-            }
-        }
-        const [maxOffer, ...allOtherOffers] = balances;
-        // TODO: we need to send MaxOffer with address to paribu and burn it
+        let winner, losers;
 
-        if (allOtherOffers.length === 0) {
-            return { message: "Auction max offer will be burnt in Paribu" };
+        if (auction.isSelled) {
+            winner = auction.selledToAddress;
+            losers = balances.map((balance) => balance.userAddress);
+        } else {
+            [winner, ...losers] = balances.map(
+                (balance) => balance.userAddress,
+            );
         }
+        console.log(winner, losers)
 
-        const addresses = allOtherOffers.map((offer) => {
-            return offer.userAddress;
-        });
+        // TODO: we need to send auction.buyNowPrice to Paribu for burning
+        // burnMaxOffer()
 
         try {
-            await this.auctionContract.finishAuction(auctionId, addresses);
+            // TODO: update is_refunded to true for all losers with listening events
+            console.log("losers: ", losers)
+            await this.auctionContract.refundTokensToUsers(auctionId, losers);
         } catch (e: any) {
-            console.log(e);
-            return {
-                error: getAuctionContractErrorMessage(e.message),
-            };
+            console.log(e)
+            return { error: getAuctionContractErrorMessage(e.message) };
         }
 
-        await this.balanceRepository
-            .createQueryBuilder()
-            .update({
-                isRefunded: true,
-            })
-            .where(`user_address in (:...addresses)`, { addresses })
-            .execute();
+        // await this.balanceService.refundAllUsersFBToken(auctionId, losers);
 
         return {
             message: "success",

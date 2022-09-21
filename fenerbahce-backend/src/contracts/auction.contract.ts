@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import {
@@ -45,6 +45,7 @@ export class AuctionContract {
 
     async onModuleInit() {
         const auctionAddress = this.configService.get("AUCTION_CONTRACT_ADDRESS");
+        console.log(auctionAddress)
         const wallet = this.configService.get<string>("WALLET")
         if (!auctionAddress) {
             throw new Error("You need to provide auction contract address")
@@ -52,31 +53,31 @@ export class AuctionContract {
         if (!wallet) {
             throw new Error("Wallet does not exist");
         }
-        Moralis.start({ appId: "TQbbsjto3Rbo2ZUkHZtpx6mD9Pj8pMRNcnL7GNUc", serverUrl: "https://rfkyqvw4bkox.usemoralis.com:2053/server", masterKey: "uyCmaY0URZL3DJfZFzsv1i1GZx6Gf90sPejaAGWx" });
+        // Moralis.start({ appId: "TQbbsjto3Rbo2ZUkHZtpx6mD9Pj8pMRNcnL7GNUc", serverUrl: "https://rfkyqvw4bkox.usemoralis.com:2053/server", masterKey: "uyCmaY0URZL3DJfZFzsv1i1GZx6Gf90sPejaAGWx" });
         
-        const auctionCreatedEventClient = new Moralis.Query("auction_created_events");
-        const auctionCreatedEventSubscription = await auctionCreatedEventClient.subscribe();
+        // const auctionCreatedEventClient = new Moralis.Query("auction_created_events");
+        // const auctionCreatedEventSubscription = await auctionCreatedEventClient.subscribe();
 
-        auctionCreatedEventSubscription.on("create", (object: any) => {
-            console.log("object created");
-            console.log(object);
-        });
+        // auctionCreatedEventSubscription.on("create", (object: any) => {
+        //     console.log("object created");
+        //     console.log(object);
+        // });
 
-        auctionCreatedEventSubscription.on("open", () => {
-            console.log("opened")
-        });
+        // auctionCreatedEventSubscription.on("open", () => {
+        //     console.log("opened")
+        // });
 
-        auctionCreatedEventSubscription.on("error", () => {
-            console.log("error")
-        });
+        // auctionCreatedEventSubscription.on("error", () => {
+        //     console.log("error")
+        // });
 
-        auctionCreatedEventSubscription.on("update", (object: any) => {
-            console.log("update: ", object)
-        });
+        // auctionCreatedEventSubscription.on("update", (object: any) => {
+        //     console.log("update: ", object)
+        // });
 
-        auctionCreatedEventSubscription.on("close", () => {
-            console.log("closed");
-        });
+        // auctionCreatedEventSubscription.on("close", () => {
+        //     console.log("closed");
+        // });
 
         this.wallet = this.ethersSigner.createWalletfromMnemonic(
             wallet
@@ -122,6 +123,7 @@ export class AuctionContract {
         value: BigNumber,
         e: any,
     ) {
+        console.log("merhaba dunya2")
         if (this.startBlockNumber >= e.blockNumber) {
             return;
         }
@@ -157,7 +159,7 @@ export class AuctionContract {
         this.eventEmitter.emit("auction.refunded", {
             auctionId,
             toAddress,
-            value: value.toNumber(),
+            value: formatEther(value),
         });
     }
 
@@ -205,8 +207,10 @@ export class AuctionContract {
         return await tx.wait();
     }
 
-    async finishAuction(auctionId: string, addresses: string[]): Promise<any> {
-        const tx = await this.contract.finishAuction(auctionId, addresses);
-        return await tx.wait();
+    async refundTokensToUsers(auctionId: string, losers: string[]) {
+        return await Promise.all(losers.map(async loser => {
+            const tx = await this.contract.refund(auctionId, loser);
+            await tx.wait();
+        }));
     }
 }

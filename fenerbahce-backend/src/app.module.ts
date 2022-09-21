@@ -18,21 +18,13 @@ const localEthersConfig: EthersModuleOptions = {
     useDefaultProvider: false,
 };
 
-// const fujiEthersConfig: EthersModuleOptions = {
-//     custom: {
-//         url: "https://eth-mainnet.g.alchemy.com/v2/fMCE1lXY5v0mfIOR0lZjxG_MVcZqT0BE",
-//     },
-//     useDefaultProvider: false,
-//     alchemy: "fMCE1lXY5v0mfIOR0lZjxG_MVcZqT0BE",
-// };
-
-const fujiEthersConfig: EthersModuleOptions = {
+const goerliEthersConfig: EthersModuleOptions = {
     network: {
-        chainId: 43113,
-        name: "avalanche-fuji",
+        chainId: 420,
+        name: "goerli-eth",
     },
     useDefaultProvider: false,
-    custom: { url: "https://api.avax-test.network/ext/bc/C/rpc" },
+    custom: { url: `https://eth-goerli.alchemyapi.io/v2/KyAueXqubNej0IIqd6CCqTujIQg1y3B7` },
 };
 
 @Module({
@@ -44,7 +36,7 @@ const fujiEthersConfig: EthersModuleOptions = {
             isGlobal: true,
             envFilePath: envPath,
         }),
-        EthersModule.forRoot(localEthersConfig),
+        EthersModule.forRoot(goerliEthersConfig),
         DatabaseModule,
         EventEmitterModule.forRoot(),
         AuthModule,

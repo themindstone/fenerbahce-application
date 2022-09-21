@@ -271,24 +271,6 @@ export const auctionABI = [
                 type: "string",
             },
             {
-                internalType: "address[]",
-                name: "_addresses",
-                type: "address[]",
-            },
-        ],
-        name: "finishAuction",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-    },
-    {
-        inputs: [
-            {
-                internalType: "string",
-                name: "_auctionId",
-                type: "string",
-            },
-            {
                 internalType: "address",
                 name: "_address",
                 type: "address",
@@ -316,6 +298,24 @@ export const auctionABI = [
             },
         ],
         stateMutability: "view",
+        type: "function",
+    },
+    {
+        inputs: [
+            {
+                internalType: "string",
+                name: "_auctionId",
+                type: "string",
+            },
+            {
+                internalType: "address",
+                name: "_to",
+                type: "address",
+            },
+        ],
+        name: "refund",
+        outputs: [],
+        stateMutability: "nonpayable",
         type: "function",
     },
     {
