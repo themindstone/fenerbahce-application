@@ -45,7 +45,9 @@ export class AuctionContract {
 
     async onModuleInit() {
         const auctionAddress = this.configService.get("AUCTION_CONTRACT_ADDRESS");
-        console.log(auctionAddress)
+        const moralisAppId = this.configService.get("MORALIS_APP_ID");
+        const moralisServerUrl = this.configService.get("MORALIS_SERVER_URL");
+        const moralisMasterKey = this.configService.get("MORALIS_MASTER_KEY");
         const wallet = this.configService.get<string>("WALLET")
         if (!auctionAddress) {
             throw new Error("You need to provide auction contract address")
@@ -53,31 +55,31 @@ export class AuctionContract {
         if (!wallet) {
             throw new Error("Wallet does not exist");
         }
-        // Moralis.start({ appId: "TQbbsjto3Rbo2ZUkHZtpx6mD9Pj8pMRNcnL7GNUc", serverUrl: "https://rfkyqvw4bkox.usemoralis.com:2053/server", masterKey: "uyCmaY0URZL3DJfZFzsv1i1GZx6Gf90sPejaAGWx" });
+        Moralis.start({ appId: moralisAppId, serverUrl: moralisServerUrl, masterKey: moralisMasterKey });
         
-        // const auctionCreatedEventClient = new Moralis.Query("auction_created_events");
-        // const auctionCreatedEventSubscription = await auctionCreatedEventClient.subscribe();
+        const auctionCreatedEventClient = new Moralis.Query("AuctionCreated");
+        const auctionCreatedEventSubscription = await auctionCreatedEventClient.subscribe();
 
-        // auctionCreatedEventSubscription.on("create", (object: any) => {
-        //     console.log("object created");
-        //     console.log(object);
-        // });
+        auctionCreatedEventSubscription.on("create", (object: any) => {
+            console.log("object created");
+            console.log(object);
+        });
 
-        // auctionCreatedEventSubscription.on("open", () => {
-        //     console.log("opened")
-        // });
+        auctionCreatedEventSubscription.on("open", () => {
+            console.log("opened")
+        });
 
-        // auctionCreatedEventSubscription.on("error", () => {
-        //     console.log("error")
-        // });
+        auctionCreatedEventSubscription.on("error", () => {
+            console.log("error")
+        });
 
-        // auctionCreatedEventSubscription.on("update", (object: any) => {
-        //     console.log("update: ", object)
-        // });
+        auctionCreatedEventSubscription.on("update", (object: any) => {
+            console.log("update: ", object)
+        });
 
-        // auctionCreatedEventSubscription.on("close", () => {
-        //     console.log("closed");
-        // });
+        auctionCreatedEventSubscription.on("close", () => {
+            console.log("closed");
+        });
 
         this.wallet = this.ethersSigner.createWalletfromMnemonic(
             wallet

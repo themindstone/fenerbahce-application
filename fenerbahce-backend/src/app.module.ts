@@ -5,7 +5,7 @@ import { AppService } from "./app.service";
 import { AuthModule } from "~/auth/auth.module";
 import { AuctionModule } from "~/auction/auction.module";
 import { DatabaseModule } from "~/shared/database.module";
-import { EthersModule, EthersModuleOptions } from "nestjs-ethers";
+import { EthersModule, EthersModuleOptions, GOERLI_NETWORK } from "nestjs-ethers";
 import { envPath } from "~/shared/utils";
 import { EventEmitterModule } from "@nestjs/event-emitter";
 import { IndexerModule } from "~/indexer/indexer.module";
@@ -19,12 +19,9 @@ const localEthersConfig: EthersModuleOptions = {
 };
 
 const goerliEthersConfig: EthersModuleOptions = {
-    network: {
-        chainId: 420,
-        name: "goerli-eth",
-    },
-    useDefaultProvider: false,
-    custom: { url: `https://eth-goerli.alchemyapi.io/v2/KyAueXqubNej0IIqd6CCqTujIQg1y3B7` },
+    network: GOERLI_NETWORK,
+    // useDefaultProvider: false,
+    // custom: { url: `https://eth-goerli.alchemyapi.io/v2/KyAueXqubNej0IIqd6CCqTujIQg1y3B7` },
 };
 
 @Module({

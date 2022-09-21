@@ -30,7 +30,6 @@ const getEnvPath = (): string => {
     if (!envs[env_path]) {
         return "envs/.env.development";
     }
-    console.log(envs[env_path]);
     return envs[env_path];
 };
 
