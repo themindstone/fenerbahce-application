@@ -170,10 +170,12 @@ contract FenerbahceAuction is Ownable {
     }
 
     function refund(string memory _auctionId, address _to) public {
+        Auction memory auction = idToAuctions[_auctionId];
         require(
-            block.timestamp > idToAuctions[_auctionId].endDate,
+            block.timestamp > auction.endDate,
             "Auction have not finished yet!"
         );
+        require(auction.buyNowPrice != 0, "There is no auction like that");
 
         uint256 value = idToOffers[_auctionId][_to];
 
@@ -196,7 +198,8 @@ contract FenerbahceAuction is Ownable {
         onlyOwner
     {
         Auction memory auction = idToAuctions[_auctionId];
-        require(auction.buyNowPrice != 0, "This auction doesn't exist");
+        require(auction.isBought == false, "This auction is already selled");
+        require(auction.buyNowPrice != 0, "There is no auction like that");
         require(
             _newPrice > auction.buyNowPrice,
             "New buy now price needs to be bigger than the old price"
@@ -206,26 +209,4 @@ contract FenerbahceAuction is Ownable {
         emit AuctionBuyNowPriceUpdated(_auctionId, _newPrice);
     }
 
-    function finishAuction(
-        string memory _auctionId,
-        address[] memory _addresses
-    ) external onlyOwner {
-        require(
-            block.timestamp > idToAuctions[_auctionId].endDate,
-            "Auction have not finished yet!"
-        );
-
-        require(
-            idToAuctionRefundDone[_auctionId] == false,
-            "Auction refund done!"
-        );
-
-        for (uint256 i = 0; i < _addresses.length; i++) {
-            refund(_auctionId, _addresses[i]);
-        }
-
-        idToAuctionRefundDone[_auctionId] = true;
-
-        emit AuctionFinished(_auctionId);
-    }
 }

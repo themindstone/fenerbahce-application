@@ -1,16 +1,18 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 
-dotenv.config()
+// dotenv.config()
 
 interface ENV {
-	DEPLOYER_PRIVATE_KEY: string
+	DEPLOYER_PRIVATE_KEY: string;
+	ALCHEMY_API_KEY: string;
 };
 
 const getConfig = (): ENV => {
 	return {
-		DEPLOYER_PRIVATE_KEY: process.env.DEPLOYER_PRIVATE_KEY as string
+		DEPLOYER_PRIVATE_KEY: process.env.DEPLOYER_PRIVATE_KEY as string,
+		ALCHEMY_API_KEY: process.env.ALCHEMY_API_KEY as string
 	};
 };
 
@@ -28,12 +30,16 @@ const config: HardhatUserConfig = {
 				"ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
 			],
 		},
-		fuji: {
-			url: "https://api.avax-test.network/ext/bc/C/rpc",
-			gasPrice: 225000000000,
-			chainId: 43113,
+		// fuji: {
+		// 	url: "https://api.avax-test.network/ext/bc/C/rpc",
+		// 	gasPrice: 225000000000,
+		// 	chainId: 43113,
+		// 	accounts: [env.DEPLOYER_PRIVATE_KEY]
+		// },
+		goerli: {
+			url: `https://eth-goerli.alchemyapi.io/v2/${env.ALCHEMY_API_KEY}`,
 			accounts: [env.DEPLOYER_PRIVATE_KEY]
-		},
+		  },
 		mainnet: {
 			url: "https://api.avax.network/ext/bc/C/rpc",
 			gasPrice: 225000000000,
