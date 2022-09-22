@@ -31,8 +31,8 @@ export class BalanceService {
         const res = await this.balanceRepository
             .createQueryBuilder()
             .select("*")
-            .where("auction_id = :auctionId", { auctionId })
-            .andWhere("user_address = :userAddress", { userAddress })
+            .where("auction_id = :auctionId and user_address = :userAddress", { auctionId, userAddress })
+            // .andWhere("user_address = :userAddress", { userAddress })
             .execute();
         if (res.length === 0) {
             return null;
