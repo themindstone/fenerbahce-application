@@ -24,8 +24,8 @@ export const action: ActionFunction = async ({ request }) => {
 		const buyNowPrice = formdata.get("buyNowPrice");
 		const bidIncrement = formdata.get("bidIncrement");
 
-		const startTime = new Date(new Date(startDate).getTime() + 3 * 1000 * 60 * 60);
-		const endTime = new Date(new Date(endDate).getTime() + 3 * 1000 * 60 * 60);
+		const startTime = new Date(new Date(startDate).getTime() - 3 * 1000 * 60 * 60);
+		const endTime = new Date(new Date(endDate).getTime() - 3 * 1000 * 60 * 60);
 
 
 		try {
