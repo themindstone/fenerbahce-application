@@ -85,7 +85,6 @@ export const ProductInfo = (): ReactElement => {
 		if (userAllowance.data.allowance === 0) {
 			await fbTokenContract.approveAuctionContract();
 		}
-		console.log("approved")
 		const balance = Number((userBalance as any).data?.balance?.toFixed?.(2)) || 0;
 
 		let newOffer;
@@ -102,21 +101,23 @@ export const ProductInfo = (): ReactElement => {
 			newOffer = getMaxOffer();
 		}
 		newOffer = newOffer.toFixed(2);
-		console.log("new offer:", newOffer)
 
-		await auctionContract.deposit({
+		const { isError, errorMessage } = await auctionContract.deposit({
 			auctionId: auction.id,
 			value: newOffer.toString(),
 		});
-		const message = balance ? "Açık artırma ücretiniz güncellendi" : "Açık artırmaya başarıyla katıldınız.";
+		if (isError && errorMessage) {
+			auctionResultModalEventBus.publish("auctionresultmodal.open", { isSucceed: false, description: errorMessage });
+		}
+		else {
+			const message = balance ? "Açık artırma ücretiniz güncellendi" : "Açık artırmaya başarıyla katıldınız.";
+	
+			auctionResultModalEventBus.publish("auctionresultmodal.open", { isSucceed: true, description: message });
+			setTimeout(() => {
+				auctionHighestBalances.refetch();
+			}, 5000);
+		}
 
-		auctionResultModalEventBus.publish("auctionresultmodal.open", { isSucceed: true, description: message });
-
-		setTimeout(() => {
-			auctionHighestBalances.refetch();
-		}, 5000);
-
-		// console.log(tx, errorMessage, isError);
 	}, [auctionContract, fbTokenContract, balances, userBalance, userAllowance]);
 
 	const buyNow = useCallback(async () => {

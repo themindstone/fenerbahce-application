@@ -11,7 +11,7 @@ export async function list() {
 }
 
 export async function listByPage(page: number) {
-    const res = await BFFClient.get(`auction/:page`);
+    const res = await BFFClient.get(`auction/${page}`);
     return res.data;
 }
 

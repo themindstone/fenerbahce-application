@@ -1,18 +1,28 @@
 import { ReactElement } from "react";
-import { Flex, Heading, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Text, useDisclosure, VStack } from "@chakra-ui/react";
+import {
+	Flex,
+	Heading,
+	Image,
+	Modal,
+	ModalBody,
+	ModalCloseButton,
+	ModalContent,
+	ModalOverlay,
+	Text,
+	useDisclosure,
+	VStack,
+} from "@chakra-ui/react";
 import type { ButtonProps } from "@chakra-ui/react";
 import { connectWalletEventBus } from "~/eventbus";
 import { TokenLogoImage, MetamaskLogoImage, ParibuLogoImage } from "~/assets";
 import { ColorfulBorderButton } from "~/components";
 import { useConnectWallet } from "~/context";
 
-const CustomButton = (props: ButtonProps) => <ColorfulBorderButton
-						from="var(--biscay)"
-						to="var(--golden-fizz)"
-						angle="to right"
-						w="100%"
-						{...props}
-					>{props.children}</ColorfulBorderButton>
+const CustomButton = (props: ButtonProps) => (
+	<ColorfulBorderButton from="var(--biscay)" to="var(--golden-fizz)" angle="to right" w="100%" {...props}>
+		{props.children}
+	</ColorfulBorderButton>
+);
 
 export const ConnectWallet = (): ReactElement => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -23,8 +33,7 @@ export const ConnectWallet = (): ReactElement => {
 		try {
 			await connectWallet.connect();
 			onClose();
-		}
-		catch {
+		} catch {
 			// show user an alert that he was unable to login with metamask
 		}
 	};
@@ -32,14 +41,14 @@ export const ConnectWallet = (): ReactElement => {
 	const open = () => {
 		connectWalletEventBus.publish("connectwallet.connectwalletmodalchange", true);
 		onOpen();
-	}
+	};
 
 	const close = () => {
 		connectWalletEventBus.publish("connectwallet.connectwalletmodalchange", false);
 		onClose();
-	}
+	};
 
-    connectWalletEventBus.useListener("connectwallet.open", open, []);
+	connectWalletEventBus.useListener("connectwallet.open", open, []);
 
 	return (
 		<Modal isOpen={isOpen} onClose={close}>
@@ -54,8 +63,12 @@ export const ConnectWallet = (): ReactElement => {
 							<Text>Nasıl bağlanmak istediğinizi seçin.</Text>
 						</VStack>
 						<Flex direction="column" w="100%" gap="10px">
-							<CustomButton leftIcon={<Image src={MetamaskLogoImage} />} onClick={connectWithMetamask}>Metamask Cüzdan</CustomButton>
-							<CustomButton leftIcon={<Image src={ParibuLogoImage} />} disabled>Paribu Cüzdan</CustomButton>
+							<CustomButton leftIcon={<Image src={MetamaskLogoImage} />} onClick={connectWithMetamask}>
+								Metamask Cüzdan
+							</CustomButton>
+							<CustomButton leftIcon={<Image src={ParibuLogoImage} />} disabled>
+								Paribu Cüzdan
+							</CustomButton>
 						</Flex>
 						<Text>Cüzdanlar hakkında daha fazla bilgi edinin.</Text>
 					</VStack>

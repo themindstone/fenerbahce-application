@@ -15,7 +15,7 @@ export const useChainConfig = () => {
 			return testnetChain;
 		}
 		else if (config.NODE_ENV === "production") {
-			return mainnetChain;
+			return testnetChain;
 		}
 
 		return localChain;
