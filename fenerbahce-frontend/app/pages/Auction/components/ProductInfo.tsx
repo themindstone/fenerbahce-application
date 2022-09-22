@@ -78,6 +78,8 @@ export const ProductInfo = (): ReactElement => {
 		},
 	);
 
+	console.log(userBalance)
+
 	const deposit = useCallback(async () => {
 		await switchToNetwork();
 		if (!userAllowance.data || userAllowance.data.isError) {
@@ -105,6 +107,7 @@ export const ProductInfo = (): ReactElement => {
 			newOffer = getMaxOffer();
 		}
 		newOffer = newOffer.toFixed(2);
+		console.log(newOffer)
 
 		const { isError, errorMessage } = await auctionContract.deposit({
 			auctionId: auction.id,
