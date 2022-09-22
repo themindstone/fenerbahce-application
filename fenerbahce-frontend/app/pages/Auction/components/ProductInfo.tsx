@@ -195,7 +195,7 @@ export const ProductInfo = (): ReactElement => {
 				)}
 				{status === "undefined" && "Açık artırmanın süresi doldu"}
 				<Flex gap="10px" direction="column" alignItems="stretch">
-					<WhiteButton onClick={buyNow}>HEMEN AL {humanReadableNumber(auction.buyNowPrice)}₺</WhiteButton>
+					<WhiteButton onClick={buyNow}>HEMEN AL {humanReadableNumber(auction.buyNowPrice)} FB</WhiteButton>
 					<GoldenFizzButton onClick={deposit}>TEKLİF VER</GoldenFizzButton>
 				</Flex>
 				{balances.length === 0 && <Text>Bu açık artırmaya hiç teklif gelmedi</Text>}
