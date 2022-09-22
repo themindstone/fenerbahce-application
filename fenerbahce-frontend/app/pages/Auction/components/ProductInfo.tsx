@@ -191,18 +191,22 @@ export const ProductInfo = (): ReactElement => {
 						)}
 					</Flex>
 				)}
-				{status === "undefined" && "Açık artırmanın süresi doldu"}
-				<Flex gap="10px" direction="column" alignItems="stretch">
-					<WhiteButton onClick={buyNow}>HEMEN AL {humanReadableNumber(auction.buyNowPrice)} FB</WhiteButton>
-					<GoldenFizzButton onClick={deposit}>TEKLİF VER</GoldenFizzButton>
-				</Flex>
-				{balances.length === 0 && <Text>Bu açık artırmaya hiç teklif gelmedi</Text>}
+				{status === "undefined" && <Box borderRadius="7px" border="2px solid white" p="10px 15px" fontWeight="extrabold">AÇIK ARTIRMANIN SÜRESİ DOLDU</Box>}
+				{status === "success" && (
+					<Flex gap="10px" direction="column" alignItems="stretch">
+						<WhiteButton onClick={buyNow}>
+							HEMEN AL {humanReadableNumber(auction.buyNowPrice)} FB
+						</WhiteButton>
+						<GoldenFizzButton onClick={deposit}>TEKLİF VER</GoldenFizzButton>
+					</Flex>
+				)}
 				{balances.length !== 0 && (
 					<Fragment>
 						<Flex direction="column" gap="10px">
-							<Text>En Yüksek Teklif</Text>
+							<Text>{status === "undefined" ? "Kazanan Teklif" : "En Yüksek Teklif"}</Text>
 							{balances.length > 0 && (
 								<OfferCard
+									isWinner={status === "undefined" ? true : false}
 									withToken={true}
 									address={balances[0].userAddress}
 									numberOfTokens={balances[0].balance}

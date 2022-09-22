@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface TimeLeftInterface {
 	days: string;
@@ -17,20 +17,17 @@ const timeLeftInitialValue: TimeLeftInterface = {
 };
 
 export const useCountdownTimer = (date: string): TimeLeftInterface => {
-	// console.log(new Date(date))
-	const [timeLeft, setTimeLeft] = useState<TimeLeftInterface>(timeLeftInitialValue);
 
-	useEffect(() => {
-		const timer = setTimeout(() => {
-			let difference = +new Date(date).getTime() - +new Date().getTime();
+
+	const getObj = useCallback((): TimeLeftInterface => {
+		let difference = +new Date(date).getTime() - +new Date().getTime();
 			if (difference < 0) {
-				setTimeLeft(prev => ({
-					...prev,
+				return {
+					...timeLeftInitialValue,
 					status: "undefined",
-				}));
-				return;
+				};
 			}
-			setTimeLeft({
+			return {
 				days: Math.floor(difference / (1000 * 60 * 60 * 24))
 					.toString()
 					.padStart(2, "0"),
@@ -44,7 +41,14 @@ export const useCountdownTimer = (date: string): TimeLeftInterface => {
 					.toString()
 					.padStart(2, "0"),
 				status: "success",
-			});
+			};
+	}, [date]);
+
+	const [timeLeft, setTimeLeft] = useState<TimeLeftInterface>(() => getObj());
+
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setTimeLeft(getObj())
 		}, 1000);
 
 		return () => {

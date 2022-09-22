@@ -3,20 +3,23 @@ import { Box, Flex, Heading, Link, Text, VStack } from "@chakra-ui/react";
 import { IFAQ } from "~/interfaces";
 import { faq } from "~/data";
 import { ArrowForwardIcon } from "~/assets";
+import useCollapse from "react-collapsed";
 
 interface FAQItemProps extends IFAQ {}
 
-
 const FAQItem = ({ text, answer }: FAQItemProps): ReactElement => {
+	const { getCollapseProps, getToggleProps } = useCollapse();
+
 	return (
-		<Link>
-			<Flex borderBottom="1px solid #ddd" justifyContent="space-between" p="10px 15px">
-				<Text>
-					{text}
-				</Text>
+		<Box>
+			<Flex borderBottom="1px solid #ddd" justifyContent="space-between" p="10px 15px" {...getToggleProps()}>
+				<Text>{text}</Text>
 				<ArrowForwardIcon height="25px" width="25px" cursor="pointer" fill="#000" />
 			</Flex>
-		</Link>
+			<Box {...getCollapseProps()}>
+				<Box p="10px 15px">{answer}</Box>
+			</Box>
+		</Box>
 	);
 };
 
