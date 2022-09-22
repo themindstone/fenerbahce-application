@@ -17,5 +17,5 @@ export const useChainConfig = () => {
 		return testnetChain;
 	}, []);
 
-	return { switchToNetwork: () => switchToNetwork(chainConfig) };
+	return { switchToNetwork: async () => await switchToNetwork(chainConfig) };
 };

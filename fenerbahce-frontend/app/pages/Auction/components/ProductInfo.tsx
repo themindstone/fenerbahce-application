@@ -79,9 +79,10 @@ export const ProductInfo = (): ReactElement => {
 	);
 
 	const deposit = useCallback(async () => {
-		switchToNetwork();
+		await switchToNetwork();
 		if (!userAllowance.data || userAllowance.data.isError) {
 			auctionResultModalEventBus.publish("auctionresultmodal.open", { isSucceed: false, description: "Allowance bilgilerinizi alırken bir hata oluştu" });
+			window.location.reload();
 			return;
 		}
 
