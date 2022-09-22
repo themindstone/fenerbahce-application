@@ -115,7 +115,7 @@ export const SideNav = (): ReactElement => {
                 }}>
                     <Flex alignItems="center" gap="15px">
                         <Image src={TokenLogoImage} h="60px" />
-                        <Heading fontSize="24px">Fenerbahce Token</Heading>
+                        <Heading fontSize="24px">Fenerbahçe Token</Heading>
                     </Flex>
                     <Flex direction="column" gap="10px">
                         {sidenavlink.map((item: ISideNavLink) => {

@@ -32,7 +32,7 @@ export class BalanceService {
             .createQueryBuilder()
             .select("*")
             .where("auction_id = :auctionId", { auctionId })
-            .andWhere("user_adderss = :userAddress", { userAddress })
+            .andWhere("user_address = :userAddress", { userAddress })
             .execute();
         if (res.length === 0) {
             return null;

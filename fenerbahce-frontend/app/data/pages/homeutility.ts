@@ -8,7 +8,7 @@ export const homeutility: IHomeUtility[] = [
 	},
 	{
 		avatarUrl: "/images/token-logo.png",
-		title: "Fenerbahce'nin yarinina etki edin",
+		title: "Fenerbahçe'nin yarinina etki edin",
 		text: "Kulüp tarafindan açiklanacak anketlerde o hakki elde edin.",
 	},
 	{

@@ -45,7 +45,7 @@ const HighestOffersCard = ({ slug, offers, photoUrls }: HighestOffersCardProps):
 						<Text>25.000TL</Text>
 					</Flex>
 					<Flex justifyContent="space-between">
-						<Text>En yüksek teklif</Text>
+						<Text>En yüksek 2. teklif</Text>
 						<Text>25.000TL</Text>
 					</Flex>
 				</Flex>
