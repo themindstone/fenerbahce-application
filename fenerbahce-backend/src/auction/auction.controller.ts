@@ -108,7 +108,7 @@ export class AuctionController {
     ) {
         return await this.balanceService.getUserBalanceByAuctionId(
             auctionId,
-            userAddress,
+            userAddress.toLowerCase(),
         );
     }
 
