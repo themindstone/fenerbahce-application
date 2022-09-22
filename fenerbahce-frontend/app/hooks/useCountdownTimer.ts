@@ -5,7 +5,7 @@ interface TimeLeftInterface {
 	hours: string;
 	minutes: string;
 	seconds: string;
-    status: "loading" | "success" | "undefined"
+	status: "loading" | "success" | "undefined";
 }
 
 const timeLeftInitialValue: TimeLeftInterface = {
@@ -13,36 +13,60 @@ const timeLeftInitialValue: TimeLeftInterface = {
 	hours: "",
 	minutes: "",
 	seconds: "",
-    status: "loading"
+	status: "loading",
 };
 
 export const useCountdownTimer = (date: string): TimeLeftInterface => {
-	const [timeLeft, setTimeLeft] = useState<TimeLeftInterface>(timeLeftInitialValue);
+	const [timeLeft, setTimeLeft] = useState<TimeLeftInterface>(() => {
+		let difference = +new Date(date) - +new Date();
+		return {
+			days: Math.floor(difference / (1000 * 60 * 60 * 24))
+				.toString()
+				.padStart(2, "0"),
+			hours: Math.floor((difference / (1000 * 60 * 60)) % 24)
+				.toString()
+				.padStart(2, "0"),
+			minutes: Math.floor((difference / 1000 / 60) % 60)
+				.toString()
+				.padStart(2, "0"),
+			seconds: Math.floor((difference / 1000) % 60)
+				.toString()
+				.padStart(2, "0"),
+			status: "success",
+		};
+	});
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            let difference = +new Date(date) - +new Date();
-            if (difference < 0) {
-                setTimeLeft((prev) => ({
-                    ...prev,
-                    status: "undefined"
-                }));
-                return;
-            }
-            setTimeLeft({
-                days: Math.floor(difference / (1000 * 60 * 60 * 24)).toString().padStart(2, "0"),
-                hours: Math.floor((difference / (1000 * 60 * 60)) % 24).toString().padStart(2, "0"),
-                minutes: Math.floor((difference / 1000 / 60) % 60).toString().padStart(2, "0"),
-                seconds: Math.floor((difference / 1000) % 60).toString().padStart(2, "0"),
-                status: "success",
-            });
-        }, 1000);
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			let difference = +new Date(date) - +new Date();
+			if (difference < 0) {
+				setTimeLeft(prev => ({
+					...prev,
+					status: "undefined",
+				}));
+				return;
+			}
+			setTimeLeft({
+				days: Math.floor(difference / (1000 * 60 * 60 * 24))
+					.toString()
+					.padStart(2, "0"),
+				hours: Math.floor((difference / (1000 * 60 * 60)) % 24)
+					.toString()
+					.padStart(2, "0"),
+				minutes: Math.floor((difference / 1000 / 60) % 60)
+					.toString()
+					.padStart(2, "0"),
+				seconds: Math.floor((difference / 1000) % 60)
+					.toString()
+					.padStart(2, "0"),
+				status: "success",
+			});
+		}, 1000);
 
-        return () => {
-            clearTimeout(timer);
-        }
-    }, [timeLeft]);
+		return () => {
+			clearTimeout(timer);
+		};
+	}, [timeLeft]);
 
-
-    return timeLeft;
+	return timeLeft;
 };

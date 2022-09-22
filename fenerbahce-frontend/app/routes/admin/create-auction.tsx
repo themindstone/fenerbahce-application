@@ -18,19 +18,23 @@ export const action: ActionFunction = async ({ request }) => {
 		const password = formdata.get("password");
 		const name = formdata.get("name") as string;
 		const photoUrls = formdata.getAll("photoUrls[]");
-		const startDate = new Date(formdata.get("startDate") as string);
-		const endDate = new Date(formdata.get("endDate") as string);
+		let startDate = new Date(formdata.get("startDate") as string);
+		let endDate = new Date(formdata.get("endDate") as string);
 		const startPrice = formdata.get("startPrice");
 		const buyNowPrice = formdata.get("buyNowPrice");
 		const bidIncrement = formdata.get("bidIncrement");
+
+		const startTime = new Date(new Date(startDate).getTime() + 3 * 1000 * 60 * 60);
+		const endTime = new Date(new Date(endDate).getTime() + 3 * 1000 * 60 * 60);
+
 
 		try {
 			await AuctionClient.create({
 				username,
 				password,
 				name,
-				startDate,
-				endDate,
+				startDate: startTime,
+				endDate: endTime,
 				startPrice: startPrice,
 				buyNowPrice: buyNowPrice,
 				photoUrls,
