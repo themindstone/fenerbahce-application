@@ -123,7 +123,7 @@ export const SideNav = (): ReactElement => {
                         })}
                     </Flex>
                     {connectWallet.connectionState === "disconnected" &&
-                        <GoldenFizzButton leftIcon={<UserIcon />} fontWeight="bold" onClick={connectWalletModalOpen}>Giris Yap</GoldenFizzButton>
+                        <GoldenFizzButton leftIcon={<UserIcon />} fontWeight="bold" onClick={connectWalletModalOpen}>Giriş Yap</GoldenFizzButton>
                     }
                     {connectWallet.connectionState === "connected" &&
                         <GoldenFizzButton maxW="100%" bg="var(--golden-fizz)">
@@ -136,7 +136,7 @@ export const SideNav = (): ReactElement => {
                             return <SideNavSocialMediaIcon Icon={item.Icon} link={item.link} key={item.key} />
                         })}
                     </Flex>
-                    <Text align="center">&copy; 2022 Fenerbahce Token</Text>
+                    <Text align="center">&copy; 2022 Fenerbahçe Token</Text>
             </motion.div>
     </motion.div>);
 };

@@ -59,7 +59,7 @@ export const HighestOffers = (): ReactElement => {
 
 	return (
 		<VStack gap="20px" maxW="1000px" margin="50px auto" padding="0 30px">
-			<Heading size="xl">Aktif acik artirmalar</Heading>
+			<Heading size="xl">En Yüksek Teklif Gelen Açık Artırmalar</Heading>
 			<Carousel options={options}>
 				{highestOfferAuctions.map((item: any) => {
 					return <HighestOffersCard slug={item.slug} offers={item.offers} photoUrls={item.photoUrls} />;

@@ -68,7 +68,7 @@ export const ActiveAuctions = (): ReactElement => {
 
 	return (
 		<VStack gap="20px" maxW="1000px" margin="50px auto" padding="0 30px">
-			<Heading size="xl">Aktif acik artirmalar</Heading>
+			<Heading size="xl">Aktif Açık Artırmalar</Heading>
 			<Carousel options={options}>
 				{activeAuctions.map(((item: any) => {
 					return <ActiveAuctionsCard

@@ -19,7 +19,7 @@ export const SocialMediaIcon = ({ title, link, Icon }: SocialMediaIconProps): Re
 export const JoinCommunity = (): ReactElement => {
 	return (
 		<VStack gap="50px" bg="#fbfbfb" color="black" padding="0 0 100px">
-			<Heading size="lg">Topluluga katilin</Heading>
+			<Heading size="lg">Topluluğa Katılın</Heading>
 			<Flex
 				justifyContent="space-between"
 				maxW="1000px"
