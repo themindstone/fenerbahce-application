@@ -1,35 +1,36 @@
 import { Box, Flex, Heading, Text, useDisclosure, useInterval } from "@chakra-ui/react";
 import { Fragment, ReactElement, useCallback, useEffect, useState } from "react";
 import { GoldenFizzButton, WhiteButton, Modal1907 } from "~/components";
-import { useCountdownTimer } from "~/hooks";
+import { useChainConfig, useCountdownTimer } from "~/hooks";
 import { useLoaderData } from "@remix-run/react";
 import { OfferCard } from "./OfferCard";
 import { CollapsibleCard } from "./CollapsibleCard";
 import { TimeLeftBox } from "./TimeLeftBox";
-import { MathUtils, humanReadableNumber } from "~/utils";
+import { MathUtils, humanReadableNumber, switchToNetwork } from "~/utils";
 import { useAuctionContract, useFBTokenContract } from "~/contracts";
 import { useConnectWallet } from "~/context";
 import { useQuery } from "react-query";
 import { useAuctionClient, useBalanceClient } from "~/client";
 import { auctionResultModalEventBus } from "~/eventbus";
 
-
 const Modal = () => {
-	
-	const { isOpen, onOpen, onClose } = useDisclosure()
+	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const [description, setDescription] = useState<string>("");
 	const [isSucceed, setIsSucceed] = useState<boolean>(false);
 
-	auctionResultModalEventBus.useListener("auctionresultmodal.open", ({ isSucceed, description }) => {
-		setIsSucceed(isSucceed);
-		setDescription(description);
-		onOpen();
-	}, []);
+	auctionResultModalEventBus.useListener(
+		"auctionresultmodal.open",
+		({ isSucceed, description }) => {
+			setIsSucceed(isSucceed);
+			setDescription(description);
+			onOpen();
+		},
+		[],
+	);
 
-
-	return <Modal1907 isOpen={isOpen} onClose={onClose} description={description} isSucceed={isSucceed}></Modal1907>
-}
+	return <Modal1907 isOpen={isOpen} onClose={onClose} description={description} isSucceed={isSucceed}></Modal1907>;
+};
 
 export const ProductInfo = (): ReactElement => {
 	const { auction } = useLoaderData();
@@ -43,25 +44,29 @@ export const ProductInfo = (): ReactElement => {
 	const connectWallet = useConnectWallet();
 	const balanceClient = useBalanceClient();
 	const auctionClient = useAuctionClient();
+	const { switchToNetwork } = useChainConfig();
 
 	const userBalance = useQuery(
 		["balance", connectWallet.address],
 		() => {
-			return balanceClient.getBalanceByAuctionId(auction.id, connectWallet.address)
-				.then(res => res.data);
+			return balanceClient.getBalanceByAuctionId(auction.id, connectWallet.address).then(res => res.data);
 		},
 		{
 			enabled: connectWallet.isConnected,
 		},
 	);
 
-	const userAllowance = useQuery(["allowance", connectWallet.address], () => {
-		return fbTokenContract.getAuctionContractAllowance({
-			address: connectWallet.address,
-		});
-	}, {
-		enabled: fbTokenContract.isConnected
-	});
+	const userAllowance = useQuery(
+		["allowance", connectWallet.address],
+		() => {
+			return fbTokenContract.getAuctionContractAllowance({
+				address: connectWallet.address,
+			});
+		},
+		{
+			enabled: fbTokenContract.isConnected,
+		},
+	);
 
 	const auctionHighestBalances = useQuery(
 		["balances", auction.id],
@@ -74,11 +79,9 @@ export const ProductInfo = (): ReactElement => {
 	);
 
 	const deposit = useCallback(async () => {
-		console.log(userAllowance)
-		if (!userAllowance.data) {
-			return;
-		}
-		if (userAllowance.data.isError) {
+		switchToNetwork();
+		if (!userAllowance.data || userAllowance.data.isError) {
+			auctionResultModalEventBus.publish("auctionresultmodal.open", { isSucceed: false, description: "Allowance bilgilerinizi alırken bir hata oluştu" });
 			return;
 		}
 
@@ -107,17 +110,18 @@ export const ProductInfo = (): ReactElement => {
 			value: newOffer.toString(),
 		});
 		if (isError && errorMessage) {
-			auctionResultModalEventBus.publish("auctionresultmodal.open", { isSucceed: false, description: errorMessage });
-		}
-		else {
+			auctionResultModalEventBus.publish("auctionresultmodal.open", {
+				isSucceed: false,
+				description: errorMessage,
+			});
+		} else {
 			const message = balance ? "Açık artırma ücretiniz güncellendi" : "Açık artırmaya başarıyla katıldınız.";
-	
+
 			auctionResultModalEventBus.publish("auctionresultmodal.open", { isSucceed: true, description: message });
 			setTimeout(() => {
 				auctionHighestBalances.refetch();
 			}, 5000);
 		}
-
 	}, [auctionContract, fbTokenContract, balances, userBalance, userAllowance]);
 
 	const buyNow = useCallback(async () => {
@@ -164,15 +168,16 @@ export const ProductInfo = (): ReactElement => {
 					</Text>
 				)}
 				<Heading>{auction.name}</Heading>
-				{status === "success" &&
-				<Flex direction="column" gap="10px">
-					<Text>Kalan süre</Text>
-					<Flex gap="20px">
-						<TimeLeftBox left={days} text="GÜN"></TimeLeftBox>
-						<TimeLeftBox left={hours} text="SAAT"></TimeLeftBox>
-						<TimeLeftBox left={minutes} text="DAKİKA"></TimeLeftBox>
+				{status === "success" && (
+					<Flex direction="column" gap="10px">
+						<Text>Kalan süre</Text>
+						<Flex gap="20px">
+							<TimeLeftBox left={days} text="GÜN"></TimeLeftBox>
+							<TimeLeftBox left={hours} text="SAAT"></TimeLeftBox>
+							<TimeLeftBox left={minutes} text="DAKİKA"></TimeLeftBox>
+						</Flex>
 					</Flex>
-				</Flex>}
+				)}
 				{status === "undefined" && "Açık artırmanın süresi doldu"}
 				<Flex gap="10px" direction="column" alignItems="stretch">
 					<WhiteButton onClick={buyNow}>HEMEN AL {humanReadableNumber(auction.buyNowPrice)}₺</WhiteButton>

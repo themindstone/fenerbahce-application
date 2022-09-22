@@ -19,7 +19,7 @@ export const mainnetChain: IChain = {
 
 export const testnetChain: IChain = {
 	isDefaultNetwork: true,
-	chainId: `0x${(420).toString(16)}`,
+	chainId: `0x${(5).toString(16)}`,
 };
 
 console.log("testnet:", testnetChain)
