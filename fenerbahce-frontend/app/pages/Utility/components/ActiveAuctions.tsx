@@ -45,6 +45,7 @@ const ActiveAuctionsCard = ({
 		<Flex borderRadius="15px" overflow="hidden" bg="var(--governor-bay)" direction="column">
 			<Box style={{ aspectRatio: "13/16" }}
 				bgImage={`url(${photoUrls[0]})`}
+				bgSize={"cover"}
 				w="100%"
 				bgRepeat="no-repeat"
 				bgPos="center" />

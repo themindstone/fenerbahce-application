@@ -7,9 +7,9 @@ import { ArrowForwardIcon } from "~/assets";
 interface FAQItemProps extends IFAQ {}
 
 
-const FAQItem = ({ text, url }: FAQItemProps): ReactElement => {
+const FAQItem = ({ text, answer }: FAQItemProps): ReactElement => {
 	return (
-		<Link href={url}>
+		<Link>
 			<Flex borderBottom="1px solid #ddd" justifyContent="space-between" p="10px 15px">
 				<Text>
 					{text}
@@ -26,7 +26,7 @@ export const FAQ = (): ReactElement => {
 			<Heading size="lg">Şıkça Sorulan Sorular</Heading>
 			<Box maxW="800px" w="90%">
 				{faq.map((item, index) => {
-					return <FAQItem text={item.text} url={item.url} key={index} />;
+					return <FAQItem text={item.text} answer={item.answer} key={index} />;
 				})}
 			</Box>
 		</VStack>

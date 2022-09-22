@@ -35,6 +35,7 @@ const HighestOffersCard = ({ id, offers, photoUrls }: HighestOffersCardProps): R
 				<Box
 					style={{ aspectRatio: "13/16" }}
 					bgImage={`url(${photoUrls[0]})`}
+					bgSize={"cover"}
 					w="100%"
 					bgRepeat="no-repeat"
 					bgPos="center"

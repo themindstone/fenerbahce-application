@@ -11,6 +11,7 @@ import Close from "~/assets/icons/close-icon.svg";
 import Copy from "~/assets/icons/copy-icon.svg";
 import ViewEtherscan from "~/assets/icons/view-etherscan.svg";
 import Menu from "~/assets/icons/menu-icon.svg";
+import SliderImage from "~/assets/images/slider.jpeg";
 
 import HeroImage from "./images/Hero.png";
 import UniformImage from "./images/uniform.png";
@@ -46,3 +47,4 @@ export { UniformImage4 };
 export { TokenLogoImage };
 export { MetamaskLogoImage };
 export { ParibuLogoImage };
+export { SliderImage };
