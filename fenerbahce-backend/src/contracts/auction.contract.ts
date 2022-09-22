@@ -89,7 +89,7 @@ export class AuctionContract {
 
     private async auctionDeposited({
         auctionId,
-        address,
+        from,
         value,
         block_number,
     }: any) {
@@ -99,7 +99,7 @@ export class AuctionContract {
 
         this.eventEmitter.emit("auction.deposited", {
             auctionId,
-            address,
+            address: from,
             value: formatEther(value),
         });
     }
