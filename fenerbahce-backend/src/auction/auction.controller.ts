@@ -60,7 +60,9 @@ export class AuctionController {
     }
 
     @Post("/finish")
-    async finish(@Body() { username, password, auctionId }: FinishAuctionWithCred) {
+    async finish(
+        @Body() { username, password, auctionId }: FinishAuctionWithCred,
+    ) {
         if (!this.authService.isAuthenticated(username, password)) {
             throw new UnauthorizedException();
         }
@@ -91,7 +93,6 @@ export class AuctionController {
     async listHighestOfferAuctions(): Promise<AuctionRepository[]> {
         return await this.auctionService.listHighestOfferAuctions();
     }
-
 
     @Get("/:auctionId/highest-offers")
     async getHighestOffersByAuctionId(@Param("auctionId") auctionId: string) {

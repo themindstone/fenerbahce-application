@@ -142,13 +142,13 @@ export class AuctionContract {
         });
     }
 
-    private auctionProlonged({ auctionId, endDate, block_number }: any) {
+    private auctionProlonged({ auctionId, toDate, block_number }: any) {
         if (this.startBlockNumber >= block_number) {
             return;
         }
         this.eventEmitter.emit("auction.prolonged", {
             auctionId,
-            endDate: new Date(endDate.toNumber() * 1000),
+            endDate: new Date(Number(toDate) * 1000),
         });
     }
 

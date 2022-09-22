@@ -1,9 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import {
-    FindManyOptions,
-    Repository,
-} from "typeorm";
+import { FindManyOptions, Repository } from "typeorm";
 import { Balance as BalanceRepository } from "~/shared/entities";
 
 @Injectable()
@@ -30,11 +27,17 @@ export class BalanceService {
     async getUserBalanceByAuctionId(
         auctionId: string,
         userAddress: string,
-    ): Promise<BalanceRepository | null> {
-        return await this.balanceRepository.findOne({
-            select: ["id", "balance", "userAddress"],
-            where: { auctionId, userAddress },
-        });
+    ): Promise<BalanceRepository[] | null> {
+        const res = await this.balanceRepository
+            .createQueryBuilder()
+            .select("*")
+            .where("auction_id = :auctionId", { auctionId })
+            .execute();
+        if (res.length === 0) {
+            return null;
+        }
+
+        return res[0];
     }
 
     async getBalancesByAuctionId(
