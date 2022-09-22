@@ -5,6 +5,7 @@ import Telegram from "~/assets/icons/telegram.svg";
 import Facebook from "~/assets/icons/facebook.svg";
 import Instagram from "~/assets/icons/instagram.svg";
 import Twitter from "~/assets/icons/twitter.svg";
+import LinkedIn from "~/assets/icons/linkedin.svg";
 import User from "~/assets/icons/user-icon.svg";
 import Close from "~/assets/icons/close-icon.svg";
 import Copy from "~/assets/icons/copy-icon.svg";
@@ -25,6 +26,7 @@ export const TelegramIcon = (props: ImageProps): ReactElement => <Image src={Tel
 export const FacebookIcon = (props: ImageProps): ReactElement => <Image src={Facebook} {...props} />;
 export const InstagramIcon = (props: ImageProps): ReactElement => <Image src={Instagram} {...props} />;
 export const TwitterIcon = (props: ImageProps): ReactElement => <Image src={Twitter} {...props} />;
+export const LinkedInIcon = (props: ImageProps): ReactElement => <Image src={LinkedIn} {...props} />;
 
 export const UserIcon = (props: ImageProps): ReactElement => <Image src={User} {...props} />;
 export const CloseIcon = (props: ImageProps): ReactElement => <Image src={Close} {...props} />;

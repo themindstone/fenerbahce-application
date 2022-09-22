@@ -17,11 +17,12 @@ const timeLeftInitialValue: TimeLeftInterface = {
 };
 
 export const useCountdownTimer = (date: string): TimeLeftInterface => {
+	// console.log(new Date(date))
 	const [timeLeft, setTimeLeft] = useState<TimeLeftInterface>(timeLeftInitialValue);
 
 	useEffect(() => {
 		const timer = setTimeout(() => {
-			let difference = +new Date(date) - +new Date();
+			let difference = +new Date(date).getTime() - +new Date().getTime();
 			if (difference < 0) {
 				setTimeLeft(prev => ({
 					...prev,

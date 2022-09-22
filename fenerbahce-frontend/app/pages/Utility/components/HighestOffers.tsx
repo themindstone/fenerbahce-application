@@ -4,7 +4,7 @@ import { Carousel } from "~/components";
 import { useLoaderData } from "@remix-run/react";
 
 interface HighestOffersCardProps {
-	slug: string;
+	id: string;
 	offers: number[];
 	photoUrls: string[];
 }
@@ -28,9 +28,9 @@ const options = {
 	margin: 30,
 };
 
-const HighestOffersCard = ({ slug, offers, photoUrls }: HighestOffersCardProps): ReactElement => {
+const HighestOffersCard = ({ id, offers, photoUrls }: HighestOffersCardProps): ReactElement => {
 	return (
-		<Link href={`/product/${slug}`}>
+		<Link href={`/product/${id}`}>
 			<Flex borderRadius="15px" overflow="hidden" bg="var(--governor-bay)" direction="column">
 				<Box
 					style={{ aspectRatio: "13/16" }}
@@ -62,7 +62,7 @@ export const HighestOffers = (): ReactElement => {
 			<Heading size="xl">En Yüksek Teklif Gelen Açık Artırmalar</Heading>
 			<Carousel options={options}>
 				{highestOfferAuctions.map((item: any) => {
-					return <HighestOffersCard slug={item.slug} offers={item.offers} photoUrls={item.photoUrls} />;
+					return <HighestOffersCard id={item.id} offers={item.offers} photoUrls={item.photoUrls} />;
 				})}
 			</Carousel>
 		</VStack>

@@ -78,8 +78,6 @@ export const ProductInfo = (): ReactElement => {
 		},
 	);
 
-	console.log(userBalance);
-
 	const deposit = useCallback(async () => {
 		await switchToNetwork();
 		if (!userAllowance.data || userAllowance.data.isError) {
