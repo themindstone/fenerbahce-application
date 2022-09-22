@@ -29,7 +29,7 @@ export class BalanceService {
         userAddress: string,
     ): Promise<BalanceRepository[] | null> {
         const res = await this.balanceRepository.query(`
-            select * from where auction_id = '${auctionId}' and user_address = '${userAddress}'`);
+            select * from balances where auction_id = '${auctionId}' and user_address = '${userAddress}'`);
             console.log(res);
         // const res = await this.balanceRepository
         //     .createQueryBuilder()
