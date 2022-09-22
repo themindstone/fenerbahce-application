@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { FindManyOptions, Repository } from "typeorm";
+import { EntityManager, FindManyOptions, Repository } from "typeorm";
 import { Balance as BalanceRepository } from "~/shared/entities";
 
 @Injectable()
@@ -28,12 +28,15 @@ export class BalanceService {
         auctionId: string,
         userAddress: string,
     ): Promise<BalanceRepository[] | null> {
-        const res = await this.balanceRepository
-            .createQueryBuilder()
-            .select("*")
-            .where("auction_id = :auctionId and user_address = :userAddress", { auctionId, userAddress })
-            // .andWhere("user_address = :userAddress", { userAddress })
-            .execute();
+        const res = await this.balanceRepository.query(`
+            select * from where auction_id = '${auctionId}' and user_address = '${userAddress}'`);
+            console.log(res);
+        // const res = await this.balanceRepository
+        //     .createQueryBuilder()
+        //     .select("*")
+        //     .where("auction_id = :auctionId and user_address = :userAddress", { auctionId, userAddress })
+        //     // .andWhere("user_address = :userAddress", { userAddress })
+        //     .execute();
         if (res.length === 0) {
             return null;
         }
