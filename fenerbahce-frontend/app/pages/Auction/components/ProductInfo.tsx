@@ -37,7 +37,7 @@ export const ProductInfo = (): ReactElement => {
 
 	const [balances, setBalances] = useState(() => auction.balances);
 
-	const { days, hours, minutes, status } = useCountdownTimer(auction.endDate);
+	const { days, hours, minutes, seconds, status } = useCountdownTimer(auction.endDate);
 
 	const auctionContract = useAuctionContract();
 	const fbTokenContract = useFBTokenContract();
@@ -78,12 +78,15 @@ export const ProductInfo = (): ReactElement => {
 		},
 	);
 
-	console.log(userBalance)
+	console.log(userBalance);
 
 	const deposit = useCallback(async () => {
 		await switchToNetwork();
 		if (!userAllowance.data || userAllowance.data.isError) {
-			auctionResultModalEventBus.publish("auctionresultmodal.open", { isSucceed: false, description: "Allowance bilgilerinizi alırken bir hata oluştu" });
+			auctionResultModalEventBus.publish("auctionresultmodal.open", {
+				isSucceed: false,
+				description: "Allowance bilgilerinizi alırken bir hata oluştu",
+			});
 			window.location.reload();
 			return;
 		}
@@ -107,7 +110,7 @@ export const ProductInfo = (): ReactElement => {
 			newOffer = getMaxOffer();
 		}
 		newOffer = newOffer.toFixed(2);
-		console.log(newOffer)
+		console.log(newOffer);
 
 		const { isError, errorMessage } = await auctionContract.deposit({
 			auctionId: auction.id,
@@ -175,11 +178,19 @@ export const ProductInfo = (): ReactElement => {
 				{status === "success" && (
 					<Flex direction="column" gap="10px">
 						<Text>Kalan süre</Text>
-						<Flex gap="20px">
-							<TimeLeftBox left={days} text="GÜN"></TimeLeftBox>
-							<TimeLeftBox left={hours} text="SAAT"></TimeLeftBox>
-							<TimeLeftBox left={minutes} text="DAKİKA"></TimeLeftBox>
-						</Flex>
+						{days === "00" ? (
+							<Flex gap="20px">
+								<TimeLeftBox left={hours} text="SAAT"></TimeLeftBox>
+								<TimeLeftBox left={minutes} text="DAKİKA"></TimeLeftBox>
+								<TimeLeftBox left={seconds} text="SANİYE"></TimeLeftBox>
+							</Flex>
+						) : (
+							<Flex gap="20px">
+								<TimeLeftBox left={days} text="GÜN"></TimeLeftBox>
+								<TimeLeftBox left={hours} text="SAAT"></TimeLeftBox>
+								<TimeLeftBox left={minutes} text="DAKİKA"></TimeLeftBox>
+							</Flex>
+						)}
 					</Flex>
 				)}
 				{status === "undefined" && "Açık artırmanın süresi doldu"}
