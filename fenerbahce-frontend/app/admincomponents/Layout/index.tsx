@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import React from "react";
-import { Header } from "~/components";
+import { Header } from "~/admincomponents";
 import { ConnectWalletProvider, ContractsProvider } from "~/context";
 
 interface LayoutProps {

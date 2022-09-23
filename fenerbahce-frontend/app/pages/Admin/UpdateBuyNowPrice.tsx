@@ -134,7 +134,7 @@ export const UpdateBuyNowPrice = (): ReactElement => {
 	});
 
 	if (!auctions.data) {
-		return <Box>data nyok</Box>;
+		return <Box></Box>;
 	}
 
 	const addTokenToMetamask = () => {

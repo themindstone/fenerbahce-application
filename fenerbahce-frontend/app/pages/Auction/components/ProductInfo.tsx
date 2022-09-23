@@ -79,10 +79,17 @@ export const ProductInfo = (): ReactElement => {
 	);
 
 	const deposit = useCallback(async () => {
+		if (!connectWallet.isConnected) {
+			auctionResultModalEventBus.publish("auctionresultmodal.open", {
+				isSucceed: false,
+				description: "İşlem yapabilmek için cüzdanınızı bağlamanız gerekiyor.",
+			});
+			return;
+		}
 		if (!userAllowance.data || userAllowance.data.isError) {
 			auctionResultModalEventBus.publish("auctionresultmodal.open", {
 				isSucceed: false,
-				description: "Allowance bilgilerinizi alırken bir hata oluştu, sayfayı yenileyip tekrar dener misiniz?",
+				description: "Sayfayı yenileyip tekrar dener misiniz?",
 			});
 			// window.location.reload();
 			return;

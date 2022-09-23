@@ -61,9 +61,10 @@ export const HighestOffers = (): ReactElement => {
 
 	const auctions = useMemo(() => {
 		const newAuctions = highestOfferAuctions.map((auction: any) => {
+			const lowOffer = Math.floor(Math.random() * 6000) + 12000;
 			auction.offers = [
-				humanReadableNumber(Math.floor(Math.random() * 6000) + 12000 + Math.floor(Math.random() * 6000)),
-				humanReadableNumber(Math.floor(Math.random() * 6000) + 12000),
+				humanReadableNumber(lowOffer + Math.floor(Math.random() * 6000)),
+				humanReadableNumber(lowOffer),
 			];
 			return auction;
 		});
@@ -74,7 +75,7 @@ export const HighestOffers = (): ReactElement => {
 		<VStack gap="20px" maxW="1000px" margin="50px auto" padding="0 30px">
 			<Heading size="xl">En Yüksek Teklif Gelen Açık Artırmalar</Heading>
 			<Carousel options={options}>
-				{highestOfferAuctions.map((item: any) => {
+				{auctions.map((item: any) => {
 					return <HighestOffersCard id={item.id} offers={item.offers} photoUrls={item.photoUrls} />;
 				})}
 			</Carousel>

@@ -60,10 +60,11 @@ export const ActiveAuctions = (): ReactElement => {
 	const { activeAuctions } = useLoaderData();
 
 	const auctions = useMemo(() => {
+		const lowOffer = Math.floor(Math.random() * 6000) + 12000;
 		const newAuctions = activeAuctions.map((auction: any) => {
 			auction.offers = [
-				humanReadableNumber(Math.floor(Math.random() * 6000) + 12000 + Math.floor(Math.random() * 6000)),
-				humanReadableNumber(Math.floor(Math.random() * 6000) + 12000),
+				humanReadableNumber(lowOffer + Math.floor(Math.random() * 6000)),
+				humanReadableNumber(lowOffer),
 			];
 			return auction;
 		});
