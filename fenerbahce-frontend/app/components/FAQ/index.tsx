@@ -26,7 +26,7 @@ const FAQItem = ({ text, answer }: FAQItemProps): ReactElement => {
 export const FAQ = (): ReactElement => {
 	return (
 		<VStack bg="#fbfbfb" color="black" paddingTop="150px" paddingBottom="100px">
-			<Heading size="lg">Şıkça Sorulan Sorular</Heading>
+			<Heading size="lg">Sıkça Sorulan Sorular</Heading>
 			<Box maxW="800px" w="90%">
 				{faq.map((item, index) => {
 					return <FAQItem text={item.text} answer={item.answer} key={index} />;
