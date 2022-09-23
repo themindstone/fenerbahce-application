@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, useMediaQuery } from "@chakra-ui/react";
 import { useLoaderData } from "@remix-run/react";
 import { ReactElement } from "react";
 import { Slideshow } from "~/components";
@@ -24,6 +24,7 @@ const options = {
 
 export const Gallery = (): ReactElement => {
 
+	const [md] = useMediaQuery("(max-width: 900px)");
     const { auction: { photoUrls } } = useLoaderData();
 
     const _photoUrls = photoUrls.map((item: string) => {
@@ -33,7 +34,7 @@ export const Gallery = (): ReactElement => {
         };
     });
 
-    return <Box overflow="hidden">
+    return <Box overflow="hidden" maxW={md && "400px" || "unset"}>
         <Slideshow options={options} images={_photoUrls} />
     </Box>
 };
