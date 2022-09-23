@@ -7,6 +7,7 @@ import type { MetaFunction, LinksFunction } from "@remix-run/node"; // Depends o
 import { theme } from "./theme";
 import styles from "./styles/globals.css";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { TokenLogoImage } from "~/assets";
 
 import { ServerStyleContext, ClientStyleContext } from "./_context";
 import { LoadingModal } from "./components/LoadingModal";
@@ -26,6 +27,7 @@ export let links: LinksFunction = () => {
 			href: "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap",
 		},
 		{ rel: "stylesheet", href: styles },
+		{ rel: "icon", type: "image/x-icon", href: TokenLogoImage }
 	];
 };
 
