@@ -162,7 +162,7 @@ export const ProductInfo = (): ReactElement => {
 	return (
 		<Box>
 			<Flex direction="column" maxW="400px" gap="30px">
-				{auction.isSelled && (
+				{/* {auction.isSelled && (
 					<Text color="green" fontSize="20px">
 						Bu açık artırma bir başkası tarafından satın alındı
 					</Text>
@@ -171,7 +171,7 @@ export const ProductInfo = (): ReactElement => {
 					<Text color="red" fontSize="20px">
 						Bu açık artırma şu anda aktif değil
 					</Text>
-				)}
+				)} */}
 				<Heading>{auction.name}</Heading>
 				{status === "success" && (
 					<Flex direction="column" gap="10px">
@@ -191,8 +191,8 @@ export const ProductInfo = (): ReactElement => {
 						)}
 					</Flex>
 				)}
-				{status === "undefined" && <Box borderRadius="7px" border="2px solid white" p="10px 15px" fontWeight="extrabold">AÇIK ARTIRMANIN SÜRESİ DOLDU</Box>}
-				{status === "success" && (
+				{(status === "undefined" || auction.isSelled) && <Box borderRadius="7px" border="2px solid white" p="10px 15px" fontWeight="extrabold">AÇIK ARTIRMANIN TAMAMLANDI</Box>}
+				{status === "success" && !auction.isSelled && (
 					<Flex gap="10px" direction="column" alignItems="stretch">
 						<WhiteButton onClick={buyNow}>
 							HEMEN AL {humanReadableNumber(auction.buyNowPrice)} FB
@@ -203,10 +203,10 @@ export const ProductInfo = (): ReactElement => {
 				{balances.length !== 0 && (
 					<Fragment>
 						<Flex direction="column" gap="10px">
-							<Text>{status === "undefined" ? "Kazanan Teklif" : "En Yüksek Teklif"}</Text>
+							<Text>{status === "undefined" || auction.isSelled ? "Kazanan Teklif" : "En Yüksek Teklif"}</Text>
 							{balances.length > 0 && (
 								<OfferCard
-									isWinner={status === "undefined" ? true : false}
+									isWinner={status === "undefined" || auction.isSelled ? true : false}
 									withToken={true}
 									address={balances[0].userAddress}
 									numberOfTokens={balances[0].balance}
