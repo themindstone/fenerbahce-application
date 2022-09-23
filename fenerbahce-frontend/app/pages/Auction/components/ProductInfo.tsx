@@ -226,7 +226,7 @@ export const ProductInfo = (): ReactElement => {
 								/>
 							)}
 						</Flex>
-						{balances.length !== 0 && (
+						{balances.length > 1 && (
 							<Flex direction="column" gap="10px">
 								<Text>Diğer Teklifler</Text>
 								{balances.length > 1 && (
