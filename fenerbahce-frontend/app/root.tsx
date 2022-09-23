@@ -9,6 +9,7 @@ import styles from "./styles/globals.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import { ServerStyleContext, ClientStyleContext } from "./_context";
+import { LoadingModal } from "./components/LoadingModal";
 
 export const meta: MetaFunction = () => ({
 	charset: "utf-8",
@@ -81,6 +82,7 @@ export default function App() {
 			<QueryClientProvider client={queryClient}>
 				<ChakraProvider theme={theme}>
 					<Outlet />
+					<LoadingModal />
 				</ChakraProvider>
 			</QueryClientProvider>
 		</Document>

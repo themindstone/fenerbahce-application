@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import { Flex, Image, Box } from "@chakra-ui/react";
+import { Flex, Image, Box, Link } from "@chakra-ui/react";
 import { GoldenFizzIconButton, ShowAccount } from "~/components";
 import { MenuIcon, UserIcon } from "~/assets";
 import { FBTokenText } from "./utils";
@@ -8,7 +8,6 @@ import { useConnectWallet } from "~/context";
 import { sideNavEventBus } from "~/eventbus";
 
 export const MobileHeader = (): ReactElement => {
-
 	const { connectWalletModalOpen } = useConnectWalletModal();
 	const { isWalletModalOpen, showWalletModal } = useWalletModal();
 	const connectWallet = useConnectWallet();
@@ -19,12 +18,14 @@ export const MobileHeader = (): ReactElement => {
 
 	return (
 		<Flex display={{ base: "flex", lg: "none" }} w="100%" alignItems="center" justifyContent="space-between">
-			<Image src="/images/token-logo.png" w="60px" />
+			<Link href="/">
+				<Image src="/images/token-logo.png" w="60px" />
+			</Link>
 			<Flex gap="15px" alignItems="center" flexWrap="wrap-reverse">
 				<FBTokenText />
 				<MenuIcon onClick={openSideNav} cursor="pointer" />
 				<Box pos="relative">
-					{connectWallet.connectionState === "disconnected" &&
+					{connectWallet.connectionState === "disconnected" && (
 						<GoldenFizzIconButton
 							icon={<UserIcon />}
 							aria-label="user"
@@ -33,9 +34,9 @@ export const MobileHeader = (): ReactElement => {
 								pointerEvents: isWalletModalOpen ? "none" : "all",
 							}}
 						/>
-					}
+					)}
 
-					{connectWallet.connectionState === "connected" &&
+					{connectWallet.connectionState === "connected" && (
 						<GoldenFizzIconButton
 							icon={<UserIcon />}
 							aria-label="user"
@@ -44,7 +45,7 @@ export const MobileHeader = (): ReactElement => {
 								pointerEvents: isWalletModalOpen ? "none" : "all",
 							}}
 						/>
-					}
+					)}
 					<Box pos="absolute" p="10px 0px" zIndex="2" right="0" w="300px">
 						<ShowAccount />
 					</Box>

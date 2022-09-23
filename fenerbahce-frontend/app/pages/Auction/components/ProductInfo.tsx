@@ -11,7 +11,7 @@ import { useAuctionContract, useFBTokenContract } from "~/contracts";
 import { useConnectWallet } from "~/context";
 import { useQuery } from "react-query";
 import { useAuctionClient, useBalanceClient } from "~/client";
-import { auctionResultModalEventBus } from "~/eventbus";
+import { auctionResultModalEventBus, loadingModalEventBus } from "~/eventbus";
 
 const Modal = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -79,72 +79,84 @@ export const ProductInfo = (): ReactElement => {
 	);
 
 	const deposit = useCallback(async () => {
-		await switchToNetwork();
 		if (!userAllowance.data || userAllowance.data.isError) {
 			auctionResultModalEventBus.publish("auctionresultmodal.open", {
 				isSucceed: false,
-				description: "Allowance bilgilerinizi alırken bir hata oluştu",
+				description: "Allowance bilgilerinizi alırken bir hata oluştu, sayfayı yenileyip tekrar dener misiniz?",
 			});
-			window.location.reload();
+			// window.location.reload();
 			return;
 		}
+		try {
+			loadingModalEventBus.publish("loadingmodal.open", { message: "Açık artırma teklifiniz yükleniyor..." });
+			await switchToNetwork();
 
-		if (userAllowance.data.allowance === 0) {
-			await fbTokenContract.approveAuctionContract();
-		}
-		const balance = Number((userBalance as any).data?.balance?.toFixed?.(2)) || 0;
+			if (userAllowance.data.allowance === 0) {
+				await fbTokenContract.approveAuctionContract();
+			}
+			const balance = Number((userBalance as any).data?.balance?.toFixed?.(2)) || 0;
 
-		let newOffer;
-		const getMaxOffer = () => {
-			const balanceArr: number[] = balances.map((x: any) => x.balance);
-			return MathUtils.max(balanceArr) + auction.bidIncrement;
-		};
+			let newOffer;
+			const getMaxOffer = () => {
+				const balanceArr: number[] = balances.map((x: any) => x.balance);
+				return MathUtils.max(balanceArr) + auction.bidIncrement;
+			};
 
-		if (balances.length === 0) {
-			newOffer = auction.startPrice;
-		} else if (balance) {
-			newOffer = getMaxOffer() - balance;
-		} else {
-			newOffer = getMaxOffer();
-		}
-		newOffer = newOffer.toFixed(2);
-		console.log(newOffer);
+			if (balances.length === 0) {
+				newOffer = auction.startPrice;
+			} else if (balance) {
+				newOffer = getMaxOffer() - balance;
+			} else {
+				newOffer = getMaxOffer();
+			}
+			newOffer = newOffer.toFixed(2);
+			console.log(newOffer);
 
-		const { isError, errorMessage } = await auctionContract.deposit({
-			auctionId: auction.id,
-			value: newOffer.toString(),
-		});
-		if (isError && errorMessage) {
-			auctionResultModalEventBus.publish("auctionresultmodal.open", {
-				isSucceed: false,
-				description: errorMessage,
+			const { isError, errorMessage } = await auctionContract.deposit({
+				auctionId: auction.id,
+				value: newOffer.toString(),
 			});
-		} else {
-			const message = balance ? "Açık artırma ücretiniz güncellendi" : "Açık artırmaya başarıyla katıldınız.";
+			if (isError && errorMessage) {
+				auctionResultModalEventBus.publish("auctionresultmodal.open", {
+					isSucceed: false,
+					description: errorMessage,
+				});
+			} else {
+				const message = balance ? "Açık artırma ücretiniz güncellendi" : "Açık artırmaya başarıyla katıldınız.";
 
-			auctionResultModalEventBus.publish("auctionresultmodal.open", { isSucceed: true, description: message });
-			setTimeout(() => {
-				auctionHighestBalances.refetch();
-			}, 5000);
+				auctionResultModalEventBus.publish("auctionresultmodal.open", {
+					isSucceed: true,
+					description: message,
+				});
+				setTimeout(() => {
+					auctionHighestBalances.refetch();
+				}, 5000);
+			}
+		} finally {
+			loadingModalEventBus.publish("loadingmodal.close");
 		}
 	}, [auctionContract, fbTokenContract, balances, userBalance, userAllowance]);
 
 	const buyNow = useCallback(async () => {
-		let { isError, errorMessage } = await auctionContract.buyNow({
-			auctionId: auction.id,
-		});
-
-		if (isError && errorMessage) {
-			// show modal with error message
-			auctionResultModalEventBus.publish("auctionresultmodal.open", {
-				isSucceed: !isError,
-				description: errorMessage,
+		try {
+			loadingModalEventBus.publish("loadingmodal.open", { message: "Açık artırma hemen al teklifiniz veriliyor..." });
+			let { isError, errorMessage } = await auctionContract.buyNow({
+				auctionId: auction.id,
 			});
-		} else {
-			auctionResultModalEventBus.publish("auctionresultmodal.open", {
-				isSucceed: true,
-				description: "İşleminiz başarıyla tamamlandı.",
-			});
+			if (isError && errorMessage) {
+				// show modal with error message
+				auctionResultModalEventBus.publish("auctionresultmodal.open", {
+					isSucceed: !isError,
+					description: errorMessage,
+				});
+			} else {
+				auctionResultModalEventBus.publish("auctionresultmodal.open", {
+					isSucceed: true,
+					description: "İşleminiz başarıyla tamamlandı.",
+				});
+			}
+		} finally {
+			loadingModalEventBus.publish("loadingmodal.close");
 		}
 	}, [auctionContract]);
 
@@ -162,12 +174,7 @@ export const ProductInfo = (): ReactElement => {
 	return (
 		<Box>
 			<Flex direction="column" maxW="400px" gap="30px">
-				{/* {auction.isSelled && (
-					<Text color="green" fontSize="20px">
-						Bu açık artırma bir başkası tarafından satın alındı
-					</Text>
-				)}
-				{!auction.isActive && (
+				{/* {!auction.isActive && (
 					<Text color="red" fontSize="20px">
 						Bu açık artırma şu anda aktif değil
 					</Text>
@@ -191,7 +198,11 @@ export const ProductInfo = (): ReactElement => {
 						)}
 					</Flex>
 				)}
-				{(status === "undefined" || auction.isSelled) && <Box borderRadius="7px" border="2px solid white" p="10px 15px" fontWeight="extrabold">AÇIK ARTIRMANIN TAMAMLANDI</Box>}
+				{(status === "undefined" || auction.isSelled) && (
+					<Box borderRadius="7px" border="2px solid white" p="10px 15px" fontWeight="extrabold">
+						AÇIK ARTIRMANIN TAMAMLANDI
+					</Box>
+				)}
 				{status === "success" && !auction.isSelled && (
 					<Flex gap="10px" direction="column" alignItems="stretch">
 						<WhiteButton onClick={buyNow}>
@@ -203,7 +214,9 @@ export const ProductInfo = (): ReactElement => {
 				{balances.length !== 0 && (
 					<Fragment>
 						<Flex direction="column" gap="10px">
-							<Text>{status === "undefined" || auction.isSelled ? "Kazanan Teklif" : "En Yüksek Teklif"}</Text>
+							<Text>
+								{status === "undefined" || auction.isSelled ? "Kazanan Teklif" : "En Yüksek Teklif"}
+							</Text>
 							{balances.length > 0 && (
 								<OfferCard
 									isWinner={status === "undefined" || auction.isSelled ? true : false}

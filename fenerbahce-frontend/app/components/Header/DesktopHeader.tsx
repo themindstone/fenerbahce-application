@@ -1,29 +1,30 @@
 import type { ReactElement } from "react";
 import { Fragment } from "react";
 import { useConnectWallet } from "~/context";
-import { Flex, Image, Text, Box } from "@chakra-ui/react";
+import { Flex, Image, Text, Box, Link } from "@chakra-ui/react";
 import { NavLink, FBTokenText } from "./utils";
 import { GoldenFizzButton, ShowAccount } from "~/components";
 import { UserIcon } from "~/assets";
 import { useConnectWalletModal, useWalletModal } from "~/hooks";
 
 export const DesktopHeader = (): ReactElement => {
-
 	const connectWallet = useConnectWallet();
 	const { connectWalletModalOpen } = useConnectWalletModal();
 	const { isWalletModalOpen, showWalletModal } = useWalletModal();
-	
+
 	return (
 		<Fragment>
-			<Flex gap="40px" alignItems="center" display={{ base: "none", lg: "flex" }}>
-				<Flex gap="10px" alignItems="center">
-					<Image src="/images/token-logo.png" w="60px" />
-					<Text fontWeight="bold">
-						FENERBAHÇE <br /> TOKEN
-					</Text>
+			<Link href="/" _hover={{ textDecoration: "none" }}>
+				<Flex gap="40px" alignItems="center" display={{ base: "none", lg: "flex" }}>
+					<Flex gap="10px" alignItems="center">
+						<Image src="/images/token-logo.png" w="60px" />
+						<Text fontWeight="bold">
+							FENERBAHÇE <br /> TOKEN
+						</Text>
+					</Flex>
+					<FBTokenText />
 				</Flex>
-				<FBTokenText />
-			</Flex>
+			</Link>
 			<Flex gap="30px" alignItems="center" display={{ base: "none", lg: "flex" }}>
 				<NavLink>HAKKINDA</NavLink>
 				<NavLink>FAYDALAR</NavLink>
