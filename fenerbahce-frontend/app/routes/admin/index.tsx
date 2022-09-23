@@ -1,8 +1,6 @@
-import { LoaderFunction } from "@remix-run/node";
-import { json } from "remix-utils";
-import { AdminHome } from "~/pages";
+import { json, LoaderFunction } from "@remix-run/node";
+import { UpdateBuyNowPrice } from "~/pages";
 import { config } from "~/configs";
-
 
 export const loader: LoaderFunction = () => {
 	return json({
@@ -10,5 +8,4 @@ export const loader: LoaderFunction = () => {
 	});
 };
 
-
-export default () => <AdminHome />
+export default () => <UpdateBuyNowPrice />;

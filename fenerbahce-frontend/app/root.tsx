@@ -13,7 +13,7 @@ import { LoadingModal } from "./components/LoadingModal";
 
 export const meta: MetaFunction = () => ({
 	charset: "utf-8",
-	title: "New Remix App",
+	title: "$FB - Fenerbahçe Token",
 	viewport: "width=device-width,initial-scale=1",
 });
 

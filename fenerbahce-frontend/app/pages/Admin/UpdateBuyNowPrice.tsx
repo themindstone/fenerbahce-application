@@ -22,6 +22,7 @@ import moment from "moment";
 import { adminResultEventBus } from "~/eventbus";
 import { AdminModal } from "./components";
 import { getAuctionContractErrorMessage } from "~/utils";
+import { fbTokenAddress } from "~/data";
 
 const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoUrls, endDate }: any): ReactElement => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -31,14 +32,13 @@ const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoUrls, en
 	const auctionContract = useAuctionContract();
 	const auctionClient = useAuctionClient();
 
-
 	const updateBuyNowPrice = useCallback(
 		async ({ newBuyNowPrice }: any) => {
 			const { isError, errorMessage } = await auctionContract.updateBuyNowPrice({ auctionId, newBuyNowPrice });
-			console.log(isError, errorMessage)
+			console.log(isError, errorMessage);
 			if (isError && errorMessage) {
-				console.log("herhalde oluyor")
-				adminResultEventBus.publish("adminresult.open", { isSucceed: false, description: errorMessage })
+				console.log("herhalde oluyor");
+				adminResultEventBus.publish("adminresult.open", { isSucceed: false, description: errorMessage });
 				// we need to show a modal in case of errors to the user
 				return;
 			}
@@ -48,34 +48,44 @@ const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoUrls, en
 		[auctionContract],
 	);
 
-	const finishAuctionMutation = useMutation(() => {
-		return auctionClient.finishAuction({ username: "fb-admin", password: "fb-admin", auctionId }).then(res => res.data);
-	}, {
-		onSuccess: (data) => {
-			// console.log("options:", options)
-			console.log(data)
-			if (data.error) {
-				const e = getAuctionContractErrorMessage(data.error)
-				console.log(data.error, e)
-				if (!e) {
-					return;
+	const finishAuctionMutation = useMutation(
+		() => {
+			return auctionClient
+				.finishAuction({ username: "fb-admin", password: "fb-admin", auctionId })
+				.then(res => res.data);
+		},
+		{
+			onSuccess: data => {
+				// console.log("options:", options)
+				console.log(data);
+				if (data.error) {
+					const e = getAuctionContractErrorMessage(data.error);
+					console.log(data.error, e);
+					if (!e) {
+						return;
+					}
+					adminResultEventBus.publish("adminresult.open", { isSucceed: false, description: e });
+				} else if (data.message) {
+					if (data.message === "Auction max offer will be burnt in Paribu") {
+						adminResultEventBus.publish("adminresult.open", {
+							isSucceed: true,
+							description: "En yüksek teklif paribuda yakılıyor",
+						});
+					} else if (data.message === "There is no user paying that auction") {
+						adminResultEventBus.publish("adminresult.open", {
+							isSucceed: true,
+							description: "Bu açık artırma için teklif veren henüz kimse yok",
+						});
+					} else if (data.message === "success") {
+						adminResultEventBus.publish("adminresult.open", {
+							isSucceed: true,
+							description: "Açık artırma başarıyla sonlandı.",
+						});
+					}
 				}
-				adminResultEventBus.publish("adminresult.open", { isSucceed: false, description: e });
-			}
-			else if (data.message) {
-				if (data.message === "Auction max offer will be burnt in Paribu") {
-					adminResultEventBus.publish("adminresult.open", { isSucceed: true, description: "En yüksek teklif paribuda yakılıyor" });
-				}
-				else if (data.message === "There is no user paying that auction") {
-					adminResultEventBus.publish("adminresult.open", { isSucceed: true, description: "Bu açık artırma için teklif veren henüz kimse yok" });
-				}
-				else if (data.message === "success") {
-					adminResultEventBus.publish("adminresult.open", { isSucceed: true, description: "Açık artırma başarıyla sonlandı." });
-				}
-			}
-		}
-	});
-
+			},
+		},
+	);
 
 	return (
 		<Flex bg="var(--governor-bay)" p="10px" borderRadius="10px" direction="column" gap="10px">
@@ -87,7 +97,9 @@ const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoUrls, en
 				style={{ aspectRatio: "1" }}></Box>
 			<Heading size="md">{name}</Heading>
 			<Text>Hemen Al Fiyat: {buyNowPrice} FB</Text>
-			<Text>Bitiş Tarihi: {moment(new Date(endDate).getTime()).locale("tr").format("MMMM Do YYYY, h:mm:ss a")}</Text>
+			<Text>
+				Bitiş Tarihi: {moment(new Date(endDate).getTime()).locale("tr").format("MMMM Do YYYY, h:mm:ss a")}
+			</Text>
 			<WhiteButton onClick={() => finishAuctionMutation.mutate()}>Açık Artırmayı Bitir</WhiteButton>
 			<GoldenFizzButton onClick={onOpen}>Hemen Al Fiyatını Güncelle</GoldenFizzButton>
 			<Modal isOpen={isOpen} onClose={onClose}>
@@ -125,8 +137,35 @@ export const UpdateBuyNowPrice = (): ReactElement => {
 		return <Box>data nyok</Box>;
 	}
 
+	const addTokenToMetamask = () => {
+		if (!window.ethereum) {
+			return;
+		}
+		const ethereum = window.ethereum as any;
+		ethereum.request({
+			method: "wallet_watchAsset",
+			params: {
+				type: "ERC20",
+				options: {
+					address: fbTokenAddress,
+					symbol: "FB",
+					decimals: 18,
+				},
+			},
+		});
+	};
+
 	return (
 		<Layout>
+			<Flex gap="10px" margin="20px 0">
+				<GoldenFizzButton onClick={addTokenToMetamask}>Tokeni Metamask'a Ekle</GoldenFizzButton>
+				<GoldenFizzButton
+					onClick={() => {
+						window.location.href = "/admin/create-auction";
+					}}>
+					Açık Artırma Oluştur
+				</GoldenFizzButton>
+			</Flex>
 			<Grid gridTemplateColumns="1fr 1fr 1fr" gap="20px">
 				{(auctions.data as any[]).map((product: any) => {
 					return (
