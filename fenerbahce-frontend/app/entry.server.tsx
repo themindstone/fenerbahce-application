@@ -7,6 +7,9 @@ import type { EntryContext } from "@remix-run/node";
 
 import { ServerStyleContext } from "./_context";
 import createEmotionCache from "./createEmotionCache";
+import { config } from "~/configs";
+
+global.config = config;
 
 export default function handleRequest(
 	request: Request,

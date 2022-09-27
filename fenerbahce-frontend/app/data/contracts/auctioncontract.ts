@@ -1,4 +1,9 @@
-export const auctionAddress = "0x540B7FdEb8b622430F12F9b672574A1C0c5AFDcC";
+
+export const auctionAddress = {
+	"development": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+	"testing": "0x540B7FdEb8b622430F12F9b672574A1C0c5AFDcC",
+	"production": ""
+};
 
 export const auctionABI = [
 	{
@@ -97,6 +102,31 @@ export const auctionABI = [
 			},
 		],
 		name: "AuctionDeposited",
+		type: "event",
+	},
+	{
+		anonymous: false,
+		inputs: [
+			{
+				indexed: false,
+				internalType: "string",
+				name: "auctionId",
+				type: "string",
+			},
+			{
+				indexed: false,
+				internalType: "address",
+				name: "from",
+				type: "address",
+			},
+			{
+				indexed: false,
+				internalType: "uint256",
+				name: "value",
+				type: "uint256",
+			},
+		],
+		name: "AuctionDepositedWithBidIncrement",
 		type: "event",
 	},
 	{
@@ -258,7 +288,7 @@ export const auctionABI = [
 				type: "uint256",
 			},
 		],
-		name: "depositToAuction",
+		name: "deposit",
 		outputs: [],
 		stateMutability: "nonpayable",
 		type: "function",
@@ -271,12 +301,12 @@ export const auctionABI = [
 				type: "string",
 			},
 			{
-				internalType: "address[]",
-				name: "_addresses",
-				type: "address[]",
+				internalType: "uint256",
+				name: "value",
+				type: "uint256",
 			},
 		],
-		name: "finishAuction",
+		name: "depositWithBidIncrement",
 		outputs: [],
 		stateMutability: "nonpayable",
 		type: "function",

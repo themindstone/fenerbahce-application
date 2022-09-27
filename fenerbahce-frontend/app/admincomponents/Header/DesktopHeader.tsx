@@ -27,6 +27,7 @@ export const DesktopHeader = (): ReactElement => {
 			</Link>
 			<Flex gap="30px" alignItems="center" display={{ base: "none", lg: "flex" }}>
 				<NavLink href="/admin">AÇIK ARTIRMALAR</NavLink>
+				<NavLink href="/admin/finished-auctions">BİTEN AÇIK ARTIRMALAR</NavLink>
 				<NavLink href="/admin/create-auction">AÇIK ARTIRMA OLUŞTUR</NavLink>
 				<NavLink>EN</NavLink>
 

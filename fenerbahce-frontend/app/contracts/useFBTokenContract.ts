@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import { useCallback } from "react";
+// import { useEnvironmentVariables } from "~/configs";
 import { useContract } from "~/context";
 import { auctionAddress } from "~/data";
 import { FBTokenContractFunctions, FBTokenContractErrors, FBTokenGetAuctionContractAllowanceDTO } from "~/interfaces";
@@ -29,29 +30,37 @@ export const getFBTokenContractErrorMessage = (e: string | null) => {
 export const useFBTokenContract = (): FBTokenContractFunctions => {
 	const { contract } = useContract("FBToken");
 
-	const approveAuctionContract = useCallback(async () => {
-		if (!contract) {
-			return {
-				isError: true,
-				errorMessage: "İşlem yapabilmek için cüzdanınızı bağlamanız gerekiyor.",
-			};
-		}
+	// const conf = useEnvironmentVariables();
 
-		try {
-			const transaction = await contract.approve(auctionAddress, ethers.constants.MaxUint256);
-			const tx = await transaction.wait();
+	const approveAuctionContract = useCallback(
+		async (newOffer?: number) => {
+			if (!contract) {
+				return {
+					isError: true,
+					errorMessage: "İşlem yapabilmek için cüzdanınızı bağlamanız gerekiyor.",
+				};
+			}
 
-			return {
-				tx,
-				isError: false,
-			};
-		} catch (e: any) {
-			return {
-				isError: true,
-				errorMessage: getFBTokenContractErrorMessage(e.message),
-			};
-		}
-	}, [contract]);
+			try {
+				const transaction = await contract.approve(
+					auctionAddress["development"],
+					ethers.constants.MaxUint256 ?? ethers.BigNumber.from(newOffer),
+				);
+				const tx = await transaction.wait();
+
+				return {
+					tx,
+					isError: false,
+				};
+			} catch (e: any) {
+				return {
+					isError: true,
+					errorMessage: getFBTokenContractErrorMessage(e.message),
+				};
+			}
+		},
+		[contract],
+	);
 
 	const getAuctionContractAllowance = useCallback(
 		async ({ address }: FBTokenGetAuctionContractAllowanceDTO) => {

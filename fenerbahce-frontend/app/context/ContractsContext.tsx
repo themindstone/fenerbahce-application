@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { auctionABI, auctionAddress, fbTokenAddress, fbTokenABI } from "~/data";
 import { connectContracts } from "~/hooks/useContract";
 import { useConnectWallet } from "./MetamaskConnectContext";
@@ -10,11 +10,7 @@ import {
 	ContractName,
 	ContractsStateType,
 } from "~/interfaces";
-
-const registry: IRegistry[] = [
-	{ name: "Auction", address: auctionAddress, abi: auctionABI },
-	{ name: "FBToken", address: fbTokenAddress, abi: fbTokenABI },
-];
+// import { useEnvironmentVariables } from "~/configs";
 
 const ContractsContext = React.createContext<ContractsContextInterface>({
 	connectContractIfNotConnected: (contractName: ContractName) => {},
@@ -26,6 +22,7 @@ const ContractsContext = React.createContext<ContractsContextInterface>({
 
 export const ContractsProvider = ({ children }: ContractsProviderProps) => {
 	const { isConnected } = useConnectWallet();
+	// const conf = useEnvironmentVariables();
 
 	const [contracts, setContracts] = useState<ContractsStateType>({
 		Auction: null,
@@ -33,6 +30,14 @@ export const ContractsProvider = ({ children }: ContractsProviderProps) => {
 	});
 
 	const [contractQueue, setContractQueue] = useState<ContractName[]>([]);
+
+	const registry: IRegistry[] = useMemo(
+		() => [
+			{ name: "Auction", address: auctionAddress["development"], abi: auctionABI },
+			{ name: "FBToken", address: fbTokenAddress, abi: fbTokenABI },
+		],
+		[],
+	);
 
 	const connectContractIfNotConnected = (contractName: ContractName) => {
 		if (!isConnected && !contractQueue.includes(contractName)) {

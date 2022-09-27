@@ -1,7 +1,7 @@
 import { useDisclosure } from "@chakra-ui/react";
 import { useState } from "react";
 import { Modal1907 } from "~/components";
-import { adminResultEventBus } from "~/eventbus";
+import { modal1907EventBus } from "~/eventbus";
 
 export const AdminModal = () => {
 	const { isOpen, onClose, onOpen } = useDisclosure();
@@ -9,8 +9,8 @@ export const AdminModal = () => {
 	const [description, setDescription] = useState<string>("");
 	const [isSucceed, setIsSucceed] = useState<boolean>(false);
 
-	adminResultEventBus.useListener(
-		"adminresult.open",
+	modal1907EventBus.useListener(
+		"modal.open",
 		({ isSucceed, description }) => {
 			console.log("olmadi mi")
 			setDescription(description);

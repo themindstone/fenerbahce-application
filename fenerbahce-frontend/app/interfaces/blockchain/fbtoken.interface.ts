@@ -18,7 +18,7 @@ export interface FBTokenGetAuctionContractAllowanceDTO {
 
 
 export interface FBTokenContractFunctions {
-	approveAuctionContract: () => Promise<{ tx?: ethers.Transaction, isError: boolean, errorMessage?: string; }>;
+	approveAuctionContract: (newOffer?: number) => Promise<{ tx?: ethers.Transaction, isError: boolean, errorMessage?: string; }>;
 	getAuctionContractAllowance: (params: FBTokenGetAuctionContractAllowanceDTO) => Promise<{ allowance?: number, isError: boolean, errorMessage?: string }>;
 	isConnected: boolean;
 };

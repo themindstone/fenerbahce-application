@@ -7,7 +7,7 @@
 	"scripts": {
 		"build": "remix build",
 		"build:remix": "remix build",
-		"dev": "NODE_ENV=development remix dev",
+		"dev": "env-cmd -f .env.development remix dev",
 		"local": "NODE_ENV=local remix dev",
 		"dev:remix": "remix dev",
 		"start": "env-cmd -f .env remix-serve api/index.js",

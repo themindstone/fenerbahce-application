@@ -1,17 +1,19 @@
+type NODE_ENV_TYPE = "development" | "testing" | "production";
+
 interface ENV {
 	BACKEND_URL: string | undefined;
-	NODE_ENV: string;
+	NODE_ENV: NODE_ENV_TYPE;
 }
 
-interface Config {
+export interface Config {
 	BACKEND_URL: string;
-	NODE_ENV: string;
+	NODE_ENV: NODE_ENV_TYPE;
 }
 
 const getEnv = (): ENV => {
 	return {
 		BACKEND_URL: process.env.BACKEND_URL,
-		NODE_ENV: process.env.NODE_ENV
+		NODE_ENV: process.env.NODE_ENV as NODE_ENV_TYPE
 	};
 };
 

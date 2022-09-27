@@ -2,8 +2,8 @@
 import React, { useContext, useEffect } from "react";
 import { withEmotionCache } from "@emotion/react";
 import { ChakraProvider } from "@chakra-ui/react";
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from "@remix-run/react";
-import type { MetaFunction, LinksFunction } from "@remix-run/node"; // Depends on the runtime you choose
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from "@remix-run/react";
+import { MetaFunction, LinksFunction, json } from "@remix-run/node";
 import { theme } from "./theme";
 import styles from "./styles/globals.css";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -11,6 +11,7 @@ import { TokenLogoImage } from "~/assets";
 
 import { ServerStyleContext, ClientStyleContext } from "./_context";
 import { LoadingModal } from "./components/LoadingModal";
+import { Config, config } from "~/configs";
 
 export const meta: MetaFunction = () => ({
 	charset: "utf-8",
@@ -27,7 +28,7 @@ export let links: LinksFunction = () => {
 			href: "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap",
 		},
 		{ rel: "stylesheet", href: styles },
-		{ rel: "icon", type: "image/x-icon", href: TokenLogoImage }
+		{ rel: "icon", type: "image/x-icon", href: TokenLogoImage },
 	];
 };
 
@@ -78,13 +79,26 @@ const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) =>
 
 const queryClient = new QueryClient();
 
+type LoaderData = {
+	config: Config;
+};
+
+export const loader = () => {
+	return json<LoaderData>({
+		config: config,
+	});
+};
+
 export default function App() {
+	const { config } = useLoaderData();
+
 	return (
 		<Document>
 			<QueryClientProvider client={queryClient}>
 				<ChakraProvider theme={theme}>
 					<Outlet />
 					<LoadingModal />
+					<script dangerouslySetInnerHTML={{ __html: `window.config = ${JSON.stringify(config)}` }}></script>
 				</ChakraProvider>
 			</QueryClientProvider>
 		</Document>

@@ -19,7 +19,7 @@ import { GoldenFizzButton, WhiteButton } from "~/components";
 import { useAuctionContract } from "~/contracts";
 import { useForm } from "react-hook-form";
 import moment from "moment";
-import { adminResultEventBus } from "~/eventbus";
+import { modal1907EventBus } from "~/eventbus";
 import { AdminModal } from "./components";
 import { getAuctionContractErrorMessage } from "~/utils";
 import { fbTokenAddress } from "~/data";
@@ -38,7 +38,7 @@ const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoUrls, en
 			console.log(isError, errorMessage);
 			if (isError && errorMessage) {
 				console.log("herhalde oluyor");
-				adminResultEventBus.publish("adminresult.open", { isSucceed: false, description: errorMessage });
+				modal1907EventBus.publish("modal.open", { isSucceed: false, description: errorMessage });
 				// we need to show a modal in case of errors to the user
 				return;
 			}
@@ -64,20 +64,20 @@ const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoUrls, en
 					if (!e) {
 						return;
 					}
-					adminResultEventBus.publish("adminresult.open", { isSucceed: false, description: e });
+					modal1907EventBus.publish("modal.open", { isSucceed: false, description: e });
 				} else if (data.message) {
 					if (data.message === "Auction max offer will be burnt in Paribu") {
-						adminResultEventBus.publish("adminresult.open", {
+						modal1907EventBus.publish("modal.open", {
 							isSucceed: true,
 							description: "En yüksek teklif paribuda yakılıyor",
 						});
 					} else if (data.message === "There is no user paying that auction") {
-						adminResultEventBus.publish("adminresult.open", {
+						modal1907EventBus.publish("modal.open", {
 							isSucceed: true,
 							description: "Bu açık artırma için teklif veren henüz kimse yok",
 						});
 					} else if (data.message === "success") {
-						adminResultEventBus.publish("adminresult.open", {
+						modal1907EventBus.publish("modal.open", {
 							isSucceed: true,
 							description: "Açık artırma başarıyla sonlandı.",
 						});
