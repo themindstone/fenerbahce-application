@@ -34,6 +34,11 @@ contract FenerbahceAuction is Ownable {
         uint256 endDate
     );
     event AuctionDeposited(string auctionId, address from, uint256 value);
+    event AuctionDepositedWithBidIncrement(
+        string auctionId,
+        address from,
+        uint256 value
+    );
     event AuctionSelled(string auctionId, address buyer);
     event AuctionRefunded(string auctionId, address to, uint256 value);
     event AuctionProlonged(string auctionId, uint256 toDate);
@@ -42,6 +47,19 @@ contract FenerbahceAuction is Ownable {
 
     constructor(address _address) {
         fbToken = FBToken(_address);
+    }
+
+    function _prolongAuction(string memory _auctionId) internal {
+        Auction memory auction = idToAuctions[_auctionId];
+        uint256 diff = auction.endDate - block.timestamp;
+
+        // if a user deposit to an auction half an hour before the auction is finished,
+        // The auction end time will be prolonged to half an hour
+        uint256 maxLeftTime = 30 * 60;
+        if (diff < maxLeftTime) {
+            auction.endDate += maxLeftTime - diff;
+            emit AuctionProlonged(_auctionId, auction.endDate);
+        }
     }
 
     function createAuction(
@@ -76,13 +94,11 @@ contract FenerbahceAuction is Ownable {
         );
     }
 
-    function depositToAuction(string memory _auctionId, uint256 value) public {
-        require(
-            idToAuctions[_auctionId].startDate != 0,
-            "There is no auction like that"
-        );
-
+    function depositWithBidIncrement(string memory _auctionId, uint256 value)
+        public
+    {
         Auction memory auction = idToAuctions[_auctionId];
+        require(auction.startDate != 0, "There is no auction like that");
 
         uint256 userBalanceToAuction = value +
             idToOffers[_auctionId][msg.sender];
@@ -115,15 +131,7 @@ contract FenerbahceAuction is Ownable {
             );
         }
 
-        uint256 diff = auction.endDate - block.timestamp;
-
-        // if a user deposit to an auction half an hour before the auction is finished,
-        // The auction end time will be prolonged to half an hour
-        uint256 maxLeftTime = 2 * 60;
-        if (diff < maxLeftTime) {
-            auction.endDate += maxLeftTime - diff;
-            emit AuctionProlonged(_auctionId, auction.endDate);
-        }
+        _prolongAuction(_auctionId);
 
         idToOffers[_auctionId][msg.sender] =
             idToOffers[_auctionId][msg.sender] +
@@ -132,7 +140,56 @@ contract FenerbahceAuction is Ownable {
 
         fbToken.safeTransferFrom(msg.sender, address(this), value);
 
-        emit AuctionDeposited(_auctionId, msg.sender, userBalanceToAuction);
+        emit AuctionDepositedWithBidIncrement(
+            _auctionId,
+            msg.sender,
+            userBalanceToAuction
+        );
+    }
+
+    function deposit(string memory _auctionId, uint256 value) public {
+        Auction memory auction = idToAuctions[_auctionId];
+
+        uint256 userBalanceToAuction = value +
+            idToOffers[_auctionId][msg.sender];
+
+        require(auction.startDate != 0, "There is no auction like that");
+
+        require(
+            auction.startDate < block.timestamp,
+            "Auction have not started yet!"
+        );
+        require(auction.endDate > block.timestamp, "Auction finished!");
+        require(auction.isBought == false, "This is already selled!");
+
+        require(
+            fbToken.allowance(msg.sender, address(this)) >= value,
+            "You don't have enough allowance!"
+        );
+        require(
+            fbToken.balanceOf(msg.sender) >= value,
+            "You don't have enough balance!"
+        );
+
+        if (idToMaxOffers[_auctionId] == 0) {
+            require(
+                userBalanceToAuction >= auction.startPrice,
+                "You need to start auction with the minimum of auction start price"
+            );
+        }
+        else {
+            require(userBalanceToAuction > idToMaxOffers[_auctionId], "You need to deposit more than max offer!");
+        }
+
+        _prolongAuction(_auctionId);
+
+        idToOffers[_auctionId][msg.sender] = userBalanceToAuction;
+        idToMaxOffers[_auctionId] = userBalanceToAuction;
+
+
+        fbToken.safeTransferFrom(msg.sender, address(this), value);
+
+        emit AuctionDeposited(_auctionId, msg.sender, value);
     }
 
     function buyNow(string memory _auctionId) public {
@@ -208,5 +265,4 @@ contract FenerbahceAuction is Ownable {
         idToAuctions[_auctionId].buyNowPrice = _newPrice;
         emit AuctionBuyNowPriceUpdated(_auctionId, _newPrice);
     }
-
 }
