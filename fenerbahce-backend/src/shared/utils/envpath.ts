@@ -1,9 +1,9 @@
 type NodeEnv = "development" | "local" | "production";
 
 const envs = {
-    development: "envs/.env.development",
-    local: "envs/.env.local",
-    production: "envs/.env",
+    development: "config/.env.development",
+    local: "config/.env.local",
+    production: "config/.env",
 };
 
 const getNodeEnv = (): NodeEnv => {
@@ -28,7 +28,7 @@ const getEnvPath = (): string => {
     const env_path: NodeEnv = getNodeEnv();
 
     if (!envs[env_path]) {
-        return "envs/.env.development";
+        return "config/env.development";
     }
     return envs[env_path];
 };

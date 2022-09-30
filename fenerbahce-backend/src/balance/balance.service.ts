@@ -28,6 +28,7 @@ export class BalanceService {
         auctionId: string,
         userAddress: string,
     ): Promise<BalanceRepository[] | null> {
+        console.log('addR: ', userAddress)
         const res = await this.balanceRepository.query(`
             select * from balances where auction_id = '${auctionId}' and user_address = '${userAddress}'`);
             console.log(res);

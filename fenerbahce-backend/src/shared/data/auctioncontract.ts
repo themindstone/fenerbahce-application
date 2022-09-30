@@ -108,6 +108,31 @@ export const auctionABI = [
                 name: "auctionId",
                 type: "string",
             },
+            {
+                indexed: false,
+                internalType: "address",
+                name: "from",
+                type: "address",
+            },
+            {
+                indexed: false,
+                internalType: "uint256",
+                name: "value",
+                type: "uint256",
+            },
+        ],
+        name: "AuctionDepositedWithBidIncrement",
+        type: "event",
+    },
+    {
+        anonymous: false,
+        inputs: [
+            {
+                indexed: false,
+                internalType: "string",
+                name: "auctionId",
+                type: "string",
+            },
         ],
         name: "AuctionFinished",
         type: "event",
@@ -258,7 +283,25 @@ export const auctionABI = [
                 type: "uint256",
             },
         ],
-        name: "depositToAuction",
+        name: "deposit",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+    },
+    {
+        inputs: [
+            {
+                internalType: "string",
+                name: "_auctionId",
+                type: "string",
+            },
+            {
+                internalType: "uint256",
+                name: "value",
+                type: "uint256",
+            },
+        ],
+        name: "depositWithBidIncrement",
         outputs: [],
         stateMutability: "nonpayable",
         type: "function",

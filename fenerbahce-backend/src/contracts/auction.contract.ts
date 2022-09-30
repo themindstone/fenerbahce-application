@@ -12,10 +12,11 @@ import {
     InjectEthersProvider,
     Provider,
     parseUnits,
-    formatEther,
 } from "nestjs-ethers";
 import { auctionABI } from "~/shared/data";
 import { MoralisAPIService } from "~/shared/libs";
+import { AuctionContractDevelopment } from "./auction.contract.dev";
+import { AuctionContractProduction } from "./auction.contract.prod";
 
 interface AuctionContractCreateAuctionDto {
     auctionId: string;
@@ -44,38 +45,24 @@ export class AuctionContract {
         private readonly moralisApiService: MoralisAPIService,
     ) {}
 
+    // This will be refactored with registerAsync methods
     async onModuleInit() {
         const auctionAddress = this.configService.get(
             "AUCTION_CONTRACT_ADDRESS",
         );
+        const nodeEnv = this.configService.get("NODE_ENV");
         const wallet = this.configService.get<string>("WALLET");
         if (!auctionAddress) {
-            throw new Error("You need to provide auction contract address");
+            throw new Error("AUCTION_CONTRACT_ADDRESS must exist!");
         }
         if (!wallet) {
-            throw new Error("Wallet does not exist");
+            throw new Error("WALLET must exist!");
         }
-
-        this.moralisApiService.LiveQuery("AuctionDeposited", (object) =>
-            this.auctionDeposited(object.attributes),
-        );
-        this.moralisApiService.LiveQuery("AuctionSelled", (object) =>
-            this.auctionSelled(object.attributes),
-        );
-        this.moralisApiService.LiveQuery("AuctionRefunded", (object) =>
-            this.auctionRefunded(object.attributes),
-        );
-        this.moralisApiService.LiveQuery("AuctionProlonged", (object) =>
-            this.auctionProlonged(object.attributes),
-        );
-        this.moralisApiService.LiveQuery(
-            "AuctionBuyNowPriceUpdated",
-            (object) => this.auctionBuyNowPriceUpdated(object.attributes),
-        );
-
-        this.wallet = this.ethersSigner.createWalletfromMnemonic(wallet);
-
+        if (!nodeEnv) {
+            throw new Error("NODE_ENV must exist!");
+        }
         try {
+            this.wallet = this.ethersSigner.createWalletfromMnemonic(wallet);
             this.contract = this.ethersContract.create(
                 auctionAddress,
                 auctionABI,
@@ -85,71 +72,55 @@ export class AuctionContract {
             throw new Error("Error connecting to the contract");
         }
         this.startBlockNumber = await this.provider.getBlockNumber();
-    }
 
-    private async auctionDeposited({
-        auctionId,
-        from,
-        value,
-        block_number,
-    }: any) {
-        if (this.startBlockNumber >= block_number) {
-            return;
+        if (nodeEnv === "production") {
+            const contractProvider = new AuctionContractProduction(
+                this.eventEmitter,
+                this.startBlockNumber,
+            );
+            this.moralisApiService.LiveQuery("AuctionDeposited", (object) =>
+                contractProvider.auctionDeposited(object.attributes),
+            );
+            this.moralisApiService.LiveQuery("AuctionSelled", (object) =>
+                contractProvider.auctionSelled(object.attributes),
+            );
+            this.moralisApiService.LiveQuery("AuctionRefunded", (object) =>
+                contractProvider.auctionRefunded(object.attributes),
+            );
+            this.moralisApiService.LiveQuery("AuctionProlonged", (object) =>
+                contractProvider.auctionProlonged(object.attributes),
+            );
+            this.moralisApiService.LiveQuery(
+                "AuctionBuyNowPriceUpdated",
+                (object) =>
+                    contractProvider.auctionBuyNowPriceUpdated(
+                        object.attributes,
+                    ),
+            );
+        } else {
+            const contractProvider = new AuctionContractDevelopment(
+                this.eventEmitter,
+                this.startBlockNumber,
+            );
+            console.log(contractProvider)
+            this.contract.on(
+                "AuctionDeposited",
+                contractProvider.auctionDeposited.bind(contractProvider),
+            );
+            this.contract.on(
+                "AuctionRefunded",
+                contractProvider.auctionRefunded.bind(contractProvider),
+            );
+            this.contract.on(
+                "AuctionBuyNowPriceUpdated",
+                contractProvider.auctionBuyNowPriceUpdated.bind(contractProvider),
+            );
+            this.contract.on(
+                "AuctionProlonged",
+                contractProvider.auctionProlonged.bind(contractProvider),
+            );
+            this.contract.on("AuctionSelled", contractProvider.auctionSelled.bind(contractProvider));
         }
-
-        this.eventEmitter.emit("auction.deposited", {
-            auctionId,
-            address: from,
-            value: formatEther(value),
-        });
-    }
-
-    private async auctionSelled({ auctionId, buyer, block_number }: any) {
-        if (this.startBlockNumber >= block_number) {
-            return;
-        }
-
-        this.eventEmitter.emit("auction.selled", {
-            auctionId,
-            buyer,
-        });
-    }
-
-    private auctionRefunded({ auctionId, to, value, block_number }: any) {
-        if (this.startBlockNumber >= block_number) {
-            return;
-        }
-
-        this.eventEmitter.emit("auction.refunded", {
-            auctionId,
-            to,
-            value: formatEther(value),
-        });
-    }
-
-    async auctionBuyNowPriceUpdated({
-        auctionId,
-        newBuyNowPrice,
-        block_number,
-    }: any) {
-        if (this.startBlockNumber >= block_number) {
-            return;
-        }
-
-        this.eventEmitter.emit("auction.buynowpriceupdated", {
-            auctionId,
-            newBuyNowPrice: formatEther(newBuyNowPrice),
-        });
-    }
-
-    private auctionProlonged({ auctionId, toDate, block_number }: any) {
-        if (this.startBlockNumber >= block_number) {
-            return;
-        }
-        this.eventEmitter.emit("auction.prolonged", {
-            auctionId,
-            endDate: new Date(Number(toDate) * 1000),
-        });
     }
 
     async createAuction({
@@ -167,6 +138,7 @@ export class AuctionContract {
             parseUnits(bidIncrement.toString(), "18"),
             parseUnits(startPrice.toString(), "18"),
             parseUnits(buyNowPrice.toString(), "18"),
+            { gasLimit: 10000000 }
         );
         return await tx.wait();
     }

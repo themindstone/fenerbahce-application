@@ -33,7 +33,7 @@ const goerliEthersConfig: EthersModuleOptions = {
             isGlobal: true,
             envFilePath: envPath,
         }),
-        EthersModule.forRoot(goerliEthersConfig),
+        EthersModule.forRoot(localEthersConfig),
         DatabaseModule,
         EventEmitterModule.forRoot(),
         AuthModule,

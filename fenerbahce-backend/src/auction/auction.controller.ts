@@ -94,6 +94,13 @@ export class AuctionController {
         return await this.auctionService.listHighestOfferAuctions();
     }
 
+    async listFinishedAuctionsByPage(
+        @Query("page") page: number,
+        @Query("auctionByPage") auctionByPage: number,
+    ): Promise<AuctionRepository[]> {
+        return await this.auctionService.listFinishedAuctionsByPage(page, auctionByPage);
+    }
+
     @Get("/:auctionId/highest-offers")
     async getHighestOffersByAuctionId(@Param("auctionId") auctionId: string) {
         return await this.balanceService.getHighestBalancesByAuctionId(

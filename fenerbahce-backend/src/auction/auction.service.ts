@@ -3,7 +3,7 @@ import { CreateAuctionDto, Auction } from "./auction.model";
 import { v4 } from "uuid";
 import { Auction as AuctionRepository } from "~/shared/entities";
 import { InjectRepository } from "@nestjs/typeorm";
-import { DeepPartial, Repository } from "typeorm";
+import { DeepPartial, LessThan, Repository } from "typeorm";
 import { AuctionContract } from "~/contracts/auction.contract";
 import {
     AuctionContractErrorsEnglish,
@@ -118,6 +118,30 @@ export class AuctionService {
         return await this.auctionRepository.find();
     }
 
+    async listFinishedAuctionsByPage(
+        page: number,
+        auctionByPage: number,
+    ): Promise<AuctionRepository[]> {
+        // return await this.auctionRepository.listFinishedAuctions()
+        return await this.auctionRepository.find({
+            select: [
+                "id",
+                "buyNowPrice",
+                "name",
+                "balances",
+                "isActive",
+                "isSelled",
+                "photoUrls",
+                "startDate",
+                "endDate",
+                "selledToAddress",
+            ],
+            where: {
+                endDate: LessThan(new Date())
+            }
+        });
+    }
+
     async activate(auctionId: string) {
         await this.auctionRepository.update(
             { id: auctionId },
@@ -181,17 +205,17 @@ export class AuctionService {
                 (balance) => balance.userAddress,
             );
         }
-        console.log(winner, losers)
+        console.log(winner, losers);
 
         // TODO: we need to send auction.buyNowPrice to Paribu for burning
         // burnMaxOffer()
 
         try {
             // TODO: update is_refunded to true for all losers with listening events
-            console.log("losers: ", losers)
+            console.log("losers: ", losers);
             await this.auctionContract.refundTokensToUsers(auctionId, losers);
         } catch (e: any) {
-            console.log(e)
+            console.log(e);
             return { error: getAuctionContractErrorMessage(e.message) };
         }
 
