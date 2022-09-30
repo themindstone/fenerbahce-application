@@ -2,6 +2,7 @@ import type { ReactElement } from "react";
 import { UserIcon } from "~/assets";
 import { Flex, Text, Icon, Box } from "@chakra-ui/react";
 import { humanReadableNumber, getShortAddress } from "~/utils";
+import { useFBTokenCalculator } from "~/hooks";
 
 interface OfferCardProps {
 	withToken: boolean;
@@ -11,6 +12,9 @@ interface OfferCardProps {
 }
 
 export const OfferCard = ({ withToken = false, address, numberOfTokens, isWinner }: OfferCardProps): ReactElement => {
+
+	const fbTokenCalculator = useFBTokenCalculator();
+
 	const bg = isWinner ? "var(--golden-fizz)" : "var(--governor-bay)";
 	const color = isWinner ? "var(--governor-bay)" : "white";
 
@@ -35,7 +39,7 @@ export const OfferCard = ({ withToken = false, address, numberOfTokens, isWinner
 			<Text fontSize="18px">{address && getShortAddress(address)}</Text>
 			<Flex direction="column" ml="auto" alignItems="flex-end">
 				<Text fontSize={withToken ? "22px" : "18px"} fontWeight="bold">
-					{humanReadableNumber(numberOfTokens * 36.05)}0 ₺
+					{humanReadableNumber(numberOfTokens * fbTokenCalculator.price)} ₺
 				</Text>
 				{withToken && <Text>{numberOfTokens} FB</Text>}
 			</Flex>

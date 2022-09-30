@@ -1,18 +1,13 @@
-import { useLoaderData } from "@remix-run/react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useAuctionClient, useBalanceClient } from "~/client";
 import { useConnectWallet } from "~/context";
 import { useAuctionContract, useFBTokenContract } from "~/contracts";
 import { modal1907EventBus, loadingModalEventBus } from "~/eventbus";
 import { useChainConfig } from "~/hooks";
-import { MathUtils } from "~/utils";
 
 // TODO: This page will be seperated from UI things
-export const useAuctionContractAdapter = () => {
-
-	const { auction } = useLoaderData();
-
+export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 	const balanceClient = useBalanceClient();
 	const auctionClient = useAuctionClient();
 	const connectWallet = useConnectWallet();
@@ -37,24 +32,12 @@ export const useAuctionContractAdapter = () => {
 	});
 
 	const userBalance = useQuery(
-		["balance", connectWallet.address],
+		["balance", connectWallet.address, auction.id],
 		() => {
 			return balanceClient.getBalanceByAuctionId(auction.id, connectWallet.address).then(res => res.data);
 		},
 		{
 			enabled: connectWallet.isConnected,
-		},
-	);
-
-	const userAllowance = useQuery(
-		["allowance", connectWallet.address],
-		() => {
-			return fbTokenContract.getAuctionContractAllowance({
-				address: connectWallet.address,
-			});
-		},
-		{
-			enabled: fbTokenContract.isConnected,
 		},
 	);
 
@@ -68,7 +51,62 @@ export const useAuctionContractAdapter = () => {
 		},
 	);
 
-	const deposit = useCallback(async () => {
+	const deposit = useCallback(
+		async (params: { offer: number }) => {
+			if (!connectWallet.isConnected) {
+				modal1907EventBus.publish("modal.open", {
+					isSucceed: false,
+					description: "İşlem yapabilmek için cüzdanınızı bağlamanız gerekiyor.",
+				});
+				return;
+			}
+
+			await switchToNetwork();
+			const balance = Number((userBalance as any).data?.balance?.toFixed?.(2)) || 0;
+
+			const newOffer = (params.offer - balance).toFixed(2);
+			const fbTokenAllowance = await fbTokenContract.approveAuctionContract(params.offer);
+
+			if (fbTokenAllowance.isError) {
+				modal1907EventBus.publish("modal.open", {
+					isSucceed: false,
+					description: fbTokenAllowance.errorMessage ?? "Hata",
+				});
+				return;
+			}
+			try {
+				loadingModalEventBus.publish("loadingmodal.open", { message: "Açık artırma teklifiniz yükleniyor..." });
+
+				const { isError, errorMessage } = await auctionContract.deposit({
+					auctionId: auction.id,
+					value: newOffer.toString(),
+				});
+				if (isError && errorMessage) {
+					modal1907EventBus.publish("modal.open", {
+						isSucceed: false,
+						description: errorMessage,
+					});
+				} else {
+					const message = balance
+						? "Açık artırma ücretiniz güncellendi"
+						: "Açık artırmaya başarıyla katıldınız.";
+
+					modal1907EventBus.publish("modal.open", {
+						isSucceed: true,
+						description: message,
+					});
+					setTimeout(() => {
+						auctionHighestBalances.refetch();
+					}, 5000);
+				}
+			} finally {
+				loadingModalEventBus.publish("loadingmodal.close");
+			}
+		},
+		[auctionContract, fbTokenContract, balances, userBalance, auction, ...deps],
+	);
+
+	const buyNow = useCallback(async () => {
 		if (!connectWallet.isConnected) {
 			modal1907EventBus.publish("modal.open", {
 				isSucceed: false,
@@ -76,65 +114,16 @@ export const useAuctionContractAdapter = () => {
 			});
 			return;
 		}
-		if (!userAllowance.data || userAllowance.data.isError) {
+		await switchToNetwork();
+		const fbTokenAllowance = await fbTokenContract.approveAuctionContract(auction.buyNowPrice as number);
+
+		if (fbTokenAllowance.isError) {
 			modal1907EventBus.publish("modal.open", {
 				isSucceed: false,
-				description: "Sayfayı yenileyip tekrar dener misiniz?",
+				description: fbTokenAllowance.errorMessage ?? "Hata",
 			});
-			// window.location.reload();
 			return;
 		}
-		try {
-			loadingModalEventBus.publish("loadingmodal.open", { message: "Açık artırma teklifiniz yükleniyor..." });
-			await switchToNetwork();
-
-			if (userAllowance.data.allowance === 0) {
-				await fbTokenContract.approveAuctionContract();
-			}
-			const balance = Number((userBalance as any).data?.balance?.toFixed?.(2)) || 0;
-
-			let newOffer;
-			const getMaxOffer = () => {
-				const balanceArr: number[] = balances.map((x: any) => x.balance);
-				return MathUtils.max(balanceArr) + auction.bidIncrement;
-			};
-
-			if (balances.length === 0) {
-				newOffer = auction.startPrice;
-			} else if (balance) {
-				newOffer = getMaxOffer() - balance;
-			} else {
-				newOffer = getMaxOffer();
-			}
-			newOffer = newOffer.toFixed(2);
-			console.log(newOffer);
-
-			const { isError, errorMessage } = await auctionContract.deposit({
-				auctionId: auction.id,
-				value: newOffer.toString(),
-			});
-			if (isError && errorMessage) {
-				modal1907EventBus.publish("modal.open", {
-					isSucceed: false,
-					description: errorMessage,
-				});
-			} else {
-				const message = balance ? "Açık artırma ücretiniz güncellendi" : "Açık artırmaya başarıyla katıldınız.";
-
-				modal1907EventBus.publish("modal.open", {
-					isSucceed: true,
-					description: message,
-				});
-				setTimeout(() => {
-					auctionHighestBalances.refetch();
-				}, 5000);
-			}
-		} finally {
-			loadingModalEventBus.publish("loadingmodal.close");
-		}
-	}, [auctionContract, fbTokenContract, balances, userBalance, userAllowance]);
-
-	const buyNow = useCallback(async () => {
 		try {
 			loadingModalEventBus.publish("loadingmodal.open", {
 				message: "Açık artırma hemen al teklifiniz veriliyor...",
@@ -157,7 +146,28 @@ export const useAuctionContractAdapter = () => {
 		} finally {
 			loadingModalEventBus.publish("loadingmodal.close");
 		}
-	}, [auctionContract]);
+	}, [auctionContract, auction, ...deps]);
+
+	useEffect(() => {
+		if (!auction) {
+			return;
+		}
+		let balances;
+		if (auction.isSelled) {
+			balances = [
+				{
+					id: "asdnfasdf",
+					balance: auction.buyNowPrice,
+					userAddress: auction.selledToAddress,
+				},
+				...auction.balances,
+			];
+		} else {
+			balances = auction.balances;
+		}
+
+		setBalances(balances);
+	}, [auction, ...deps]);
 
 	return { deposit, buyNow };
 };

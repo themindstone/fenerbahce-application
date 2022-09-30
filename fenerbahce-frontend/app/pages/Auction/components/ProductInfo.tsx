@@ -1,4 +1,16 @@
-import { Box, Flex, Heading, Text, useDisclosure, useInterval } from "@chakra-ui/react";
+import {
+	Box,
+	Flex,
+	Heading,
+	Input,
+	Modal,
+	ModalCloseButton,
+	ModalContent,
+	ModalOverlay,
+	Text,
+	useDisclosure,
+	useInterval,
+} from "@chakra-ui/react";
 import { Fragment, ReactElement, useEffect, useState } from "react";
 import { GoldenFizzButton, WhiteButton, Modal1907 } from "~/components";
 import { useCountdownTimer } from "~/hooks";
@@ -9,10 +21,10 @@ import { TimeLeftBox } from "./TimeLeftBox";
 import { humanReadableNumber } from "~/utils";
 import { useQuery } from "react-query";
 import { useAuctionClient } from "~/client";
-import { modal1907EventBus } from "~/eventbus";
+import { modal1907EventBus, placeBidModalEventBus } from "~/eventbus";
 import { useAuctionContractAdapter } from "~/mediators";
 
-const Modal = () => {
+const ModalMediator = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const [description, setDescription] = useState<string>("");
@@ -34,22 +46,35 @@ const Modal = () => {
 export const ProductInfo = (): ReactElement => {
 	const { auction } = useLoaderData();
 
-	const [balances, setBalances] = useState(() => {
+	const [balances, setBalances] = useState<any[]>(() => {
 		if (auction.isSelled) {
-			return [{
-				id: "asdnfasdf",
-				balance: auction.buyNowPrice,
-				userAddress: auction.selledToAddress
-			}, ...auction.balances];
+			return [
+				{
+					id: "asdnfasdf",
+					balance: auction.buyNowPrice,
+					userAddress: auction.selledToAddress,
+				},
+				...auction.balances,
+			];
 		}
-		return auction.balances
+		return auction.balances;
 	});
+
+	// const [value, setValue] = useState<number>(() => {
+	// 	return balances.length === 0 ? balances[0] + auction.bidIncrement : auction.startPrice;
+	// });
+
+	// const { isOpen, onClose, onOpen } = useDisclosure();
+
+	const openPlaceBidModal = () => {
+		placeBidModalEventBus.publish("placebidmodal.open", auction);
+	};
 
 	const { days, hours, minutes, seconds, status } = useCountdownTimer(auction.endDate);
 
 	const auctionClient = useAuctionClient();
 
-	const  { buyNow, deposit } = useAuctionContractAdapter();
+	const { buyNow } = useAuctionContractAdapter(auction);
 
 	const auctionHighestBalances = useQuery(
 		["balances", auction.id],
@@ -76,7 +101,7 @@ export const ProductInfo = (): ReactElement => {
 		<Box>
 			<Flex direction="column" maxW="400px" gap="30px">
 				<Heading>{auction.name}</Heading>
-				{status === "success" && (
+				{status === "success" && !auction.isSelled && (
 					<Flex direction="column" gap="10px">
 						<Text>Kalan süre</Text>
 						{days === "00" ? (
@@ -104,7 +129,7 @@ export const ProductInfo = (): ReactElement => {
 						<WhiteButton onClick={buyNow}>
 							HEMEN AL {humanReadableNumber(auction.buyNowPrice)} FB
 						</WhiteButton>
-						<GoldenFizzButton onClick={deposit}>TEKLİF VER</GoldenFizzButton>
+						<GoldenFizzButton onClick={openPlaceBidModal}>TEKLİF VER</GoldenFizzButton>
 					</Flex>
 				)}
 				{balances.length !== 0 && (
@@ -165,7 +190,33 @@ export const ProductInfo = (): ReactElement => {
 					/>
 				</Flex>
 			</Flex>
-			<Modal></Modal>
+			<ModalMediator></ModalMediator>
+			{/* <Modal isOpen={isOpen} onClose={onClose}>
+				<ModalOverlay>
+					<ModalContent color="blackAlpha.800" p="20px">
+						<ModalCloseButton></ModalCloseButton>
+						<Flex direction="column" gap="12px">
+							<Heading size="md">Place a Bid</Heading>
+							<Box>
+								<Text>You are about to place a bit for: </Text>
+								<Text>Item Name by Item Owner: </Text>
+							</Box>
+							<Heading size="sm">Your Bid (FB Token)</Heading>
+							<Input
+								placeholder="Your bid"
+								type="number"
+								onChange={e => {
+									setValue(Number(e.target.value));
+								}}
+							/>
+							<Text color="blackAlpha.600" fontSize="sm">
+								Must be at least 1.5 FB Token
+							</Text>
+							<GoldenFizzButton onClick={() => deposit({ offer: value })}>Teklif Ver</GoldenFizzButton>
+						</Flex>
+					</ModalContent>
+				</ModalOverlay>
+			</Modal> */}
 		</Box>
 	);
 };

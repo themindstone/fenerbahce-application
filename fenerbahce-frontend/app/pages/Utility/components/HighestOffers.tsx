@@ -1,8 +1,10 @@
-import { Box, Flex, Heading, Text, VStack, Link } from "@chakra-ui/react";
-import { ReactElement, useMemo } from "react";
-import { Carousel } from "~/components";
+import { Box, Flex, Heading, Text, VStack, Link, Grid } from "@chakra-ui/react";
+import { ReactElement, useMemo, useState } from "react";
+import { Carousel, GoldenFizzButton, WhiteButton } from "~/components";
 import { useLoaderData } from "@remix-run/react";
 import { humanReadableNumber } from "~/utils";
+import { useAuctionContractAdapter } from "~/mediators";
+import { placeBidModalEventBus } from "~/eventbus";
 
 interface HighestOffersCardProps {
 	id: string;
@@ -29,26 +31,59 @@ const options = {
 	margin: 30,
 };
 
-const HighestOffersCard = ({ id, offers = [], photoUrls }: HighestOffersCardProps): ReactElement => {
+const HighestOffersCard = (auction: HighestOffersCardProps): ReactElement => {
+	const [state, setState] = useState<boolean>(false);
+
+	const { buyNow } = useAuctionContractAdapter(auction);
+
+	const onOver = () => {
+		setState(true);
+	};
+
+	const onOut = () => {
+		setState(false);
+	};
+
+	const openPlaceBidModal = () => {
+		placeBidModalEventBus.publish("placebidmodal.open", auction);
+	}
+
 	return (
-		<Link href={`/product/${id}`} _hover={{ textDecor: "none" }}>
+		<Link href={`/product/${auction.id}`} _hover={{ textDecor: "none" }} onMouseOver={onOver} onMouseOut={onOut}>
 			<Flex borderRadius="15px" overflow="hidden" bg="var(--governor-bay)" direction="column">
 				<Box
 					style={{ aspectRatio: "13/16" }}
-					bgImage={`url(${photoUrls[0]})`}
+					bgImage={`url(${auction.photoUrls[0]})`}
 					bgSize={"cover"}
 					w="100%"
 					bgRepeat="no-repeat"
 					bgPos="center"
-				/>
+					pos="relative">
+					{state && (
+						<Grid
+							bottom="0"
+							pos="absolute"
+							w="100%"
+							templateColumns="1fr 1fr"
+							gap="10px"
+							p="15px"
+							background="linear-gradient(to top, #1C2F6E, transparent)"
+							onClick={e => {
+								e.preventDefault();
+							}}>
+							<WhiteButton onClick={buyNow}>Hemen Al</WhiteButton>
+							<GoldenFizzButton onClick={openPlaceBidModal}>Teklif Ver</GoldenFizzButton>
+						</Grid>
+					)}
+				</Box>
 				<Flex direction="column" p="15px 20px" gap="10px" fontWeight="bold">
 					<Flex justifyContent="space-between" color="var(--golden-fizz)">
 						<Text>En yüksek teklif</Text>
-						<Text>{offers[0] || "22.455"} ₺</Text>
+						<Text>{auction.offers[0] || "22.455"} ₺</Text>
 					</Flex>
 					<Flex justifyContent="space-between">
 						<Text>En yüksek 2. teklif</Text>
-						<Text>{offers[1] || "19.780"} ₺</Text>
+						<Text>{auction.offers[1] || "19.780"} ₺</Text>
 					</Flex>
 				</Flex>
 			</Flex>
@@ -76,7 +111,9 @@ export const HighestOffers = (): ReactElement => {
 			<Heading size="xl">En Yüksek Teklif Gelen Açık Artırmalar</Heading>
 			<Carousel options={options}>
 				{auctions.map((item: any) => {
-					return <HighestOffersCard id={item.id} offers={item.offers} photoUrls={item.photoUrls} />;
+					return (
+						<HighestOffersCard {...item} />
+					);
 				})}
 			</Carousel>
 		</VStack>

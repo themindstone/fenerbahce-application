@@ -13,6 +13,7 @@ export const ParibuWallet: IWallet = {
         this.address = "0xaaa"
         return this;
     },
+    shortAddress: "",
     initialize: async function(): Promise<IWallet> {
         // list accounts
         // set account

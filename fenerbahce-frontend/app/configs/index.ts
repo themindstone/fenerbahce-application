@@ -1,4 +1,4 @@
-type NODE_ENV_TYPE = "development" | "testing" | "production";
+type NODE_ENV_TYPE = "development" | "test" | "production";
 
 interface ENV {
 	BACKEND_URL: string | undefined;

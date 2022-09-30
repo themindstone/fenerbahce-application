@@ -1,5 +1,6 @@
-import type { ReactElement } from "react";
+import { Fragment, ReactElement } from "react";
 import { Link, Text } from "@chakra-ui/react";
+import { useFBTokenCalculator } from "~/hooks";
 
 interface NavLinkProps {
 	children?: React.ReactNode;
@@ -13,9 +14,17 @@ export const NavLink = ({ children, ...rest }: NavLinkProps): ReactElement => {
 	);
 };
 
-export const FBTokenText = (): ReactElement => (
-	<Text bg="white" color="var(--biscay)" fontWeight="bold" p="5px 10px" borderRadius="5px" fontSize="16px">
-		FB Token: 36.05₺
-	</Text>
-);
+export const FBTokenText = (): ReactElement => {
 
+	const fbTokenCalculator = useFBTokenCalculator();
+
+	if (!fbTokenCalculator.price) {
+		return <Fragment></Fragment>;
+	}
+
+	return (
+		<Text bg="white" color="var(--biscay)" fontWeight="bold" p="5px 10px" borderRadius="5px" fontSize="16px">
+			FB Token: {fbTokenCalculator.price}₺
+		</Text>
+	);
+};

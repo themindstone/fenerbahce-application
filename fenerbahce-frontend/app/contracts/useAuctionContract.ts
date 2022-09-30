@@ -1,7 +1,6 @@
 import { ethers } from "ethers";
 import { useCallback } from "react";
 import { useContract } from "~/context";
-import { useChainConfig } from "~/hooks";
 import {
 	AuctionContractBuyNowDTO,
 	AuctionContractDepositDTO,
@@ -14,35 +13,24 @@ import { getAuctionContractErrorMessage } from "~/utils";
 export const useAuctionContract = (): AuctionContractFunctions => {
 	const { contract } = useContract("Auction");
 
-
-	const { switchToNetwork } = useChainConfig()
-
-
+	// this will deposit with the bid increment
 	const deposit = useCallback(
 		async ({ auctionId, value }: AuctionContractDepositDTO): Promise<AuctionContractFunctionReturnType> => {
 			if (!contract) {
-				return {
-					isError: true,
-					errorMessage: "İşlem yapabilmek için cüzdanınızı bağlamanız gerekiyor.",
-				};
+				return { isError: true, errorMessage: "İşlem yapabilmek için cüzdanınızı bağlamanız gerekiyor." };
 			}
 
-			switchToNetwork();
-
-			let error, transaction;
+			console.log("merhaba");
 
 			try {
-				const tx = await contract.depositToAuction(auctionId, ethers.utils.parseUnits(value, "18"));
-				transaction = await tx.wait();
+				const transaction = await contract.deposit(auctionId, ethers.utils.parseUnits(value, "18"), { gasLimit: 10000000 });
+				const tx = await transaction.wait();
+				console.log(tx)
+				return { tx, isError: false };
 			} catch (e: any) {
-				error = getAuctionContractErrorMessage(e.message as string);
+				console.log(e)
+				return { isError: true, errorMessage: getAuctionContractErrorMessage(e.message as string) };
 			}
-
-			return {
-				tx: transaction,
-				isError: !!error,
-				errorMessage: error,
-			};
 		},
 		[contract],
 	);
@@ -50,30 +38,16 @@ export const useAuctionContract = (): AuctionContractFunctions => {
 	const buyNow = useCallback(
 		async ({ auctionId }: AuctionContractBuyNowDTO): Promise<AuctionContractFunctionReturnType> => {
 			if (!contract) {
-				return {
-					isError: true,
-					errorMessage: "İşlem yapabilmek için cüzdanınızı bağlamanız gerekiyor.",
-				};
+				return { isError: true };
 			}
-			
-			switchToNetwork();
-
-			let error;
-			let transaction;
-
 			try {
-				const tx = await contract.buyNow(auctionId);
+				const transaction = await contract.buyNow(auctionId);
 
-				transaction = await tx.wait();
+				const tx = await transaction.wait();
+				return { tx, isError: false };
 			} catch (e: any) {
-				error = getAuctionContractErrorMessage(e.message as string);
+				return { errorMessage: getAuctionContractErrorMessage(e.message as string), isError: true };
 			}
-
-			return {
-				tx: transaction,
-				isError: !!error,
-				errorMessage: error,
-			};
 		},
 		[contract],
 	);
@@ -84,29 +58,20 @@ export const useAuctionContract = (): AuctionContractFunctions => {
 			newBuyNowPrice,
 		}: AuctionContractUpdateBuyNowPriceDTO): Promise<AuctionContractFunctionReturnType> => {
 			if (!contract) {
-				return {
-					isError: true,
-					errorMessage: "İşlem yapabilmek için cüzdanınızı bağlamanız gerekiyor.",
-				};
+				return { isError: true };
 			}
-			
-			switchToNetwork();
-
-			let error, transaction;
-
 			try {
-				const tx = await contract.updateBuyNowPrice(auctionId, ethers.utils.parseUnits(newBuyNowPrice, "18"));
+				const transaction = await contract.updateBuyNowPrice(
+					auctionId,
+					ethers.utils.parseUnits(newBuyNowPrice, "18"),
+				);
+				const tx = await transaction.wait();
 
-				transaction = await tx.wait();
+				return { tx, isError: false };
 			} catch (e: any) {
-				error = getAuctionContractErrorMessage(e.message as string);
+				const errorMessage = getAuctionContractErrorMessage(e.message as string);
+				return { isError: true, errorMessage };
 			}
-
-			return {
-				tx: transaction,
-				isError: !!error,
-				errorMessage: error,
-			};
 		},
 		[contract],
 	);

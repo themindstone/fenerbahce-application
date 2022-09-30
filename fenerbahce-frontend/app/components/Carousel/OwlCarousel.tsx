@@ -43,7 +43,7 @@ const Carousel = (props: CarouselPropsInterface) => {
 							h="10px"
 							w="10px"
 							onClick={() => goTo(index)}
-							key={Math.random()}
+							key={index}
 						></Box>
 					);
 				})}

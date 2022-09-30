@@ -1,7 +1,7 @@
-import { BFFClient } from "~/utils";
+import { APIClientInstance } from "~/utils";
 
 const getHighestBalancesByAuctionId = async (auctionId: string) => {
-    const res = await BFFClient.get(`auction/${auctionId}/highest-offers`);
+    const res = await APIClientInstance.get(`auction/${auctionId}/highest-offers`);
     return res.data;
 }
 

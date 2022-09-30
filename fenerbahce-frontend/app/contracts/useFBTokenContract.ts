@@ -1,6 +1,5 @@
 import { ethers } from "ethers";
 import { useCallback } from "react";
-// import { useEnvironmentVariables } from "~/configs";
 import { useContract } from "~/context";
 import { auctionAddress } from "~/data";
 import { FBTokenContractFunctions, FBTokenContractErrors, FBTokenGetAuctionContractAllowanceDTO } from "~/interfaces";
@@ -30,10 +29,8 @@ export const getFBTokenContractErrorMessage = (e: string | null) => {
 export const useFBTokenContract = (): FBTokenContractFunctions => {
 	const { contract } = useContract("FBToken");
 
-	// const conf = useEnvironmentVariables();
-
 	const approveAuctionContract = useCallback(
-		async (newOffer?: number) => {
+		async (newOffer: number) => {
 			if (!contract) {
 				return {
 					isError: true,
@@ -44,7 +41,7 @@ export const useFBTokenContract = (): FBTokenContractFunctions => {
 			try {
 				const transaction = await contract.approve(
 					auctionAddress["development"],
-					ethers.constants.MaxUint256 ?? ethers.BigNumber.from(newOffer),
+					ethers.utils.parseUnits(newOffer.toString(), "18") ?? ethers.constants.MaxUint256,
 				);
 				const tx = await transaction.wait();
 
@@ -53,6 +50,7 @@ export const useFBTokenContract = (): FBTokenContractFunctions => {
 					isError: false,
 				};
 			} catch (e: any) {
+				console.log(e)
 				return {
 					isError: true,
 					errorMessage: getFBTokenContractErrorMessage(e.message),
@@ -72,7 +70,7 @@ export const useFBTokenContract = (): FBTokenContractFunctions => {
 			}
 
 			try {
-				const res = await contract.allowance(address, auctionAddress);
+				const res = await contract.allowance(address, auctionAddress[config.NODE_ENV]);
 				const allowance = Number(ethers.utils.formatEther(res));
 
 				return {

@@ -10,7 +10,6 @@ import {
 	ContractName,
 	ContractsStateType,
 } from "~/interfaces";
-// import { useEnvironmentVariables } from "~/configs";
 
 const ContractsContext = React.createContext<ContractsContextInterface>({
 	connectContractIfNotConnected: (contractName: ContractName) => {},
@@ -22,7 +21,6 @@ const ContractsContext = React.createContext<ContractsContextInterface>({
 
 export const ContractsProvider = ({ children }: ContractsProviderProps) => {
 	const { isConnected } = useConnectWallet();
-	// const conf = useEnvironmentVariables();
 
 	const [contracts, setContracts] = useState<ContractsStateType>({
 		Auction: null,
@@ -33,8 +31,8 @@ export const ContractsProvider = ({ children }: ContractsProviderProps) => {
 
 	const registry: IRegistry[] = useMemo(
 		() => [
-			{ name: "Auction", address: auctionAddress["development"], abi: auctionABI },
-			{ name: "FBToken", address: fbTokenAddress, abi: fbTokenABI },
+			{ name: "Auction", address: auctionAddress[config.NODE_ENV], abi: auctionABI },
+			{ name: "FBToken", address: fbTokenAddress[config.NODE_ENV], abi: fbTokenABI },
 		],
 		[],
 	);

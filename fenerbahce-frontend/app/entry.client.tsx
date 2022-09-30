@@ -7,6 +7,7 @@ import { RemixBrowser } from "@remix-run/react";
 
 import { ClientStyleContext } from "./_context";
 import createEmotionCache from "./createEmotionCache";
+import { hydrate } from "react-dom";
 
 interface ClientCacheProviderProps {
 	children: React.ReactNode;

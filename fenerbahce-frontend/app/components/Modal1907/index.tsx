@@ -13,7 +13,7 @@ interface Modal1907Props {
 export const Modal1907 = ({ description, isSucceed, isOpen, onClose }: Modal1907Props) => {
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={onClose} blockScrollOnMount={false}>
 			<ModalOverlay />
 			<ModalContent bg="var(--governor-bay)" maxW="330px" p="20px" gap="10px">
 				<ModalCloseButton color="#fff" />

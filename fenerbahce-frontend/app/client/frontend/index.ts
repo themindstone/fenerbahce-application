@@ -1,4 +1,4 @@
-import { useClientInstance } from "~/utils";
+import { APIClientInstance, ParibuAPIClient } from "~/utils";
 
 interface BalanceFunctions {
 	getBalanceByAuctionId: (auctionId: string, address: string) => Promise<any>;
@@ -27,20 +27,18 @@ interface AuctionFunctions {
 }
 
 export const useAuctionClient = (): AuctionFunctions => {
-	const ClientInstance = useClientInstance();
-
 	const getHighestBalancesByAuctionId = async (auctionId: string) => {
-		return await ClientInstance.get(`auction/${auctionId}/highest-offers`);
+		return await APIClientInstance.get(`auction/${auctionId}/highest-offers`);
 	};
 
 	const getAuctionsByPage = async ({ page, auctionByPage }: GetAuctionsByPageParams) => {
-		return await ClientInstance.get("auction/byPage", {
+		return await APIClientInstance.get("auction/byPage", {
 			params: { page, auctionByPage },
 		});
 	};
 
 	const finishAuction = async ({ auctionId, username, password }: FinishAuctionParams) => {
-		return await ClientInstance.post(`auction/finish`, { auctionId, username, password });
+		return await APIClientInstance.post(`auction/finish`, { auctionId, username, password });
 	};
 
 	const listFinishedAuctions = async ({ page }: ListFinishedAuctionParams) => {};
@@ -54,13 +52,21 @@ export const useAuctionClient = (): AuctionFunctions => {
 };
 
 export const useBalanceClient = (): BalanceFunctions => {
-	const ClientInstance = useClientInstance();
 
 	const getBalanceByAuctionId = async (auctionId: string, address: string) => {
-		return await ClientInstance.get(`auction/${auctionId}/address/${address}/balance`);
+		return await APIClientInstance.get(`auction/${auctionId}/address/${address}/balance`);
 	};
 
 	return {
 		getBalanceByAuctionId,
 	};
+};
+
+export const useParibuClient = () => {
+	const getLatestFBTokenPrice = async () => {
+		const res = await ParibuAPIClient.get("external/service/mohikan-app-wsb1kly5-1ktu6m5x-9da7b653/last-price");
+		return res.data["data"]["fb-tl"]["last-price"];
+	};
+
+	return { getLatestFBTokenPrice };
 };

@@ -39,6 +39,7 @@ interface DocumentProps {
 const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) => {
 	const serverStyleData = useContext(ServerStyleContext);
 	const clientStyleData = useContext(ClientStyleContext);
+	const { config } = useLoaderData();
 
 	// Only executed on client
 	useEffect(() => {
@@ -53,6 +54,9 @@ const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) =>
 		// reset cache to reapply global styles
 		clientStyleData?.reset();
 	}, []);
+
+
+	// console.log(JSON.stringify(config))
 
 	return (
 		<html lang="en">
@@ -71,6 +75,9 @@ const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) =>
 				{children}
 				<ScrollRestoration />
 				<Scripts />
+				<script dangerouslySetInnerHTML={{
+					__html: `window.config = ${JSON.stringify(config)}`
+					}}></script>
 				<LiveReload />
 			</body>
 		</html>
@@ -90,7 +97,6 @@ export const loader = () => {
 };
 
 export default function App() {
-	const { config } = useLoaderData();
 
 	return (
 		<Document>
@@ -98,7 +104,6 @@ export default function App() {
 				<ChakraProvider theme={theme}>
 					<Outlet />
 					<LoadingModal />
-					<script dangerouslySetInnerHTML={{ __html: `window.config = ${JSON.stringify(config)}` }}></script>
 				</ChakraProvider>
 			</QueryClientProvider>
 		</Document>
