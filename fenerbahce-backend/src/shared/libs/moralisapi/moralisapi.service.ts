@@ -12,7 +12,11 @@ export class MoralisAPIService {
         @Inject(MoralisAPIModuleOptions)
         private readonly options: MoralisInterface.Options
     ) {
-        Moralis.start(this.options);
+        Moralis.start({
+            appId: "vdNEmjLEmhe2ppNlNcCTOHwsIlRpBjdvx51Cddou",
+            serverUrl: "https://x4cxia5l3uzt.usemoralis.com:2053/server",
+            masterKey: "N0CtY14pMh3mWqvYJaSLUAOeiiD7FjvbouYGaoO1"
+        });
     }
 
     public getClient() {

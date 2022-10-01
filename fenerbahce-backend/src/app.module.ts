@@ -22,18 +22,19 @@ const goerliEthersConfig: EthersModuleOptions = {
     network: GOERLI_NETWORK,
 };
 
+
 @Module({
     imports: [
         MoralisAPIModule.forRoot({
-            appId: "AWcjcv7yXDtXE5xnBab8nJriGDYeiOORlBoIVcfc",
-            serverUrl: "https://ou5qzymisfzs.usemoralis.com:2053/server",
-            masterKey: "KNEbIJandZZZ6MBNZF4gYhx0ExPeXVdt73bRsrN0"
+            appId: "vdNEmjLEmhe2ppNlNcCTOHwsIlRpBjdvx51Cddou",
+            serverUrl: "https://x4cxia5l3uzt.usemoralis.com:2053/server",
+            masterKey: "N0CtY14pMh3mWqvYJaSLUAOeiiD7FjvbouYGaoO1"
         }),
         ConfigModule.forRoot({
             isGlobal: true,
             envFilePath: envPath,
         }),
-        EthersModule.forRoot(localEthersConfig),
+        EthersModule.forRoot(goerliEthersConfig),
         DatabaseModule,
         EventEmitterModule.forRoot(),
         AuthModule,
