@@ -38,7 +38,7 @@ const FinishedAuctionsCard = (auction: FinishedAuctionsCardProps): ReactElement 
 
 	const auctionHighestBalances = useQuery(["balances", auction.id], () => {
 		return auctionClient.getHighestBalancesByAuctionId(auction.id).then(res => res.data);
-	});
+	}, { enabled: !!auction.id });
 
 	useEffect(() => {
 		if (!auctionHighestBalances.isSuccess) {

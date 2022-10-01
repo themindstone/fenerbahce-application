@@ -29,6 +29,9 @@ interface AuctionFunctions {
 
 export const useAuctionClient = (): AuctionFunctions => {
 	const getHighestBalancesByAuctionId = async (auctionId: string) => {
+		if (!auctionId) {
+			return;
+		}
 		return await APIClientInstance.get(`auction/${auctionId}/highest-offers`);
 	};
 

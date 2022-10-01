@@ -37,7 +37,7 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 			return balanceClient.getBalanceByAuctionId(auction.id, connectWallet.address).then(res => res.data);
 		},
 		{
-			enabled: connectWallet.isConnected,
+			enabled: connectWallet.isConnected && !!auction.id,
 		},
 	);
 
@@ -47,7 +47,7 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 			return auctionClient.getHighestBalancesByAuctionId(auction.id).then(res => res.data);
 		},
 		{
-			enabled: auction.isActive && !auction.isSelled,
+			enabled: auction.isActive && !auction.isSelled && !!auction.id,
 		},
 	);
 

@@ -14,7 +14,7 @@ import { CollapsibleCard } from "./CollapsibleCard";
 import { TimeLeftBox } from "./TimeLeftBox";
 import { humanReadableNumber } from "~/utils";
 import { useQuery } from "react-query";
-import { useAuctionClient } from "~/client";
+import { AuctionClient, BalanceClient, useAuctionClient } from "~/client";
 import { placeBidModalEventBus } from "~/eventbus";
 import { useAuctionContractAdapter } from "~/mediators";
 
@@ -48,10 +48,11 @@ export const ProductInfo = (): ReactElement => {
 	const auctionHighestBalances = useQuery(
 		["balances", auction.id],
 		() => {
-			return auctionClient.getHighestBalancesByAuctionId(auction.id).then(res => res.data);
+			// return auctionClient.getHighestBalancesByAuctionId(auction.id).then(res => res.data);
+			return BalanceClient.getHighestBalancesByAuctionId(auction.id);
 		},
 		{
-			enabled: auction.isActive && !auction.isSelled,
+			enabled: auction.isActive && !auction.isSelled && !!auction.id,
 		},
 	);
 

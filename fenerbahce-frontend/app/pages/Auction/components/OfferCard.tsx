@@ -12,7 +12,6 @@ interface OfferCardProps {
 }
 
 export const OfferCard = ({ withToken = false, address, numberOfTokens, isWinner }: OfferCardProps): ReactElement => {
-
 	const fbTokenCalculator = useFBTokenCalculator();
 
 	const bg = isWinner ? "var(--golden-fizz)" : "var(--governor-bay)";
@@ -39,9 +38,9 @@ export const OfferCard = ({ withToken = false, address, numberOfTokens, isWinner
 			<Text fontSize="18px">{address && getShortAddress(address)}</Text>
 			<Flex direction="column" ml="auto" alignItems="flex-end">
 				<Text fontSize={withToken ? "22px" : "18px"} fontWeight="bold">
-					{humanReadableNumber(numberOfTokens * fbTokenCalculator.price)} ₺
+					{withToken && <Text>{humanReadableNumber(numberOfTokens)} FB</Text>}
 				</Text>
-				{withToken && <Text>{humanReadableNumber(numberOfTokens)} FB</Text>}
+				{humanReadableNumber(numberOfTokens * fbTokenCalculator.price)} ₺
 			</Flex>
 		</Flex>
 	);
