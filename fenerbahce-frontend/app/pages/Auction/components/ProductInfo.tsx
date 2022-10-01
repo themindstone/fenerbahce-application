@@ -2,17 +2,11 @@ import {
 	Box,
 	Flex,
 	Heading,
-	Input,
-	Modal,
-	ModalCloseButton,
-	ModalContent,
-	ModalOverlay,
 	Text,
-	useDisclosure,
 	useInterval,
 } from "@chakra-ui/react";
 import { Fragment, ReactElement, useEffect, useState } from "react";
-import { GoldenFizzButton, WhiteButton, Modal1907 } from "~/components";
+import { GoldenFizzButton, WhiteButton } from "~/components";
 import { useCountdownTimer } from "~/hooks";
 import { useLoaderData } from "@remix-run/react";
 import { OfferCard } from "./OfferCard";
@@ -21,27 +15,8 @@ import { TimeLeftBox } from "./TimeLeftBox";
 import { humanReadableNumber } from "~/utils";
 import { useQuery } from "react-query";
 import { useAuctionClient } from "~/client";
-import { modal1907EventBus, placeBidModalEventBus } from "~/eventbus";
+import { placeBidModalEventBus } from "~/eventbus";
 import { useAuctionContractAdapter } from "~/mediators";
-
-const ModalMediator = () => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
-
-	const [description, setDescription] = useState<string>("");
-	const [isSucceed, setIsSucceed] = useState<boolean>(false);
-
-	modal1907EventBus.useListener(
-		"modal.open",
-		({ isSucceed, description }) => {
-			setIsSucceed(isSucceed);
-			setDescription(description);
-			onOpen();
-		},
-		[],
-	);
-
-	return <Modal1907 isOpen={isOpen} onClose={onClose} description={description} isSucceed={isSucceed}></Modal1907>;
-};
 
 export const ProductInfo = (): ReactElement => {
 	const { auction } = useLoaderData();
@@ -59,12 +34,6 @@ export const ProductInfo = (): ReactElement => {
 		}
 		return auction.balances;
 	});
-
-	// const [value, setValue] = useState<number>(() => {
-	// 	return balances.length === 0 ? balances[0] + auction.bidIncrement : auction.startPrice;
-	// });
-
-	// const { isOpen, onClose, onOpen } = useDisclosure();
 
 	const openPlaceBidModal = () => {
 		placeBidModalEventBus.publish("placebidmodal.open", auction);
@@ -190,7 +159,6 @@ export const ProductInfo = (): ReactElement => {
 					/>
 				</Flex>
 			</Flex>
-			<ModalMediator></ModalMediator>
 			{/* <Modal isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay>
 					<ModalContent color="blackAlpha.800" p="20px">

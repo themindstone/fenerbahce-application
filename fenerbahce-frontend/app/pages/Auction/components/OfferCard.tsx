@@ -41,7 +41,7 @@ export const OfferCard = ({ withToken = false, address, numberOfTokens, isWinner
 				<Text fontSize={withToken ? "22px" : "18px"} fontWeight="bold">
 					{humanReadableNumber(numberOfTokens * fbTokenCalculator.price)} ₺
 				</Text>
-				{withToken && <Text>{numberOfTokens} FB</Text>}
+				{withToken && <Text>{humanReadableNumber(numberOfTokens)} FB</Text>}
 			</Flex>
 		</Flex>
 	);

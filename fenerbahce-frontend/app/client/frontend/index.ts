@@ -24,6 +24,7 @@ interface AuctionFunctions {
 	getAuctionsByPage: ({ page, auctionByPage }: GetAuctionsByPageParams) => Promise<any>;
 	finishAuction: (params: FinishAuctionParams) => Promise<any>;
 	listFinishedAuctions: (params: ListFinishedAuctionParams) => Promise<any>;
+	// getHighestBalanceByAuctionId: (params: { auctionId: string }) => Promise<any>;
 }
 
 export const useAuctionClient = (): AuctionFunctions => {
@@ -41,18 +42,24 @@ export const useAuctionClient = (): AuctionFunctions => {
 		return await APIClientInstance.post(`auction/finish`, { auctionId, username, password });
 	};
 
-	const listFinishedAuctions = async ({ page }: ListFinishedAuctionParams) => {};
+	const listFinishedAuctions = async (params: ListFinishedAuctionParams) => {
+		return await APIClientInstance.get("auction/list-finished-auctions", { params });
+	};
+
+	// const getHighestBalanceByAuctionId = async (params: { auctionId: string }) => {
+	// 	return await APIClientInstance.get(`auction/${params.auctionId}/highest-offer`);
+	// };
 
 	return {
 		getHighestBalancesByAuctionId,
 		getAuctionsByPage,
 		finishAuction,
 		listFinishedAuctions,
+		// getHighestBalanceByAuctionId,
 	};
 };
 
 export const useBalanceClient = (): BalanceFunctions => {
-
 	const getBalanceByAuctionId = async (auctionId: string, address: string) => {
 		return await APIClientInstance.get(`auction/${auctionId}/address/${address}/balance`);
 	};

@@ -1,10 +1,12 @@
 import { Box, Flex, Heading, Text, VStack, Link, Grid } from "@chakra-ui/react";
-import { ReactElement, useMemo, useState } from "react";
+import { ReactElement, useEffect, useMemo, useState } from "react";
 import { Carousel, GoldenFizzButton, WhiteButton } from "~/components";
 import { useLoaderData } from "@remix-run/react";
 import { humanReadableNumber } from "~/utils";
 import { useAuctionContractAdapter } from "~/mediators";
 import { placeBidModalEventBus } from "~/eventbus";
+import { useAuctionClient } from "~/client";
+import { useQuery } from "react-query";
 
 interface HighestOffersCardProps {
 	id: string;
@@ -33,6 +35,7 @@ const options = {
 
 const HighestOffersCard = (auction: HighestOffersCardProps): ReactElement => {
 	const [state, setState] = useState<boolean>(false);
+	const [highestBalances, setHighestBalances] = useState<number[]>([]);
 
 	const { buyNow } = useAuctionContractAdapter(auction);
 
@@ -45,8 +48,28 @@ const HighestOffersCard = (auction: HighestOffersCardProps): ReactElement => {
 	};
 
 	const openPlaceBidModal = () => {
-		placeBidModalEventBus.publish("placebidmodal.open", auction);
-	}
+		placeBidModalEventBus.publish("placebidmodal.open", { ...auction, balances: highestBalances });
+	};
+
+	const auctionClient = useAuctionClient();
+
+	const auctionHighestBalances = useQuery(["balances", auction.id], () => {
+		return auctionClient.getHighestBalancesByAuctionId(auction.id).then(res => res.data);
+	});
+
+	useEffect(() => {
+		if (!auctionHighestBalances.isSuccess) {
+			return;
+		}
+		if (auctionHighestBalances.data.length > 0) {
+			const data = auctionHighestBalances.data;
+			const balances = data.map((item: any) => {
+				return item.balance;
+			});
+
+			setHighestBalances(balances);
+		}
+	}, [auctionHighestBalances.isSuccess]);
 
 	return (
 		<Link href={`/product/${auction.id}`} _hover={{ textDecor: "none" }} onMouseOver={onOver} onMouseOut={onOut}>
@@ -77,14 +100,18 @@ const HighestOffersCard = (auction: HighestOffersCardProps): ReactElement => {
 					)}
 				</Box>
 				<Flex direction="column" p="15px 20px" gap="10px" fontWeight="bold">
-					<Flex justifyContent="space-between" color="var(--golden-fizz)">
-						<Text>En yüksek teklif</Text>
-						<Text>{auction.offers[0] || "22.455"} ₺</Text>
-					</Flex>
-					<Flex justifyContent="space-between">
-						<Text>En yüksek 2. teklif</Text>
-						<Text>{auction.offers[1] || "19.780"} ₺</Text>
-					</Flex>
+					{auctionHighestBalances.isSuccess && auctionHighestBalances.data.length > 0 && (
+						<Flex justifyContent="space-between" color="var(--golden-fizz)">
+							<Text>En yüksek teklif</Text>
+							<Text>{auctionHighestBalances.data[0].balance} FB Token</Text>
+						</Flex>
+					)}
+					{auctionHighestBalances.isSuccess && auctionHighestBalances.data.length > 1 && (
+						<Flex justifyContent="space-between">
+							<Text>En yüksek 2. teklif</Text>
+							<Text>{auctionHighestBalances.data[1].balance} FB Token</Text>
+						</Flex>
+					)}
 				</Flex>
 			</Flex>
 		</Link>
@@ -111,9 +138,7 @@ export const HighestOffers = (): ReactElement => {
 			<Heading size="xl">En Yüksek Teklif Gelen Açık Artırmalar</Heading>
 			<Carousel options={options}>
 				{auctions.map((item: any) => {
-					return (
-						<HighestOffersCard {...item} />
-					);
+					return <HighestOffersCard {...item} />;
 				})}
 			</Carousel>
 		</VStack>

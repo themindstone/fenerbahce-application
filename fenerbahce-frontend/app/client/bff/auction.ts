@@ -35,3 +35,8 @@ export async function getById(id: string) {
     const res = await APIClientInstance.get(`auction/${id}`)
     return res.data;
 }
+
+export const listFinishedAuctions = async (params: { page: number }) => {
+    const res = await APIClientInstance.get("auction/list-finished-auctions", { params });
+    return res.data;
+};

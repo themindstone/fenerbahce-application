@@ -14,10 +14,12 @@ export let links: LinksFunction = () => {
 export const loader: LoaderFunction = async ({ context }) => {
 	const highestOfferAuctions = await AuctionClient.listHighestOfferAuctions();
 	const activeAuctions = await AuctionClient.listActiveAuctions();
+	const finishedAuctions = await AuctionClient.listFinishedAuctions({ page: 0 });
 
 	return json({
 		highestOfferAuctions,
 		activeAuctions,
+		finishedAuctions,
 		config
 	});
 }

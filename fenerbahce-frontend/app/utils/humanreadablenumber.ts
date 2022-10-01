@@ -1,7 +1,3 @@
-
 export function humanReadableNumber(number: number) {
-
-    return new Intl
-       .NumberFormat('en-US')
-       .format(number)
-};
+	return Number(new Intl.NumberFormat("en-US").format(number));
+}

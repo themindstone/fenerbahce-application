@@ -3,7 +3,7 @@ import { CreateAuctionDto, Auction } from "./auction.model";
 import { v4 } from "uuid";
 import { Auction as AuctionRepository } from "~/shared/entities";
 import { InjectRepository } from "@nestjs/typeorm";
-import { DeepPartial, LessThan, Repository } from "typeorm";
+import { DeepPartial, LessThan, MoreThan, Repository } from "typeorm";
 import { AuctionContract } from "~/contracts/auction.contract";
 import {
     AuctionContractErrorsEnglish,
@@ -111,18 +111,55 @@ export class AuctionService {
     }
 
     async listActiveAuctions(): Promise<AuctionRepository[]> {
-        return await this.auctionRepository.find();
+        const res = await this.auctionRepository.find({
+            select: [
+                "id",
+                "name",
+                "selledToAddress",
+                "photoUrls",
+                "bidIncrement",
+                "buyNowPrice",
+                "startPrice",
+                "startDate",
+                "endDate",
+                "isSelled",
+                "isActive",
+            ],
+            where: {
+                isSelled: false,
+                endDate: MoreThan(new Date())
+            }
+        });
+        console.log(res)
+return res;
     }
 
     async listHighestOfferAuctions(): Promise<AuctionRepository[]> {
-        return await this.auctionRepository.find();
+        return await this.auctionRepository.find({
+            select: [
+                "id",
+                "name",
+                "selledToAddress",
+                "photoUrls",
+                "bidIncrement",
+                "buyNowPrice",
+                "startPrice",
+                "startDate",
+                "endDate",
+                "isSelled",
+                "isActive",
+            ],
+            where: {
+                isSelled: false,
+                endDate: MoreThan(new Date())
+            }
+        });
     }
 
     async listFinishedAuctionsByPage(
         page: number,
         auctionByPage: number,
     ): Promise<AuctionRepository[]> {
-        // return await this.auctionRepository.listFinishedAuctions()
         return await this.auctionRepository.find({
             select: [
                 "id",

@@ -94,6 +94,7 @@ export class AuctionController {
         return await this.auctionService.listHighestOfferAuctions();
     }
 
+    @Get("/list-finished-auctions")
     async listFinishedAuctionsByPage(
         @Query("page") page: number,
         @Query("auctionByPage") auctionByPage: number,

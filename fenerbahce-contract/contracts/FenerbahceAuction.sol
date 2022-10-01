@@ -189,7 +189,7 @@ contract FenerbahceAuction is Ownable {
 
         fbToken.safeTransferFrom(msg.sender, address(this), value);
 
-        emit AuctionDeposited(_auctionId, msg.sender, value);
+        emit AuctionDeposited(_auctionId, msg.sender, userBalanceToAuction);
     }
 
     function buyNow(string memory _auctionId) public {

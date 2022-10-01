@@ -1,12 +1,16 @@
-import { Box, Flex, Grid, Heading, Link, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text, VStack, Link } from "@chakra-ui/react";
 import { ReactElement, useEffect, useMemo, useState } from "react";
-import { Carousel, GoldenFizzButton, WhiteButton } from "~/components";
+import { Carousel } from "~/components";
 import { useLoaderData } from "@remix-run/react";
 import { humanReadableNumber } from "~/utils";
-import { useAuctionContractAdapter } from "~/mediators";
-import { placeBidModalEventBus } from "~/eventbus";
-import { useQuery } from "react-query";
 import { useAuctionClient } from "~/client";
+import { useQuery } from "react-query";
+
+interface FinishedAuctionsCardProps {
+	id: string;
+	offers: number[];
+	photoUrls: string[];
+}
 
 const options = {
 	loop: false,
@@ -27,24 +31,8 @@ const options = {
 	margin: 30,
 };
 
-const ActiveAuctionsCard = (auction: any): ReactElement => {
-	const [state, setState] = useState<boolean>(false);
+const FinishedAuctionsCard = (auction: FinishedAuctionsCardProps): ReactElement => {
 	const [highestBalances, setHighestBalances] = useState<number[]>([]);
-
-	const { buyNow } = useAuctionContractAdapter(auction);
-
-
-	const onOver = () => {
-		setState(true);
-	};
-
-	const onOut = () => {
-		setState(false);
-	};
-
-	const openPlaceBidModal = () => {
-		placeBidModalEventBus.publish("placebidmodal.open", { ...auction, balances: highestBalances });
-	};
 
 	const auctionClient = useAuctionClient();
 
@@ -67,7 +55,7 @@ const ActiveAuctionsCard = (auction: any): ReactElement => {
 	}, [auctionHighestBalances.isSuccess]);
 
 	return (
-		<Link href={`/product/${auction.id}`} _hover={{ textDecor: "none" }} onMouseOver={onOver} onMouseOut={onOut}>
+		<Link href={`/product/${auction.id}`} _hover={{ textDecor: "none" }}>
 			<Flex borderRadius="15px" overflow="hidden" bg="var(--governor-bay)" direction="column">
 				<Box
 					style={{ aspectRatio: "13/16" }}
@@ -75,25 +63,7 @@ const ActiveAuctionsCard = (auction: any): ReactElement => {
 					bgSize={"cover"}
 					w="100%"
 					bgRepeat="no-repeat"
-					bgPos="center"
-					pos="relative">
-					{state && (
-						<Grid
-							bottom="0"
-							pos="absolute"
-							w="100%"
-							templateColumns="1fr 1fr"
-							gap="10px"
-							p="15px"
-							background="linear-gradient(to top, #1C2F6E, transparent)"
-							onClick={e => {
-								e.preventDefault();
-							}}>
-							<WhiteButton onClick={buyNow}>Hemen Al</WhiteButton>
-							<GoldenFizzButton onClick={openPlaceBidModal}>Teklif Ver</GoldenFizzButton>
-						</Grid>
-					)}
-				</Box>
+					bgPos="center"></Box>
 				<Flex direction="column" p="15px 20px" gap="10px" fontWeight="bold">
 					{auctionHighestBalances.isSuccess && auctionHighestBalances.data.length > 0 && (
 						<Flex justifyContent="space-between" color="var(--golden-fizz)">
@@ -113,12 +83,12 @@ const ActiveAuctionsCard = (auction: any): ReactElement => {
 	);
 };
 
-export const ActiveAuctions = (): ReactElement => {
-	const { activeAuctions } = useLoaderData();
+export const FinishedAuctions = (): ReactElement => {
+	const { finishedAuctions } = useLoaderData();
 
 	const auctions = useMemo(() => {
-		const lowOffer = Math.floor(Math.random() * 6000) + 12000;
-		const newAuctions = activeAuctions.map((auction: any) => {
+		const newAuctions = finishedAuctions.map((auction: any) => {
+			const lowOffer = Math.floor(Math.random() * 6000) + 12000;
 			auction.offers = [
 				humanReadableNumber(lowOffer + Math.floor(Math.random() * 6000)),
 				humanReadableNumber(lowOffer),
@@ -130,10 +100,10 @@ export const ActiveAuctions = (): ReactElement => {
 
 	return (
 		<VStack gap="20px" maxW="1000px" margin="50px auto" padding="0 30px">
-			<Heading size="xl">Aktif Açık Artırmalar</Heading>
+			<Heading size="xl">Bitmiş Açık Artırmalar</Heading>
 			<Carousel options={options}>
 				{auctions.map((item: any) => {
-					return <ActiveAuctionsCard {...item} />;
+					return <FinishedAuctionsCard {...item} />;
 				})}
 			</Carousel>
 		</VStack>

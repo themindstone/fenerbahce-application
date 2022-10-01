@@ -25,10 +25,10 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 					balance: auction.buyNowPrice,
 					userAddress: auction.selledToAddress,
 				},
-				...auction.balances,
+				...auction.balances || [],
 			];
 		}
-		return auction.balances;
+		return auction.balances || [];
 	});
 
 	const userBalance = useQuery(
@@ -160,10 +160,10 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 					balance: auction.buyNowPrice,
 					userAddress: auction.selledToAddress,
 				},
-				...auction.balances,
+				...auction.balances || [],
 			];
 		} else {
-			balances = auction.balances;
+			balances = auction.balances || [];
 		}
 
 		setBalances(balances);

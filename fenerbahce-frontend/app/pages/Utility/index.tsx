@@ -1,8 +1,9 @@
 import { ReactElement } from "react";
 import { FAQ, Footer, Header, JoinCommunity, PlaceBidModal, SideNav } from "~/components";
-import { ActiveAuctions, Hero, HighestOffers, MobileApplication } from "./components";
+import { ActiveAuctions, FinishedAuctions, Hero, MobileApplication } from "./components";
 import { ConnectWallet } from "~/components/ConnectWallet";
 import { ConnectWalletProvider, ContractsProvider } from "~/context";
+import { ModalMediator } from "~/mediators";
 
 export const Utility = (): ReactElement => {
 	return (
@@ -14,12 +15,13 @@ export const Utility = (): ReactElement => {
 				<SideNav />
 				<Hero />
 				<ActiveAuctions />
-				<HighestOffers />
+				<FinishedAuctions />
 				<MobileApplication />
 				<FAQ />
 				<JoinCommunity />
 				<Footer />
 				<PlaceBidModal></PlaceBidModal>
+				<ModalMediator></ModalMediator>
 			</ContractsProvider>
 		</ConnectWalletProvider>
 	);

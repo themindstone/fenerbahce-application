@@ -1,11 +1,5 @@
-import { Hero } from "./Hero";
-import { ActiveAuctions } from "./ActiveAuctions";
-import { HighestOffers } from "./HighestOffers";
-import { MobileApplication } from "./MobileApplication";
-
-export {
-    Hero,
-    ActiveAuctions,
-    HighestOffers,
-    MobileApplication,
-};
+export * from "./Hero"
+export * from "./ActiveAuctions";
+// import { HighestOffers } from "./HighestOffers";
+export * from "./MobileApplication";
+export * from "./FinishedAuctions";
