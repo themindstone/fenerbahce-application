@@ -19,8 +19,8 @@ import { humanReadableNumber } from "~/utils";
 export function PlaceBidModal() {
 	const { isOpen, onClose, onOpen } = useDisclosure();
 
-	const [auction, setAuction] = useState({});
-	const [value, setValue] = useState(1.5);
+	const [auction, setAuction] = useState<any>({});
+	const [value, setValue] = useState<number>(0);
 	const [minValue, setMinValue] = useState(0);
 
 	const { deposit } = useAuctionContractAdapter(auction, [auction]);
@@ -28,29 +28,28 @@ export function PlaceBidModal() {
 	placeBidModalEventBus.useListener(
 		"placebidmodal.open",
 		newAuction => {
-			console.log(newAuction)
 			const newValue =
 				newAuction.balances.length > 0
 					? newAuction.bidIncrement + newAuction.balances[0]
 					: newAuction.startPrice;
 			onOpen();
 			setAuction(newAuction);
+			setValue(newValue);
 			setMinValue(newValue);
 		},
 		[auction],
 	);
 
-
 	const propose = () => {
 		if (value < minValue) {
 			modal1907EventBus.publish("modal.open", {
 				isSucceed: false,
-				description: "Minimum teklif miktarından daha fazla teklif vermeniz gerekiyor."
+				description: "Minimum teklif miktarından daha fazla teklif vermeniz gerekiyor.",
 			});
 			return;
 		}
-		deposit({ offer: value })	
-	}
+		deposit({ offer: value });
+	};
 
 	return (
 		<Modal isOpen={isOpen} onClose={onClose}>
@@ -58,7 +57,7 @@ export function PlaceBidModal() {
 				<ModalContent color="blackAlpha.800" p="20px">
 					<ModalCloseButton></ModalCloseButton>
 					<Flex direction="column" gap="12px">
-						<Heading size="md">Place a Bid</Heading>
+						<Heading size="md">Yeni bir teklif ver</Heading>
 						<Box>
 							<Text>You are about to place a bit for: </Text>
 							<Text>Item Name by Item Owner: </Text>
@@ -67,8 +66,12 @@ export function PlaceBidModal() {
 						<Input
 							placeholder="Your bid"
 							type="number"
-							value={value}
+							value={value ? value : ""}
 							onChange={e => {
+								if (Number(e.target.value) > auction?.buyNowPrice) {
+									console.log("merhaba dunya")
+									return;
+								}
 								setValue(Number(e.target.value));
 							}}
 						/>

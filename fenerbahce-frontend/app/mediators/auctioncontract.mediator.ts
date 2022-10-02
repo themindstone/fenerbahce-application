@@ -25,7 +25,7 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 					balance: auction.buyNowPrice,
 					userAddress: auction.selledToAddress,
 				},
-				...auction.balances || [],
+				...(auction.balances || []),
 			];
 		}
 		return auction.balances || [];
@@ -61,22 +61,35 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 				return;
 			}
 
-			await switchToNetwork();
 			const balance = Number((userBalance as any).data?.balance?.toFixed?.(2)) || 0;
 
 			const newOffer = (params.offer - balance).toFixed(2);
-			const fbTokenAllowance = await fbTokenContract.approveAuctionContract(params.offer);
+			try {
+				loadingModalEventBus.publish("loadingmodal.open", { message: "Açık artırma teklifiniz yükleniyor..." });
+				await switchToNetwork();
+				const fbTokenAllowance = await fbTokenContract.approveAuctionContract(params.offer);
 
-			if (fbTokenAllowance.isError) {
+				if (fbTokenAllowance.isError) {
+					modal1907EventBus.publish("modal.open", {
+						isSucceed: false,
+						description: fbTokenAllowance.errorMessage ?? "Hata",
+					});
+					return;
+				}
+			} catch (e: any) {
 				modal1907EventBus.publish("modal.open", {
 					isSucceed: false,
-					description: fbTokenAllowance.errorMessage ?? "Hata",
+					description: "Allowance esnasında bir hata oluştu",
 				});
 				return;
+			} finally {
+				loadingModalEventBus.publish("loadingmodal.close");
 			}
+
 			try {
 				loadingModalEventBus.publish("loadingmodal.open", { message: "Açık artırma teklifiniz yükleniyor..." });
 
+				await switchToNetwork();
 				const { isError, errorMessage } = await auctionContract.deposit({
 					auctionId: auction.id,
 					value: newOffer.toString(),
@@ -114,20 +127,35 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 			});
 			return;
 		}
-		await switchToNetwork();
-		const fbTokenAllowance = await fbTokenContract.approveAuctionContract(auction.buyNowPrice as number);
 
-		if (fbTokenAllowance.isError) {
-			modal1907EventBus.publish("modal.open", {
-				isSucceed: false,
-				description: fbTokenAllowance.errorMessage ?? "Hata",
-			});
-			return;
-		}
 		try {
 			loadingModalEventBus.publish("loadingmodal.open", {
 				message: "Açık artırma hemen al teklifiniz veriliyor...",
 			});
+			await switchToNetwork();
+			const fbTokenAllowance = await fbTokenContract.approveAuctionContract(auction.buyNowPrice as number);
+			if (fbTokenAllowance.isError) {
+				modal1907EventBus.publish("modal.open", {
+					isSucceed: false,
+					description: fbTokenAllowance.errorMessage ?? "Hata",
+				});
+				return;
+			}
+		} catch (e: any) {
+			modal1907EventBus.publish("modal.open", {
+				isSucceed: false,
+				description: "Bilinmeyen bir hata oluştu",
+			});
+			return;
+		} finally {
+			loadingModalEventBus.publish("loadingmodal.close");
+		}
+
+		try {
+			loadingModalEventBus.publish("loadingmodal.open", {
+				message: "Açık artırma hemen al teklifiniz veriliyor...",
+			});
+			await switchToNetwork();
 			let { isError, errorMessage } = await auctionContract.buyNow({
 				auctionId: auction.id,
 			});
@@ -160,7 +188,7 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 					balance: auction.buyNowPrice,
 					userAddress: auction.selledToAddress,
 				},
-				...auction.balances || [],
+				...(auction.balances || []),
 			];
 		} else {
 			balances = auction.balances || [];

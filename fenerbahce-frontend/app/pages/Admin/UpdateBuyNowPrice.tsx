@@ -147,7 +147,7 @@ export const UpdateBuyNowPrice = (): ReactElement => {
 			params: {
 				type: "ERC20",
 				options: {
-					address: fbTokenAddress,
+					address: fbTokenAddress[config.NODE_ENV],
 					symbol: "FB",
 					decimals: 18,
 				},
