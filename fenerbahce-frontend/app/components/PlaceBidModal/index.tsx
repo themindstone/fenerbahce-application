@@ -59,12 +59,12 @@ export function PlaceBidModal() {
 					<Flex direction="column" gap="12px">
 						<Heading size="md">Yeni bir teklif ver</Heading>
 						<Box>
-							<Text>You are about to place a bit for: </Text>
-							<Text>Item Name by Item Owner: </Text>
+							<Text>Yeni bir teklif vermek üzeresiniz: </Text>
+							<Text>{auction.name}: </Text>
 						</Box>
-						<Heading size="sm">Your Bid (FB Token)</Heading>
+						<Heading size="sm">Teklifin (FB Token)</Heading>
 						<Input
-							placeholder="Your bid"
+							placeholder="Teklifin"
 							type="number"
 							value={value ? value : ""}
 							onChange={e => {
@@ -76,7 +76,7 @@ export function PlaceBidModal() {
 							}}
 						/>
 						<Text color="blackAlpha.600" fontSize="sm">
-							Must be at least {humanReadableNumber(minValue).toFixed(2)} FB Token
+							Minimum {humanReadableNumber(minValue).toFixed(2)} FB Token teklifi verebilirsiniz.
 						</Text>
 						<GoldenFizzButton onClick={propose}>Teklif Ver</GoldenFizzButton>
 					</Flex>

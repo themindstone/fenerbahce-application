@@ -1,10 +1,4 @@
-import {
-	Box,
-	Flex,
-	Heading,
-	Text,
-	useInterval,
-} from "@chakra-ui/react";
+import { Box, Flex, Heading, Text, useInterval } from "@chakra-ui/react";
 import { Fragment, ReactElement, useEffect, useState } from "react";
 import { GoldenFizzButton, WhiteButton } from "~/components";
 import { useCountdownTimer } from "~/hooks";
@@ -14,7 +8,7 @@ import { CollapsibleCard } from "./CollapsibleCard";
 import { TimeLeftBox } from "./TimeLeftBox";
 import { humanReadableNumber } from "~/utils";
 import { useQuery } from "react-query";
-import { AuctionClient, BalanceClient, useAuctionClient } from "~/client";
+import { BalanceClient, useAuctionClient } from "~/client";
 import { placeBidModalEventBus } from "~/eventbus";
 import { useAuctionContractAdapter } from "~/mediators";
 
@@ -160,32 +154,6 @@ export const ProductInfo = (): ReactElement => {
 					/>
 				</Flex>
 			</Flex>
-			{/* <Modal isOpen={isOpen} onClose={onClose}>
-				<ModalOverlay>
-					<ModalContent color="blackAlpha.800" p="20px">
-						<ModalCloseButton></ModalCloseButton>
-						<Flex direction="column" gap="12px">
-							<Heading size="md">Place a Bid</Heading>
-							<Box>
-								<Text>You are about to place a bit for: </Text>
-								<Text>Item Name by Item Owner: </Text>
-							</Box>
-							<Heading size="sm">Your Bid (FB Token)</Heading>
-							<Input
-								placeholder="Your bid"
-								type="number"
-								onChange={e => {
-									setValue(Number(e.target.value));
-								}}
-							/>
-							<Text color="blackAlpha.600" fontSize="sm">
-								Must be at least 1.5 FB Token
-							</Text>
-							<GoldenFizzButton onClick={() => deposit({ offer: value })}>Teklif Ver</GoldenFizzButton>
-						</Flex>
-					</ModalContent>
-				</ModalOverlay>
-			</Modal> */}
 		</Box>
 	);
 };

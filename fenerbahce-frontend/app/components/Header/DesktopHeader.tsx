@@ -26,9 +26,9 @@ export const DesktopHeader = (): ReactElement => {
 				</Flex>
 			</Link>
 			<Flex gap="30px" alignItems="center" display={{ base: "none", lg: "flex" }}>
-				<NavLink>HAKKINDA</NavLink>
+				{/* <NavLink>HAKKINDA</NavLink> */}
 				<NavLink>FAYDALAR</NavLink>
-				<NavLink>ŞARTLAR</NavLink>
+				{/* <NavLink>ŞARTLAR</NavLink> */}
 				<NavLink>S.S.S</NavLink>
 				<NavLink>EN</NavLink>
 

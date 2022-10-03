@@ -14,6 +14,7 @@ import Menu from "~/assets/icons/menu-icon.svg";
 import SliderImage from "~/assets/images/slider.jpeg";
 
 import HeroImage from "./images/Hero.png";
+import JorgeJesusBanner from "./images/jorge-jesus-banner.png";
 import UniformImage from "./images/uniform.png";
 import TokenLogoImage from "./images/token-logo.png";
 import MetamaskLogoImage from "./images/metamask-logo.png";
@@ -40,6 +41,7 @@ export const PlusIcon = (props: SVGProps<SVGSVGElement>): ReactElement => <svg x
 export const MenuIcon = (props: ImageProps): ReactElement => <Image src={Menu} {...props} />;
 
 export { HeroImage };
+export { JorgeJesusBanner };
 export { UniformImage };
 export { UniformImage1 };
 export { UniformImage2 };

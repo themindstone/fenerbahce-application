@@ -1,7 +1,7 @@
 import { Box, VStack } from "@chakra-ui/react";
 import type { ReactElement } from "react";
 import { Carousel } from "~/components";
-import { SliderImage } from "~/assets";
+import { JorgeJesusBanner } from "~/assets";
 
 const options = {
 	loop: false,
@@ -10,16 +10,13 @@ const options = {
 };
 
 const HeroCard = (): ReactElement => {
-	return <Box borderRadius="15px" style={{ aspectRatio: "100/45" }} bgSize="cover" bgImage={`url(${SliderImage})`}></Box>;
+	return <Box borderRadius="15px" style={{ aspectRatio: "100/45" }} bgSize="cover" bgImage={`url(${JorgeJesusBanner})`}></Box>;
 };
 
 export const Hero = (): ReactElement => {
 	return (
 		<VStack maxW="1000px" w="90%" margin="auto">
 			<Carousel options={options}>
-				<HeroCard />
-				<HeroCard />
-				<HeroCard />
 				<HeroCard />
 			</Carousel>
 		</VStack>
