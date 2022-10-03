@@ -3,7 +3,7 @@ import { ConnectWallet, Header, SideNav, Footer, PlaceBidModal } from "~/compone
 import { Grid, useMediaQuery, VStack } from "@chakra-ui/react";
 import { Gallery, ProductInfo } from "./components";
 import { ConnectWalletProvider, ContractsProvider } from "~/context";
-// import { ModalMediator } from "~/mediators";
+import { ModalMediator } from "~/mediators";
 
 export const Auction = (): ReactElement => {
 	const [md] = useMediaQuery("(max-width: 900px)");
@@ -30,7 +30,7 @@ export const Auction = (): ReactElement => {
 				)}
 				<Footer />
 				<PlaceBidModal></PlaceBidModal>
-				{/* <ModalMediator></ModalMediator> */}
+				<ModalMediator></ModalMediator>
 			</ContractsProvider>
 		</ConnectWalletProvider>
 	);
