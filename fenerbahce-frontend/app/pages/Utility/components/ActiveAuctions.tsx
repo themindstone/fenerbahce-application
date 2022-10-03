@@ -1,5 +1,5 @@
 import { Box, Flex, Grid, Heading, Link, Text, VStack } from "@chakra-ui/react";
-import { ReactElement, useEffect, useMemo, useState } from "react";
+import { Fragment, ReactElement, useEffect, useMemo, useState } from "react";
 import { Carousel, GoldenFizzButton, WhiteButton } from "~/components";
 import { useLoaderData } from "@remix-run/react";
 import { humanReadableNumber } from "~/utils";
@@ -136,6 +136,10 @@ export const ActiveAuctions = (): ReactElement => {
 		});
 		return newAuctions;
 	}, []);
+
+	if (auctions.length === 0) {
+		return <Fragment></Fragment>;
+	}
 
 	return (
 		<VStack gap="20px" maxW="1000px" margin="50px auto" padding="0 30px">
