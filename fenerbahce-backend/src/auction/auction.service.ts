@@ -127,11 +127,11 @@ export class AuctionService {
             ],
             where: {
                 isSelled: false,
-                endDate: MoreThan(new Date())
-            }
+                endDate: MoreThan(new Date()),
+            },
         });
-        console.log(res)
-return res;
+        console.log(res);
+        return res;
     }
 
     async listHighestOfferAuctions(): Promise<AuctionRepository[]> {
@@ -151,8 +151,8 @@ return res;
             ],
             where: {
                 isSelled: false,
-                endDate: MoreThan(new Date())
-            }
+                endDate: MoreThan(new Date()),
+            },
         });
     }
 
@@ -173,9 +173,12 @@ return res;
                 "endDate",
                 "selledToAddress",
             ],
-            where: {
-                endDate: LessThan(new Date())
-            }
+            where: [
+                {
+                    endDate: LessThan(new Date()),
+                },
+                { isSelled: true },
+            ],
         });
     }
 
