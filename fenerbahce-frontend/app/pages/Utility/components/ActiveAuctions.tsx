@@ -80,6 +80,12 @@ const ActiveAuctionsCard = (auction: any): ReactElement => {
 					bgRepeat="no-repeat"
 					bgPos="center"
 					pos="relative">
+					<Box
+						pos="absolute"
+						p="10px"
+						background="linear-gradient(to bottom, #00000080, #00000070, #00000060, transparent)">
+						{auction.name}
+					</Box>
 					{state && (
 						<Grid
 							bottom="0"

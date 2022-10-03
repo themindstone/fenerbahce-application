@@ -8,6 +8,7 @@ import { useQuery } from "react-query";
 
 interface FinishedAuctionsCardProps {
 	id: string;
+	name: string;
 	offers: number[];
 	photoUrls: string[];
 }
@@ -36,9 +37,13 @@ const FinishedAuctionsCard = (auction: FinishedAuctionsCardProps): ReactElement 
 
 	const auctionClient = useAuctionClient();
 
-	const auctionHighestBalances = useQuery(["balances", auction.id], () => {
-		return auctionClient.getHighestBalancesByAuctionId(auction.id).then(res => res.data);
-	}, { enabled: !!auction.id });
+	const auctionHighestBalances = useQuery(
+		["balances", auction.id],
+		() => {
+			return auctionClient.getHighestBalancesByAuctionId(auction.id).then(res => res.data);
+		},
+		{ enabled: !!auction.id },
+	);
 
 	useEffect(() => {
 		if (!auctionHighestBalances.isSuccess) {
@@ -63,7 +68,15 @@ const FinishedAuctionsCard = (auction: FinishedAuctionsCardProps): ReactElement 
 					bgSize={"cover"}
 					w="100%"
 					bgRepeat="no-repeat"
-					bgPos="center"></Box>
+					bgPos="center"
+					pos="relative">
+					<Box
+						pos="absolute"
+						p="10px"
+						background="linear-gradient(to bottom, #00000080, #00000070, #00000060, transparent)">
+						{auction.name}
+					</Box>
+				</Box>
 				<Flex direction="column" p="15px 20px" gap="10px" fontWeight="bold">
 					{auctionHighestBalances.isSuccess && auctionHighestBalances.data.length > 0 && (
 						<Flex justifyContent="space-between" color="var(--golden-fizz)">
