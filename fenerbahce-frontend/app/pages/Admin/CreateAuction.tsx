@@ -1,12 +1,15 @@
 import { Box, Flex, FormLabel, Heading, Input, Text } from "@chakra-ui/react";
-import { Form } from "@remix-run/react";
-import { useMemo, useState } from "react";
+import { Form, useTransition } from "@remix-run/react";
+import { useEffect, useMemo, useState } from "react";
 import { GoldenFizzButton } from "~/components";
 import { Layout } from "~/admincomponents";
+import { loadingModalEventBus } from "~/eventbus";
 
 // we need to list products in this page
 export const CreateAuction = () => {
 	const [auctionPhotosInputCount, setAuctionPhotosInputCount] = useState<number>(1);
+
+	const transition = useTransition();
 
 	const increase = () => {
 		setAuctionPhotosInputCount(auctionPhotosInputCount + 1);
@@ -28,6 +31,14 @@ export const CreateAuction = () => {
 				}),
 		[auctionPhotosInputCount],
 	);
+
+	useEffect(() => {
+		if (transition.state === "submitting" || transition.state === "loading") {
+			loadingModalEventBus.publish("loadingmodal.open", { message: "Açık artırma oluşturuluyor" });
+		} else {
+			loadingModalEventBus.publish("loadingmodal.close");
+		}
+	}, [transition]);
 
 	return (
 		<Layout>
@@ -95,7 +106,11 @@ export const CreateAuction = () => {
 						</FormLabel>
 						<FormLabel gap="5px" display="flex" flexDirection="column">
 							<Text>Açık Artırma Bitiş Tarihi (ay-gun-yıl)</Text>
-							<Input placeholder="bitis tarih (ay-gun-yil)" name="endDate" defaultValue="09/19/2022 14:24:11" />
+							<Input
+								placeholder="bitis tarih (ay-gun-yil)"
+								name="endDate"
+								defaultValue="09/19/2022 14:24:11"
+							/>
 						</FormLabel>
 						<GoldenFizzButton alignSelf="start" type="submit">
 							Ekle
