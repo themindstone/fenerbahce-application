@@ -21,5 +21,3 @@ export const testnetChain: IChain = {
 	isDefaultNetwork: true,
 	chainId: `0x${(5).toString(16)}`,
 };
-
-console.log("testnet:", testnetChain)

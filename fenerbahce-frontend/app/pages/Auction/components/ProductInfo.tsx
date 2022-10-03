@@ -30,7 +30,11 @@ export const ProductInfo = (): ReactElement => {
 	});
 
 	const openPlaceBidModal = () => {
-		placeBidModalEventBus.publish("placebidmodal.open", auction);
+		console.log(auction);
+		placeBidModalEventBus.publish("placebidmodal.open", {
+			...auction,
+			balances: auction.balances.map((i: any) => i.balance),
+		});
 	};
 
 	const { days, hours, minutes, seconds, status } = useCountdownTimer(auction.endDate);

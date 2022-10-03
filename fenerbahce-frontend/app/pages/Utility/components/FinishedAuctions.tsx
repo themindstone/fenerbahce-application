@@ -61,7 +61,7 @@ const FinishedAuctionsCard = (auction: FinishedAuctionsCardProps): ReactElement 
 
 	return (
 		<Link href={`/product/${auction.id}`} _hover={{ textDecor: "none" }}>
-			<Flex borderRadius="15px" overflow="hidden" bg="var(--governor-bay)" direction="column">
+		<Flex borderRadius="15px" overflow="hidden" bg="var(--governor-bay)" direction="column">
 				<Box
 					style={{ aspectRatio: "13/16" }}
 					bgImage={`url(${auction.photoUrls[0]})`}

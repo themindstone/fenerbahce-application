@@ -28,10 +28,12 @@ export function PlaceBidModal() {
 	placeBidModalEventBus.useListener(
 		"placebidmodal.open",
 		newAuction => {
+			console.log("new auction: ", newAuction)
 			const newValue =
 				newAuction.balances.length > 0
 					? newAuction.bidIncrement + newAuction.balances[0]
 					: newAuction.startPrice;
+					console.log('new val:', newValue)
 			onOpen();
 			setAuction(newAuction);
 			setValue(newValue);
