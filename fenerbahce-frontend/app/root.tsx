@@ -55,7 +55,6 @@ const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) =>
 		clientStyleData?.reset();
 	}, []);
 
-
 	// console.log(JSON.stringify(config))
 
 	return (
@@ -75,8 +74,9 @@ const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) =>
 				{children}
 				<ScrollRestoration />
 				<Scripts />
-				<script dangerouslySetInnerHTML={{
-					__html: `window.config = ${JSON.stringify(config)}`
+				<script
+					dangerouslySetInnerHTML={{
+						__html: `window.config = ${JSON.stringify(config)}`,
 					}}></script>
 				<LiveReload />
 			</body>
@@ -84,7 +84,13 @@ const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) =>
 	);
 });
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			staleTime: Infinity,
+		},
+	},
+});
 
 type LoaderData = {
 	config: Config;
@@ -97,7 +103,6 @@ export const loader = () => {
 };
 
 export default function App() {
-
 	return (
 		<Document>
 			<QueryClientProvider client={queryClient}>

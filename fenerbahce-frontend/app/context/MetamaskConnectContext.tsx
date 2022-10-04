@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import type { ReactElement } from "react";
 import { wallets } from "~/wallets";
 import { IWallet, ConnectWalletProviderInterface, ConnectWalletContextInterface } from "~/interfaces";
+import { KYCProvider } from "./KYCContext";
 
 const ConnectWalletContext = React.createContext<ConnectWalletContextInterface>({
 	initialize: (name: keyof typeof wallets) => {},
@@ -17,7 +18,7 @@ const ConnectWalletContext = React.createContext<ConnectWalletContextInterface>(
 export const ConnectWalletProvider = ({ children }: ConnectWalletProviderInterface): ReactElement => {
 	// fetch last default wallet from local storage
 	const [defaultWallet, setDefaultWallet] = useState<IWallet>(() => wallets.MetamaskWallet);
-	
+
 	useEffect(() => {
 		// check every wallet and show connected ones
 		async function handler() {
@@ -65,7 +66,11 @@ export const ConnectWalletProvider = ({ children }: ConnectWalletProviderInterfa
 		shortAddress: defaultWallet.shortAddress,
 	};
 
-	return <ConnectWalletContext.Provider value={value}>{children}</ConnectWalletContext.Provider>;
+	return (
+		<ConnectWalletContext.Provider value={value}>
+			<KYCProvider>{children}</KYCProvider>
+		</ConnectWalletContext.Provider>
+	);
 };
 
 export const useConnectWallet = () => React.useContext(ConnectWalletContext);

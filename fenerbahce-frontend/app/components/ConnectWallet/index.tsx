@@ -13,7 +13,7 @@ import {
 	VStack,
 } from "@chakra-ui/react";
 import type { ButtonProps } from "@chakra-ui/react";
-import { connectWalletEventBus } from "~/eventbus";
+import { connectWalletEventBus, KYCModalEventBus } from "~/eventbus";
 import { TokenLogoImage, MetamaskLogoImage, ParibuLogoImage } from "~/assets";
 import { ColorfulBorderButton } from "~/components";
 import { useConnectWallet } from "~/context";
@@ -32,6 +32,7 @@ export const ConnectWallet = (): ReactElement => {
 	const connectWithMetamask = async () => {
 		try {
 			await connectWallet.connect();
+			KYCModalEventBus.publish("kycmodal.open");
 			onClose();
 		} catch {
 			// show user an alert that he was unable to login with metamask
