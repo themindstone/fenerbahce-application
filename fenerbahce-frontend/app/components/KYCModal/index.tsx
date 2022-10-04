@@ -12,7 +12,7 @@ import {
 	useDisclosure,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-import { ContractsProvider, useConnectWallet, useKYC } from "~/context";
+import { useConnectWallet, useKYC } from "~/context";
 import { KYCModalEventBus, loadingModalEventBus, modal1907EventBus } from "~/eventbus";
 import { GoldenFizzButton } from "../Button";
 
@@ -56,7 +56,7 @@ export const KYCModal = () => {
 	};
 
 	return (
-		<Modal isOpen={isOpen} onClose={onClose}>
+		<Modal isOpen={true} onClose={onClose}>
 			<ModalOverlay>
 				<ModalContent bg="var(--governor-bay)" p="20px">
 					<ModalCloseButton></ModalCloseButton>
@@ -66,14 +66,23 @@ export const KYCModal = () => {
 							<Text>KYC kayıt işlemini tamamlamak için gerekli bilgileri doldurmanız gerekmektedir.</Text>
 							<Box>
 								<FormLabel fontWeight="bold">İsminiz</FormLabel>
-								<Input type="text" placeholder="İsminiz" value="Enes ince" {...register("fullname")} />
+								<Input
+									type="text"
+									placeholder="İsminiz"
+									_placeholder={{ color: "whiteAlpha.700"}}
+									// defaultValue="Enes ince"
+									{...register("fullname")}
+									bg="var(--indigo)"
+								/>
 							</Box>
 							<Box>
 								<FormLabel fontWeight="bold">Telefon Numaranız</FormLabel>
 								<Input
 									type="text"
 									placeholder="Telefon Numaranız"
-									value="+905441700127"
+									_placeholder={{ color: "whiteAlpha.700"}}
+									bg="var(--indigo)"
+									// defaultValue="+905441700127"
 									{...register("phone")}
 								/>
 							</Box>
@@ -82,8 +91,10 @@ export const KYCModal = () => {
 								<Input
 									type="text"
 									placeholder="E-posta adresiniz"
-									value="inceenes10@gmail.com"
+									_placeholder={{ color: "whiteAlpha.700"}}
+									// defaultValue="inceenes10@gmail.com"
 									{...register("email")}
+									bg="var(--indigo)"
 								/>
 							</Box>
 							{/* <Box>
