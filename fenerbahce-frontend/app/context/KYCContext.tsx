@@ -41,6 +41,9 @@ export const KYCProvider = (props: { children: React.ReactNode }) => {
 
 	useEffect(() => {
 		const d = kycQuery.data;
+		if (!connectWallet.isConnected) {
+			return;
+		}
 		if (d === null) {
 			KYCModalEventBus.publish("kycmodal.open");
 			return;
@@ -58,7 +61,7 @@ export const KYCProvider = (props: { children: React.ReactNode }) => {
 			email: d.email,
 			phone: d.phone,
 		});
-	}, [kycQuery.data]);
+	}, [kycQuery.data, connectWallet]);
 
 	console.log(kycQuery);
 

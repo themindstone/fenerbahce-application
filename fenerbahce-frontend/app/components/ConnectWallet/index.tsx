@@ -32,7 +32,7 @@ export const ConnectWallet = (): ReactElement => {
 	const connectWithMetamask = async () => {
 		try {
 			await connectWallet.connect();
-			KYCModalEventBus.publish("kycmodal.open");
+			// KYCModalEventBus.publish("kycmodal.open");
 			onClose();
 		} catch {
 			// show user an alert that he was unable to login with metamask
