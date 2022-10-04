@@ -11,6 +11,7 @@ import { useQuery } from "react-query";
 import { BalanceClient, useAuctionClient } from "~/client";
 import { placeBidModalEventBus } from "~/eventbus";
 import { useAuctionContractAdapter } from "~/mediators";
+import moment from "moment";
 
 export const ProductInfo = (): ReactElement => {
 	const { auction } = useLoaderData();
@@ -38,8 +39,6 @@ export const ProductInfo = (): ReactElement => {
 	};
 
 	const { days, hours, minutes, seconds, status } = useCountdownTimer(auction.endDate);
-
-	const auctionClient = useAuctionClient();
 
 	const { buyNow } = useAuctionContractAdapter(auction);
 
@@ -144,18 +143,16 @@ export const ProductInfo = (): ReactElement => {
 					</Fragment>
 				)}
 				<Flex gap="15px" direction="column">
-					<CollapsibleCard
-						title="Deneyimin detayları"
-						content="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo officiis totam repellat odit eum accusamus blanditiis rem quod fugit, minus sapiente magni corporis qui beatae amet eligendi dolore cupiditate porro."
-					/>
-					<CollapsibleCard
-						title="Deneyimin özellikleri"
-						content="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo officiis totam repellat odit eum accusamus blanditiis rem quod fugit, minus sapiente magni corporis qui beatae amet eligendi dolore cupiditate porro."
-					/>
-					<CollapsibleCard
-						title="Şartlar"
-						content="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo officiis totam repellat odit eum accusamus blanditiis rem quod fugit, minus sapiente magni corporis qui beatae amet eligendi dolore cupiditate porro."
-					/>
+					<CollapsibleCard title="Deneyimin detayları">
+						Başlangıç fiyatı: {auction.startPrice} FB <br />
+						Hemen al fiyatı: {auction.buyNowPrice} FB
+						<br />
+						Açık artırma bitiş zamanı: {new Date(auction.endDate).getDate() + 1}/{new Date(auction.endDate).getMonth() + 1}/{new Date(auction.endDate).getFullYear()} - {new Date(auction.endDate).getHours() + 3}:{new Date(auction.endDate).getMinutes()}<br />
+					</CollapsibleCard>
+					<CollapsibleCard title="Deneyimin özellikleri">Deneyimin özellikleri</CollapsibleCard>
+					<CollapsibleCard title="Şartlar">
+						Yakım açık artırmadan kazanılan ödüller Fenerbahçe SK şartlarına bağlıdır.
+					</CollapsibleCard>
 				</Flex>
 			</Flex>
 		</Box>

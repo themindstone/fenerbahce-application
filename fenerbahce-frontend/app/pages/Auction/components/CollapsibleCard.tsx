@@ -5,12 +5,12 @@ import { Flex, Text, Box } from "@chakra-ui/react";
  
 interface CollapsibleCardInterface {
     title: string;
-    content: string;
+    children: React.ReactNode;
 };
 
 export const CollapsibleCard = ({
     title,
-    content,
+    children,
 }: CollapsibleCardInterface): ReactElement => {
     const { getCollapseProps, getToggleProps } = useCollapse();
 
@@ -24,7 +24,7 @@ export const CollapsibleCard = ({
         </Flex>
         <Box {...getCollapseProps()}>
             <Box borderRadius="5px" border="1px solid #CACEDB" p="10px">
-                {content}
+                {children}
             </Box>
         </Box>
     </Flex>);

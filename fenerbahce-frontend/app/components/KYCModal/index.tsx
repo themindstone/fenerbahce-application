@@ -56,7 +56,7 @@ export const KYCModal = () => {
 	};
 
 	return (
-		<Modal isOpen={true} onClose={onClose}>
+		<Modal isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay>
 				<ModalContent bg="var(--governor-bay)" p="20px">
 					<ModalCloseButton></ModalCloseButton>
