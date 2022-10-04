@@ -147,7 +147,7 @@ export const ProductInfo = (): ReactElement => {
 						Başlangıç fiyatı: {auction.startPrice} FB <br />
 						Hemen al fiyatı: {auction.buyNowPrice} FB
 						<br />
-						Açık artırma bitiş zamanı: {new Date(auction.endDate).getDate() + 1}/{new Date(auction.endDate).getMonth() + 1}/{new Date(auction.endDate).getFullYear()} - {new Date(auction.endDate).getHours() + 3}:{new Date(auction.endDate).getMinutes()}<br />
+						Açık artırma bitiş zamanı: {new Date(auction.endDate).getDate() + 1}/{new Date(auction.endDate).getMonth() + 1}/{new Date(auction.endDate).getFullYear()} - {new Date(auction.endDate).getHours()}:{new Date(auction.endDate).getMinutes()}<br />
 					</CollapsibleCard>
 					<CollapsibleCard title="Deneyimin özellikleri">Deneyimin özellikleri</CollapsibleCard>
 					<CollapsibleCard title="Şartlar">
