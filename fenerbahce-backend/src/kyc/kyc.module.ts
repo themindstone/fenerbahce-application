@@ -11,7 +11,6 @@ import { KYCService } from "./kyc.service";
     ],
     controllers: [KYCController],
     providers: [KYCService],
-
 })
 export class KYCModule {
 }

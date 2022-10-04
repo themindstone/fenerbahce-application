@@ -12,6 +12,7 @@ import { IndexerModule } from "~/indexer/indexer.module";
 import { ContractsModule } from "~/contracts";
 import { BalanceModule } from "~/balance/balance.module";
 import { MoralisAPIModule } from "./shared/libs";
+import { KYCModule } from "./kyc/kyc.module";
 
 const localEthersConfig: EthersModuleOptions = {
     custom: "http://localhost:8545",
@@ -40,6 +41,7 @@ const goerliEthersConfig: EthersModuleOptions = {
         AuthModule,
         AuctionModule,
         BalanceModule,
+        KYCModule,
         ContractsModule,
         IndexerModule,
     ],

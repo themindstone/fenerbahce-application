@@ -26,6 +26,6 @@ export class KYCService {
             where: {
                 address: params.address,
             },
-        });
+        }) || {};
     }
 }
