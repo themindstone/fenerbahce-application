@@ -15,17 +15,20 @@ export class KYCController {
             phone: string;
         },
     ) {
-        this.kycService.create({
-            fullname: params.fullname,
-            address: params.address,
-            email: params.email,
-            phone: params.phone,
-        });
+        try {
+            await this.kycService.create({
+                fullname: params.fullname,
+                address: params.address,
+                email: params.email,
+                phone: params.phone,
+            });
+        } catch (error) {
+            throw new Error("An error occured");
+        }
     }
 
     @Get("/address/:address")
     async getUserByAddress(@Param("address") address: string) {
-        console.log("heyoo");
         return await this.kycService.getUserByAddress({ address });
     }
 }

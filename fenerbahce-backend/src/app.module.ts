@@ -5,7 +5,7 @@ import { AppService } from "./app.service";
 import { AuthModule } from "~/auth/auth.module";
 import { AuctionModule } from "~/auction/auction.module";
 import { DatabaseModule } from "~/shared/database.module";
-import { EthersModule, EthersModuleOptions, GOERLI_NETWORK } from "nestjs-ethers";
+import { EthersModule, EthersModuleOptions, GOERLI_NETWORK, MAINNET_NETWORK } from "nestjs-ethers";
 import { envPath } from "~/shared/utils";
 import { EventEmitterModule } from "@nestjs/event-emitter";
 import { IndexerModule } from "~/indexer/indexer.module";
@@ -24,16 +24,21 @@ const goerliEthersConfig: EthersModuleOptions = {
 };
 
 
+const mainnetEthersConfig: EthersModuleOptions = {
+    network: MAINNET_NETWORK
+};
+
+
 @Module({
     imports: [
+        ConfigModule.forRoot({
+            isGlobal: true,
+            envFilePath: envPath,
+        }),
         MoralisAPIModule.forRoot({
             appId: "vdNEmjLEmhe2ppNlNcCTOHwsIlRpBjdvx51Cddou",
             serverUrl: "https://x4cxia5l3uzt.usemoralis.com:2053/server",
             masterKey: "N0CtY14pMh3mWqvYJaSLUAOeiiD7FjvbouYGaoO1"
-        }),
-        ConfigModule.forRoot({
-            isGlobal: true,
-            envFilePath: envPath,
         }),
         EthersModule.forRoot(goerliEthersConfig),
         DatabaseModule,

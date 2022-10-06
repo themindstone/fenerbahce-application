@@ -1,22 +1,25 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { MoralisAPIModuleOptions } from "./moralisapi.constants";
-import { Moralis as MoralisInterface } from "./interface";
+// import { MoralisAPIModuleOptions } from "./moralisapi.constants";
+// import { Moralis as MoralisInterface } from "./interface";
 const Moralis = require("moralis-v1/node");
 import IMoralis from "moralis-v1/types";
+import { ConfigService } from "@nestjs/config";
 
 
 @Injectable()
 export class MoralisAPIService {
 
     constructor(
-        @Inject(MoralisAPIModuleOptions)
-        private readonly options: MoralisInterface.Options
+        // @Inject(MoralisAPIModuleOptions)
+        // private readonly options: MoralisInterface.Options,
+        private readonly configService: ConfigService
     ) {
-        Moralis.start({
-            appId: "vdNEmjLEmhe2ppNlNcCTOHwsIlRpBjdvx51Cddou",
-            serverUrl: "https://x4cxia5l3uzt.usemoralis.com:2053/server",
-            masterKey: "N0CtY14pMh3mWqvYJaSLUAOeiiD7FjvbouYGaoO1"
-        });
+        const configs = {
+            appId: this.configService.get("MORALIS_APP_ID"),
+            serverUrl: this.configService.get("MORALIS_SERVER_URL"),
+            masterKey: this.configService.get("MORALIS_MASTER_KEY"),
+        };
+        Moralis.start(configs);
     }
 
     public getClient() {

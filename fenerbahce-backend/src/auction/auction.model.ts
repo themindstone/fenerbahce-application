@@ -1,4 +1,4 @@
-import { IsArray, IsNumber, IsString } from "class-validator";
+import { IsArray, IsISO8601, IsNumber, IsString, ValidateIf } from "class-validator";
 
 export class Auction {
     @IsString()
@@ -7,14 +7,13 @@ export class Auction {
     @IsString()
     name: string;
 
+    @IsISO8601()
+    @ValidateIf(o => new Date(o.startDate).getTime() > new Date().getTime())
     @IsString()
     startDate: string;
 
     @IsString()
     endDate: string;
-
-    // @IsString()
-    // slug: string;
 
     @IsNumber()
     startPrice: number;
@@ -36,14 +35,11 @@ export class CreateAuctionDto {
     @IsString()
     name: string;
 
-    @IsString()
+    @IsISO8601()
     startDate: string;
 
-    @IsString()
+    @IsISO8601()
     endDate: string;
-
-    // @IsString()
-    // slug: string;
 
     @IsNumber()
     startPrice: number;
@@ -57,7 +53,6 @@ export class CreateAuctionDto {
     @IsArray()
     photoUrls: string[];
 }
-
 
 export class FinishAuctionDto {
     auctionId: string;
