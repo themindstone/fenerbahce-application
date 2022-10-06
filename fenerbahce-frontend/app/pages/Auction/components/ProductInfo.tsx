@@ -8,10 +8,10 @@ import { CollapsibleCard } from "./CollapsibleCard";
 import { TimeLeftBox } from "./TimeLeftBox";
 import { humanReadableNumber } from "~/utils";
 import { useQuery } from "react-query";
-import { BalanceClient, useAuctionClient } from "~/client";
+import { BalanceClient } from "~/client";
 import { placeBidModalEventBus } from "~/eventbus";
 import { useAuctionContractAdapter } from "~/mediators";
-import moment from "moment";
+// import moment from "moment";
 
 export const ProductInfo = (): ReactElement => {
 	const { auction } = useLoaderData();
@@ -147,7 +147,10 @@ export const ProductInfo = (): ReactElement => {
 						Başlangıç fiyatı: {auction.startPrice} FB <br />
 						Hemen al fiyatı: {auction.buyNowPrice} FB
 						<br />
-						Açık artırma bitiş zamanı: {new Date(auction.endDate).getDate() + 1}/{new Date(auction.endDate).getMonth() + 1}/{new Date(auction.endDate).getFullYear()} - {new Date(auction.endDate).getHours()}:{new Date(auction.endDate).getMinutes()}<br />
+						Açık artırma bitiş zamanı: {new Date(auction.endDate).getDate() + 1}/
+						{new Date(auction.endDate).getMonth() + 1}/{new Date(auction.endDate).getFullYear()} -{" "}
+						{new Date(auction.endDate).getHours()}:{new Date(auction.endDate).getMinutes()}
+						<br />
 					</CollapsibleCard>
 					<CollapsibleCard title="Deneyimin özellikleri">Deneyimin özellikleri</CollapsibleCard>
 					<CollapsibleCard title="Şartlar">

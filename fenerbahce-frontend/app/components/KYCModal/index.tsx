@@ -31,8 +31,6 @@ export const KYCModal = () => {
 	const kyc = useKYC();
 	const connectWallet = useConnectWallet();
 
-	console.log("merhaba");
-
 	const createKYC = async ({ fullname, email, phone }: any) => {
 		if (!connectWallet.address) {
 			return;
@@ -70,7 +68,6 @@ export const KYCModal = () => {
 									type="text"
 									placeholder="İsminiz"
 									_placeholder={{ color: "whiteAlpha.700"}}
-									// defaultValue="Enes ince"
 									{...register("fullname")}
 									bg="var(--indigo)"
 								/>
@@ -82,7 +79,6 @@ export const KYCModal = () => {
 									placeholder="Telefon Numaranız"
 									_placeholder={{ color: "whiteAlpha.700"}}
 									bg="var(--indigo)"
-									// defaultValue="+905441700127"
 									{...register("phone")}
 								/>
 							</Box>
@@ -92,21 +88,10 @@ export const KYCModal = () => {
 									type="text"
 									placeholder="E-posta adresiniz"
 									_placeholder={{ color: "whiteAlpha.700"}}
-									// defaultValue="inceenes10@gmail.com"
 									{...register("email")}
 									bg="var(--indigo)"
 								/>
 							</Box>
-							{/* <Box>
-								<FormLabel fontWeight="bold">Adresiniz</FormLabel>
-								<Input
-									type="text"
-									placeholder="Adresiniz"
-									value="address"
-									{...register("homeAddress")}
-								/>
-							</Box> */}
-							{/* <Input type="hidden" value={connectWallet.address} {...register("address")} /> */}
 							<GoldenFizzButton type="submit">SUBMIT</GoldenFizzButton>
 						</Flex>
 					</form>

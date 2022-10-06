@@ -13,7 +13,7 @@ const FAQItem = ({ text, answer }: FAQItemProps): ReactElement => {
 	return (
 		<Box>
 			<Flex borderBottom="1px solid #ddd" justifyContent="space-between" p="10px 15px" {...getToggleProps()}>
-				<Text>{text}</Text>
+				<Text fontWeight="bold">{text}</Text>
 				<ArrowForwardIcon height="25px" width="25px" cursor="pointer" fill="#000" />
 			</Flex>
 			<Box {...getCollapseProps()}>

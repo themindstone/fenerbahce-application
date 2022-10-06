@@ -12,6 +12,7 @@ import { TokenLogoImage } from "~/assets";
 import { ServerStyleContext, ClientStyleContext } from "./_context";
 import { LoadingModal } from "./components/LoadingModal";
 import { Config, config } from "~/configs";
+import { ModalMediator } from "./mediators";
 
 export const meta: MetaFunction = () => ({
 	charset: "utf-8",
@@ -109,6 +110,7 @@ export default function App() {
 				<ChakraProvider theme={theme}>
 					<Outlet />
 					<LoadingModal />
+					<ModalMediator></ModalMediator>
 				</ChakraProvider>
 			</QueryClientProvider>
 		</Document>
