@@ -4,8 +4,9 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "./FBToken.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract FenerbahceAuction is Ownable {
+contract FenerbahceAuction is Ownable, ReentrancyGuard {
     using SafeERC20 for IERC20;
     using SafeERC20 for FBToken;
 
@@ -18,6 +19,7 @@ contract FenerbahceAuction is Ownable {
         bool isBought;
     }
 
+    address fbTokenAddress;
     FBToken fbToken;
 
     mapping(string => Auction) idToAuctions;
@@ -34,11 +36,6 @@ contract FenerbahceAuction is Ownable {
         uint256 endDate
     );
     event AuctionDeposited(string auctionId, address from, uint256 value);
-    event AuctionDepositedWithBidIncrement(
-        string auctionId,
-        address from,
-        uint256 value
-    );
     event AuctionSelled(string auctionId, address buyer);
     event AuctionRefunded(string auctionId, address to, uint256 value);
     event AuctionProlonged(string auctionId, uint256 toDate);
@@ -46,7 +43,8 @@ contract FenerbahceAuction is Ownable {
     event AuctionFinished(string auctionId);
 
     constructor(address _address) {
-        fbToken = FBToken(_address);
+        fbTokenAddress = _address;
+        fbToken = FBToken(fbTokenAddress);
     }
 
     function _prolongAuction(string memory _auctionId) internal {
@@ -94,60 +92,7 @@ contract FenerbahceAuction is Ownable {
         );
     }
 
-    function depositWithBidIncrement(string memory _auctionId, uint256 value)
-        public
-    {
-        Auction memory auction = idToAuctions[_auctionId];
-        require(auction.startDate != 0, "There is no auction like that");
-
-        uint256 userBalanceToAuction = value +
-            idToOffers[_auctionId][msg.sender];
-
-        require(
-            auction.startDate < block.timestamp,
-            "Auction have not started yet!"
-        );
-        require(auction.endDate > block.timestamp, "Auction finished!");
-        require(auction.isBought == false, "This is already selled!");
-        require(
-            fbToken.allowance(msg.sender, address(this)) >= value,
-            "You don't have enough allowance!"
-        );
-        require(
-            fbToken.balanceOf(msg.sender) >= value,
-            "You don't have enough balance!"
-        );
-
-        if (idToMaxOffers[_auctionId] == 0) {
-            require(
-                value == auction.startPrice,
-                "You need to start auction with auction start price"
-            );
-        } else {
-            require(
-                userBalanceToAuction - idToMaxOffers[_auctionId] ==
-                    auction.bidIncrement,
-                "You can only increase auction by bidIncrement!"
-            );
-        }
-
-        _prolongAuction(_auctionId);
-
-        idToOffers[_auctionId][msg.sender] =
-            idToOffers[_auctionId][msg.sender] +
-            value;
-        idToMaxOffers[_auctionId] = userBalanceToAuction;
-
-        fbToken.safeTransferFrom(msg.sender, address(this), value);
-
-        emit AuctionDepositedWithBidIncrement(
-            _auctionId,
-            msg.sender,
-            userBalanceToAuction
-        );
-    }
-
-    function deposit(string memory _auctionId, uint256 value) public {
+    function deposit(string memory _auctionId, uint256 value) public nonReentrant {
         Auction memory auction = idToAuctions[_auctionId];
 
         uint256 userBalanceToAuction = value +
@@ -176,9 +121,11 @@ contract FenerbahceAuction is Ownable {
                 userBalanceToAuction >= auction.startPrice,
                 "You need to start auction with the minimum of auction start price"
             );
-        }
-        else {
-            require(userBalanceToAuction > idToMaxOffers[_auctionId], "You need to deposit more than max offer!");
+        } else {
+            require(
+                userBalanceToAuction > idToMaxOffers[_auctionId],
+                "You need to deposit more than max offer!"
+            );
         }
 
         _prolongAuction(_auctionId);
@@ -186,13 +133,12 @@ contract FenerbahceAuction is Ownable {
         idToOffers[_auctionId][msg.sender] = userBalanceToAuction;
         idToMaxOffers[_auctionId] = userBalanceToAuction;
 
-
         fbToken.safeTransferFrom(msg.sender, address(this), value);
 
         emit AuctionDeposited(_auctionId, msg.sender, userBalanceToAuction);
     }
 
-    function buyNow(string memory _auctionId) public {
+    function buyNow(string memory _auctionId) public nonReentrant {
         require(
             idToAuctions[_auctionId].startDate != 0,
             "There is no auction like that"
@@ -226,7 +172,7 @@ contract FenerbahceAuction is Ownable {
         emit AuctionSelled(_auctionId, msg.sender);
     }
 
-    function refund(string memory _auctionId, address _to) public {
+    function refund(string memory _auctionId, address _to) public nonReentrant {
         Auction memory auction = idToAuctions[_auctionId];
         require(
             block.timestamp > auction.endDate,
@@ -236,7 +182,6 @@ contract FenerbahceAuction is Ownable {
 
         uint256 value = idToOffers[_auctionId][_to];
 
-        // fbToken.safeTransferFrom(address(this), _to, value);
         fbToken.approve(address(this), value);
         fbToken.safeTransferFrom(address(this), _to, value);
 
@@ -264,5 +209,30 @@ contract FenerbahceAuction is Ownable {
 
         idToAuctions[_auctionId].buyNowPrice = _newPrice;
         emit AuctionBuyNowPriceUpdated(_auctionId, _newPrice);
+    }
+
+    function withdrawOtherTokens(address tokenAddress)
+        external
+        nonReentrant
+        onlyOwner
+    {
+        require(
+            tokenAddress != fbTokenAddress,
+            "TokenVesting: invalid token address"
+        );
+        IERC20 tokenInterface = IERC20(tokenAddress);
+        require(
+            tokenInterface != fbToken,
+            "TokenVesting: use withdraw for contract token"
+        );
+
+        uint256 balance = tokenInterface.balanceOf(address(this));
+        require(balance > 0, "TokenVesting: no funds to withdraw");
+
+        tokenInterface.safeTransfer(owner(), balance);
+    }
+
+    function withdraw(uint256 amount) external nonReentrant onlyOwner {
+        fbToken.safeTransfer(owner(), amount);
     }
 }
