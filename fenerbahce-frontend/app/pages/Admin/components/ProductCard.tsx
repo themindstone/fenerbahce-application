@@ -20,9 +20,7 @@ export const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoU
 	const updateBuyNowPrice = useCallback(
 		async ({ newBuyNowPrice }: any) => {
 			const { isError, errorMessage } = await auctionContract.updateBuyNowPrice({ auctionId, newBuyNowPrice });
-			console.log(isError, errorMessage);
 			if (isError && errorMessage) {
-				console.log("herhalde oluyor");
 				modal1907EventBus.publish("modal.open", { isSucceed: false, description: errorMessage });
 				// we need to show a modal in case of errors to the user
 				return;
@@ -41,11 +39,8 @@ export const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoU
 		},
 		{
 			onSuccess: data => {
-				// console.log("options:", options)
-				console.log(data);
 				if (data.error) {
 					const e = getAuctionContractErrorMessage(data.error);
-					console.log(data.error, e);
 					if (!e) {
 						return;
 					}

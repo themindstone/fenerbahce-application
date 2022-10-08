@@ -1,7 +1,7 @@
 export const fbTokenAddress = {
 	"development": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
 	"test": "0x984D3b44841EF84a3A1b1929d7be927C99fF3c59",
-	"production": "",
+	"production": "0xFB19075D77a0F111796FB259819830F4780f1429",
 };
 
 export const fbTokenABI = [

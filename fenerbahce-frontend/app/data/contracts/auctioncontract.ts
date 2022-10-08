@@ -1,7 +1,7 @@
 export const auctionAddress = {
 	development: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-	test: "0x22f284f6E599E86B4D5AaCDdbab63c8065b11D12",
-	production: "",
+	test: "0x7E4060597AbB4585faEaCD96147aA11803f0bAd5",
+	production: "0x297fC8132FDAa95f4187f256b5948Ef048cFBb22",
 };
 
 export const auctionABI = [

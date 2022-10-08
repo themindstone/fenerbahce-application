@@ -80,12 +80,6 @@ const ActiveAuctionsCard = (auction: any): ReactElement => {
 					bgRepeat="no-repeat"
 					bgPos="center"
 					pos="relative">
-					<Box
-						pos="absolute"
-						p="10px"
-						background="linear-gradient(to bottom, #00000080, #00000070, #00000060, transparent)">
-						{auction.name}
-					</Box>
 					{state && (
 						<Grid
 							bottom="0"
@@ -104,18 +98,19 @@ const ActiveAuctionsCard = (auction: any): ReactElement => {
 					)}
 				</Box>
 				<Flex direction="column" p="15px 20px" gap="10px" fontWeight="bold">
-					{auctionHighestBalances.isSuccess && auctionHighestBalances.data.length > 0 && (
-						<Flex justifyContent="space-between" color="var(--golden-fizz)">
-							<Text>En yüksek teklif</Text>
-							<Text>{auctionHighestBalances.data[0].balance} FB Token</Text>
+					<Box fontSize="lg">{auction.name}</Box>
+					<Flex justifyContent="space-between">
+						<Flex direction="column">
+							<Text fontWeight="normal">Kalan Süre</Text>
+							<Text color="var(--golden-fizz)">45 dakika</Text>
 						</Flex>
-					)}
-					{auctionHighestBalances.isSuccess && auctionHighestBalances.data.length > 1 && (
-						<Flex justifyContent="space-between">
-							<Text>En yüksek 2. teklif</Text>
-							<Text>{auctionHighestBalances.data[1].balance} FB Token</Text>
-						</Flex>
-					)}
+						{auctionHighestBalances.isSuccess && auctionHighestBalances.data.length > 0 && (
+							<Flex direction="column" alignItems="end">
+								<Text fontWeight="normal">En yüksek teklif</Text>
+								<Text color="var(--golden-fizz)">{auctionHighestBalances.data[0].balance} FB</Text>
+							</Flex>
+						)}
+					</Flex>
 				</Flex>
 			</Flex>
 		</Link>

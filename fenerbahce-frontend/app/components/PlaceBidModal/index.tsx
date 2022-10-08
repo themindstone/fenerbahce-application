@@ -28,12 +28,10 @@ export function PlaceBidModal() {
 	placeBidModalEventBus.useListener(
 		"placebidmodal.open",
 		newAuction => {
-			console.log("new auction: ", newAuction)
 			const newValue =
 				newAuction.balances.length > 0
 					? newAuction.bidIncrement + newAuction.balances[0]
 					: newAuction.startPrice;
-					console.log('new val:', newValue)
 			onOpen();
 			setAuction(newAuction);
 			setValue(newValue);
@@ -71,7 +69,6 @@ export function PlaceBidModal() {
 							value={value ? value : ""}
 							onChange={e => {
 								if (Number(e.target.value) > auction?.buyNowPrice) {
-									console.log("merhaba dunya")
 									return;
 								}
 								setValue(Number(e.target.value));

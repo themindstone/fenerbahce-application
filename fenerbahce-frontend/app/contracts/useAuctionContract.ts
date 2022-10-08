@@ -20,15 +20,11 @@ export const useAuctionContract = (): AuctionContractFunctions => {
 				return { isError: true, errorMessage: "İşlem yapabilmek için cüzdanınızı bağlamanız gerekiyor." };
 			}
 
-			console.log("merhaba");
-
 			try {
 				const transaction = await contract.deposit(auctionId, ethers.utils.parseUnits(value, "18"), { gasLimit: 10000000 });
 				const tx = await transaction.wait();
-				console.log(tx)
 				return { tx, isError: false };
 			} catch (e: any) {
-				console.log(e)
 				return { isError: true, errorMessage: getAuctionContractErrorMessage(e.message as string) };
 			}
 		},

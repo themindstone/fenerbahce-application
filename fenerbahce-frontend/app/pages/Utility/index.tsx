@@ -21,7 +21,6 @@ export const Utility = (): ReactElement => {
 				<JoinCommunity />
 				<Footer />
 				<PlaceBidModal></PlaceBidModal>
-				<ModalMediator></ModalMediator>
 			</ContractsProvider>
 		</ConnectWalletProvider>
 	);

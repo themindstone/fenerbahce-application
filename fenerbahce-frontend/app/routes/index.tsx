@@ -16,7 +16,6 @@ export const loader: LoaderFunction = async ({ context }) => {
 	const activeAuctions = await AuctionClient.listActiveAuctions();
 	const finishedAuctions = await AuctionClient.listFinishedAuctions({ page: 0 });
 
-	console.log(config)
 	return json({
 		highestOfferAuctions,
 		activeAuctions,

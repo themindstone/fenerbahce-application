@@ -44,7 +44,6 @@ export const CreateAuction = () => {
 		startDate,
 		endDate,
 	}: any) => {
-		console.log("merhaba dunya");
 		if (
 			!Number(startPrice) ||
 			!Number(buyNowPrice) ||

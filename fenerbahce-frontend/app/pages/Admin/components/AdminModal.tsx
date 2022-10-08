@@ -12,7 +12,6 @@ export const AdminModal = () => {
 	modal1907EventBus.useListener(
 		"modal.open",
 		({ isSucceed, description }) => {
-			console.log("olmadi mi")
 			setDescription(description);
 			setIsSucceed(isSucceed);
 			onOpen();

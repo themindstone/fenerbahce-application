@@ -63,8 +63,6 @@ export const KYCProvider = (props: { children: React.ReactNode }) => {
 		});
 	}, [kycQuery.data, connectWallet]);
 
-	console.log(kycQuery);
-
 	const create = async (params: {
 		fullname: string;
 		address: string;

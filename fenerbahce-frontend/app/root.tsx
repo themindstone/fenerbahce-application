@@ -56,8 +56,6 @@ const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) =>
 		clientStyleData?.reset();
 	}, []);
 
-	// console.log(JSON.stringify(config))
-
 	return (
 		<html lang="en">
 			<head>

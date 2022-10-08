@@ -9,7 +9,6 @@ export const connectContracts = (
     const signer = provider.getSigner();
 
     const contract = new ethers.Contract(address, contractInterface, signer);
-    console.log(contract)
 
     return contract;
 };
