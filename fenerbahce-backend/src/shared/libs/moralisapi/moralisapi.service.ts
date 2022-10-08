@@ -10,8 +10,6 @@ import { ConfigService } from "@nestjs/config";
 export class MoralisAPIService {
 
     constructor(
-        // @Inject(MoralisAPIModuleOptions)
-        // private readonly options: MoralisInterface.Options,
         private readonly configService: ConfigService
     ) {
         const configs = {

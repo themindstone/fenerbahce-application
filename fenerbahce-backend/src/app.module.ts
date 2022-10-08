@@ -35,12 +35,8 @@ const mainnetEthersConfig: EthersModuleOptions = {
             isGlobal: true,
             envFilePath: envPath,
         }),
-        MoralisAPIModule.forRoot({
-            appId: "vdNEmjLEmhe2ppNlNcCTOHwsIlRpBjdvx51Cddou",
-            serverUrl: "https://x4cxia5l3uzt.usemoralis.com:2053/server",
-            masterKey: "N0CtY14pMh3mWqvYJaSLUAOeiiD7FjvbouYGaoO1"
-        }),
-        EthersModule.forRoot(goerliEthersConfig),
+        MoralisAPIModule.forRoot(),
+        EthersModule.forRoot(mainnetEthersConfig),
         DatabaseModule,
         EventEmitterModule.forRoot(),
         AuthModule,

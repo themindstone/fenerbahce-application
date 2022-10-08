@@ -1,4 +1,3 @@
-// export const auctionAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 
 export const auctionABI = [
     {
@@ -97,31 +96,6 @@ export const auctionABI = [
             },
         ],
         name: "AuctionDeposited",
-        type: "event",
-    },
-    {
-        anonymous: false,
-        inputs: [
-            {
-                indexed: false,
-                internalType: "string",
-                name: "auctionId",
-                type: "string",
-            },
-            {
-                indexed: false,
-                internalType: "address",
-                name: "from",
-                type: "address",
-            },
-            {
-                indexed: false,
-                internalType: "uint256",
-                name: "value",
-                type: "uint256",
-            },
-        ],
-        name: "AuctionDepositedWithBidIncrement",
         type: "event",
     },
     {
@@ -296,24 +270,6 @@ export const auctionABI = [
                 type: "string",
             },
             {
-                internalType: "uint256",
-                name: "value",
-                type: "uint256",
-            },
-        ],
-        name: "depositWithBidIncrement",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-    },
-    {
-        inputs: [
-            {
-                internalType: "string",
-                name: "_auctionId",
-                type: "string",
-            },
-            {
                 internalType: "address",
                 name: "_address",
                 type: "address",
@@ -395,6 +351,32 @@ export const auctionABI = [
             },
         ],
         name: "updateBuyNowPrice",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+    },
+    {
+        inputs: [
+            {
+                internalType: "uint256",
+                name: "amount",
+                type: "uint256",
+            },
+        ],
+        name: "withdraw",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+    },
+    {
+        inputs: [
+            {
+                internalType: "address",
+                name: "tokenAddress",
+                type: "address",
+            },
+        ],
+        name: "withdrawOtherTokens",
         outputs: [],
         stateMutability: "nonpayable",
         type: "function",
