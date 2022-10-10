@@ -71,7 +71,7 @@ export const CreateAuction = () => {
 			});
 			return;
 		}
-		if (buyNowPrice <= startPrice) {
+		if (Number(buyNowPrice) <= Number(startPrice)) {
 			modal1907EventBus.publish("modal.open", {
 				isSucceed: false,
 				description: "Hemen al fiyatı, başlangıç fiyatından daha düşük olamaz!",

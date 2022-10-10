@@ -15,10 +15,24 @@ import { useForm } from "react-hook-form";
 import { useConnectWallet, useKYC } from "~/context";
 import { KYCModalEventBus, loadingModalEventBus, modal1907EventBus } from "~/eventbus";
 import { GoldenFizzButton } from "../Button";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import "yup-phone";
+
+const schema = yup.object().shape({
+	fullname: yup.string().required("İsim bilgisi zorunludur."),
+	email: yup.string().email("Email adresi geçerli değil.").required("E-posta adresi zorunludur."),
+	phone: yup.string().phone("TR", false, "Telefon numarası geçerli değil.").required("Telefon numarası zorunludur."),
+});
 
 export const KYCModal = () => {
 	const { isOpen, onClose, onOpen } = useDisclosure();
-	const { handleSubmit, register } = useForm();
+	const {
+		handleSubmit,
+		register,
+		formState: { errors },
+	} = useForm({ resolver: yupResolver(schema) });
+	console.log(errors);
 
 	KYCModalEventBus.useListener(
 		"kycmodal.open",
@@ -32,9 +46,6 @@ export const KYCModal = () => {
 	const connectWallet = useConnectWallet();
 
 	const createKYC = async ({ fullname, email, phone }: any) => {
-		if (!connectWallet.address) {
-			return;
-		}
 		try {
 			loadingModalEventBus.publish("loadingmodal.open", { message: "KYC sistemine kaydınız ekleniyor..." });
 			const { errorMessage } = await kyc.create({ fullname, email, phone, address: connectWallet.address });
@@ -67,30 +78,45 @@ export const KYCModal = () => {
 								<Input
 									type="text"
 									placeholder="İsminiz"
-									_placeholder={{ color: "whiteAlpha.700"}}
+									_placeholder={{ color: "whiteAlpha.700" }}
 									{...register("fullname")}
 									bg="var(--indigo)"
 								/>
-							</Box>
-							<Box>
-								<FormLabel fontWeight="bold">Telefon Numaranız</FormLabel>
-								<Input
-									type="text"
-									placeholder="Telefon Numaranız"
-									_placeholder={{ color: "whiteAlpha.700"}}
-									bg="var(--indigo)"
-									{...register("phone")}
-								/>
+								{errors.fullname && (
+									<Text size="sm" mt="5px" color="red.400">
+										{errors.fullname.message ? <>{errors.fullname.message}</> : ""}
+										</Text>
+								)}
 							</Box>
 							<Box>
 								<FormLabel fontWeight="bold">E-posta adresiniz</FormLabel>
 								<Input
 									type="text"
 									placeholder="E-posta adresiniz"
-									_placeholder={{ color: "whiteAlpha.700"}}
+									_placeholder={{ color: "whiteAlpha.700" }}
 									{...register("email")}
 									bg="var(--indigo)"
 								/>
+								{errors.email && (
+									<Text size="sm" mt="5px" color="red.400">
+										{errors.email.message ? <>{errors.email.message}</> : ""}
+										</Text>
+								)}
+							</Box>
+							<Box>
+								<FormLabel fontWeight="bold">Telefon Numaranız</FormLabel>
+								<Input
+									type="text"
+									placeholder="+90 (___) (___) (__) (__)"
+									_placeholder={{ color: "whiteAlpha.700" }}
+									bg="var(--indigo)"
+									{...register("phone")}
+								/>
+								{errors.phone && (
+									<Text size="sm" mt="5px" color="red.400">
+										{errors.phone.message ? <>{errors.phone.message}</> : ""}
+										</Text>
+								)}
 							</Box>
 							<GoldenFizzButton type="submit">SUBMIT</GoldenFizzButton>
 						</Flex>
