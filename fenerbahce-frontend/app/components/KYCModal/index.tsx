@@ -26,35 +26,13 @@ const schema = yup.object({
 	phone: yup.string().phone("TR", false, "Telefon numarası geçerli değil.").required("Telefon numarası zorunludur."),
 });
 
-// const formatter = new AsYouTypeFormatter("US");
 
 type KYCFormType = yup.InferType<typeof schema>;
 
 const phoneUtil = gPhoneNumber.PhoneNumberUtil.getInstance();
 const PNF = gPhoneNumber.PhoneNumberFormat;
 
-// const e164ToDisplay = (e164: string): string => {
-// 	try {
-// 		const phoneNumber = phoneUtil.parse(e164);
-// 		if (phoneNumber.getCountryCode() === 90) {
-// 			return "+90 " + phoneUtil.format(phoneNumber, PNF.NATIONAL);
-// 		}
-// 		return phoneUtil.format(phoneNumber, PNF.INTERNATIONAL);
-// 	} catch (e) {
-// 		return e164;
-// 	}
-// };
-
 const AsYouTypeFormatter = gPhoneNumber.AsYouTypeFormatter;
-
-const formatPhoneNumberInternational = (rawNumber: string): string | undefined => {
-	try {
-		const phoneNumber = phoneUtil.parse(rawNumber);
-		return phoneUtil.format(phoneNumber, PNF.INTERNATIONAL);
-	} catch {
-		return undefined;
-	}
-};
 
 export const KYCModal = () => {
 	const { isOpen, onClose, onOpen } = useDisclosure();
