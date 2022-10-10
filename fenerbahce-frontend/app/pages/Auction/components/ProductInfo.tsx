@@ -9,9 +9,7 @@ import { TimeLeftBox } from "./TimeLeftBox";
 import { humanReadableNumber } from "~/utils";
 import { useQuery } from "react-query";
 import { BalanceClient } from "~/client";
-import { placeBidModalEventBus } from "~/eventbus";
-import { useAuctionContractAdapter } from "~/mediators";
-// import moment from "moment";
+import { buyNowModalEventBus, placeBidModalEventBus } from "~/eventbus";
 
 export const ProductInfo = (): ReactElement => {
 	const { auction } = useLoaderData();
@@ -31,7 +29,6 @@ export const ProductInfo = (): ReactElement => {
 	});
 
 	const openPlaceBidModal = () => {
-		console.log(auction);
 		placeBidModalEventBus.publish("placebidmodal.open", {
 			...auction,
 			balances: auction.balances.map((i: any) => i.balance),
@@ -40,12 +37,9 @@ export const ProductInfo = (): ReactElement => {
 
 	const { days, hours, minutes, seconds, status } = useCountdownTimer(auction.endDate);
 
-	const { buyNow } = useAuctionContractAdapter(auction);
-
 	const auctionHighestBalances = useQuery(
 		["balances", auction.id],
 		() => {
-			// return auctionClient.getHighestBalancesByAuctionId(auction.id).then(res => res.data);
 			return BalanceClient.getHighestBalancesByAuctionId(auction.id);
 		},
 		{
@@ -63,6 +57,10 @@ export const ProductInfo = (): ReactElement => {
 			setBalances(auctionHighestBalances.data);
 		}
 	}, [auctionHighestBalances]);
+
+	const buyNowModalOpen = () => {
+		buyNowModalEventBus.publish("buynowmodal.open", auction);
+	};
 
 	return (
 		<Box>
@@ -93,8 +91,8 @@ export const ProductInfo = (): ReactElement => {
 				)}
 				{status === "success" && !auction.isSelled && (
 					<Flex gap="10px" direction="column" alignItems="stretch">
-						<WhiteButton onClick={buyNow}>
-							HEMEN AL {humanReadableNumber(auction.buyNowPrice)} FB
+						<WhiteButton onClick={buyNowModalOpen}>
+							HEMEN AL {humanReadableNumber(auction.buyNowPrice).toFixed(2)} FB
 						</WhiteButton>
 						<GoldenFizzButton onClick={openPlaceBidModal}>TEKLİF VER</GoldenFizzButton>
 					</Flex>

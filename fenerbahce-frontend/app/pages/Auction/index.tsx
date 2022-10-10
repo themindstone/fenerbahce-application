@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import { ConnectWallet, Header, SideNav, Footer, PlaceBidModal } from "~/components";
+import { ConnectWallet, Header, SideNav, Footer, PlaceBidModal, BuyNowModal } from "~/components";
 import { Grid, useMediaQuery, VStack } from "@chakra-ui/react";
 import { Gallery, ProductInfo } from "./components";
 import { ConnectWalletProvider, ContractsProvider } from "~/context";
@@ -29,6 +29,7 @@ export const Auction = (): ReactElement => {
 				)}
 				<Footer />
 				<PlaceBidModal></PlaceBidModal>
+				<BuyNowModal />
 			</ContractsProvider>
 		</ConnectWalletProvider>
 	);

@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { FAQ, Footer, Header, JoinCommunity, PlaceBidModal, SideNav } from "~/components";
+import { BuyNowModal, FAQ, Footer, Header, JoinCommunity, PlaceBidModal, SideNav } from "~/components";
 import { ActiveAuctions, FinishedAuctions, Hero, MobileApplication } from "./components";
 import { ConnectWallet } from "~/components/ConnectWallet";
 import { ConnectWalletProvider, ContractsProvider } from "~/context";
@@ -21,6 +21,7 @@ export const Utility = (): ReactElement => {
 				<JoinCommunity />
 				<Footer />
 				<PlaceBidModal></PlaceBidModal>
+				<BuyNowModal />
 			</ContractsProvider>
 		</ConnectWalletProvider>
 	);

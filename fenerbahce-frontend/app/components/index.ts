@@ -1,6 +1,7 @@
 export * from "./Header";
 export * from "./Footer";
 export * from "./Carousel";
+export * from "./AuctionCard";
 export * from "./FAQ";
 export * from "./JoinCommunity";
 export * from "./ShowAccount";
@@ -11,4 +12,5 @@ export * from "./Slideshow";
 export * from "./Button";
 export * from "./Modal1907";
 export * from "./PlaceBidModal"
+export * from "./BuyNowModal";
 export * from "./KYCModal";
