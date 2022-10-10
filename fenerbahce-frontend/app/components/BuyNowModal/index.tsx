@@ -37,7 +37,7 @@ export const BuyNowModal = (): ReactElement => {
 				<ModalContent color="whiteAlpha.800" p="20px" bg="var(--biscay)">
 					<ModalCloseButton />
 					<Flex direction="column" gap="20px">
-						<Heading size="lg">Teklif Ver</Heading>
+						<Heading size="lg">Hemen Al</Heading>
 						<Flex gap="12px">
 							<Box
 								borderRadius="5px"
