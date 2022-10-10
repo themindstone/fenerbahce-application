@@ -47,7 +47,7 @@ export const BuyNowModal = (): ReactElement => {
 								bgImage={`url(${auction?.photoUrls && auction.photoUrls[0]})`}
 								bgSize="contain"></Box>
 							<Flex justifyContent="center" direction="column" gap="12px">
-								<Text>Teklif Verilen Açık Artırma</Text>
+								<Text>Hemen Alınan Açık Artırma</Text>
 								<Heading fontSize="20px">{auction.name}</Heading>
 							</Flex>
 						</Flex>
