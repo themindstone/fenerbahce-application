@@ -1,10 +1,9 @@
 node_modules
-.env
-.env.fuji
 coverage
 coverage.json
 typechain
 typechain-types
+config/*
 
 #Hardhat files
 cache

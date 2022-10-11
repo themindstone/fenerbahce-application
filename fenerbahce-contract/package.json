@@ -1,9 +1,9 @@
 {
   "name": "hardhat-project",
   "scripts": {
-    "deploy:local": "env-cmd -f ./.env.local npx hardhat run scripts/deploy.ts --network local",
-    "deploy:goerli": "env-cmd -f ./.env.goerli  npx hardhat run scripts/deploy.ts --network goerli ",
-    "deploy:mainnet": "env-cmd -f ./.env npx hardhat run scripts/deploy.ts --network mainnet"
+    "deploy:local": "env-cmd -f ./config/.env.local npx hardhat run scripts/deploy.ts --network local",
+    "deploy:goerli": "env-cmd -f ./config/.env.goerli  npx hardhat run scripts/deploy.ts --network goerli ",
+    "deploy:mainnet": "env-cmd -f ./config/.env npx hardhat run scripts/deploy.ts --network mainnet"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^1.0.2",

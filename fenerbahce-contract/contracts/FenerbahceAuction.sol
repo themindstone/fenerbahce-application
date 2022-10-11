@@ -3,51 +3,51 @@ pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "./FBToken.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 contract FenerbahceAuction is Ownable, ReentrancyGuard {
     using SafeERC20 for IERC20;
-    using SafeERC20 for FBToken;
 
     struct Auction {
-        uint256 startPrice;
-        uint256 buyNowPrice;
-        uint256 bidIncrement;
         uint256 startDate;
         uint256 endDate;
+        uint32 startPrice;
+        uint32 buyNowPrice;
+        uint16 bidIncrement;
         bool isBought;
     }
 
-    address fbTokenAddress;
-    FBToken fbToken;
+    uint32 latestId;
 
-    mapping(string => Auction) idToAuctions;
-    mapping(string => mapping(address => uint256)) idToOffers;
-    mapping(string => uint256) idToMaxOffers;
-    mapping(string => bool) idToAuctionRefundDone;
+    address fbTokenAddress;
+    IERC20 fbToken;
+
+    mapping(uint32 => Auction) idToAuctions;
+    mapping(uint32 => mapping(address => uint32)) idToOffers;
+    mapping(uint32 => uint32) idToMaxOffers;
+    mapping(uint32 => bool) idToAuctionRefundDone;
 
     event AuctionCreated(
-        string auctionId,
-        uint256 startPrice,
-        uint256 buyNowPrice,
-        uint256 bidIncrement,
+        uint32 auctionId,
+        uint32 startPrice,
+        uint32 buyNowPrice,
+        uint16 bidIncrement,
         uint256 startDate,
         uint256 endDate
     );
-    event AuctionDeposited(string auctionId, address from, uint256 value);
-    event AuctionSelled(string auctionId, address buyer);
-    event AuctionRefunded(string auctionId, address to, uint256 value);
-    event AuctionProlonged(string auctionId, uint256 toDate);
-    event AuctionBuyNowPriceUpdated(string auctionId, uint256 newBuyNowPrice);
-    event AuctionFinished(string auctionId);
+    event AuctionDeposited(uint32 auctionId, address from, uint32 value);
+    event AuctionSelled(uint32 auctionId, address buyer);
+    event AuctionRefunded(uint32 auctionId, address to, uint32 value);
+    event AuctionProlonged(uint32 auctionId, uint256 toDate);
+    event AuctionBuyNowPriceUpdated(uint32 auctionId, uint32 newBuyNowPrice);
+    event AuctionFinished(uint32 auctionId);
 
     constructor(address _address) {
         fbTokenAddress = _address;
-        fbToken = FBToken(fbTokenAddress);
+        fbToken = IERC20(fbTokenAddress);
     }
 
-    function _prolongAuction(string memory _auctionId) internal {
+    function _prolongAuction(uint32 _auctionId) internal {
         Auction memory auction = idToAuctions[_auctionId];
         uint256 diff = auction.endDate - block.timestamp;
 
@@ -61,41 +61,41 @@ contract FenerbahceAuction is Ownable, ReentrancyGuard {
     }
 
     function createAuction(
-        string memory _auctionId,
         uint256 _startDate,
         uint256 _endDate,
-        uint256 _bidIncrement,
-        uint256 _startPrice,
-        uint256 _buyNowPrice
-    ) public onlyOwner {
-        require(
-            idToAuctions[_auctionId].startDate == 0,
-            "An auction with this auctionId already exists."
-        );
-        idToAuctions[_auctionId] = Auction(
+        uint32 _startPrice,
+        uint32 _buyNowPrice,
+        uint16 _bidIncrement
+    ) public onlyOwner returns (uint32) {
+        latestId += 1;
+
+        idToAuctions[latestId] = Auction(
+            _startDate,
+            _endDate,
             _startPrice,
             _buyNowPrice,
             _bidIncrement,
-            _startDate,
-            _endDate,
             false
         );
-        idToMaxOffers[_auctionId] = 0;
+
+        idToMaxOffers[latestId] = 0;
 
         emit AuctionCreated(
-            _auctionId,
+            latestId,
             _startPrice,
             _buyNowPrice,
             _bidIncrement,
             _startDate,
             _endDate
         );
+
+        return latestId;
     }
 
-    function deposit(string memory _auctionId, uint256 value) public nonReentrant {
+    function deposit(uint32 _auctionId, uint32 value) public nonReentrant {
         Auction memory auction = idToAuctions[_auctionId];
 
-        uint256 userBalanceToAuction = value +
+        uint32 userBalanceToAuction = value +
             idToOffers[_auctionId][msg.sender];
 
         require(auction.startDate != 0, "There is no auction like that");
@@ -138,7 +138,7 @@ contract FenerbahceAuction is Ownable, ReentrancyGuard {
         emit AuctionDeposited(_auctionId, msg.sender, userBalanceToAuction);
     }
 
-    function buyNow(string memory _auctionId) public nonReentrant {
+    function buyNow(uint32 _auctionId) public nonReentrant {
         require(
             idToAuctions[_auctionId].startDate != 0,
             "There is no auction like that"
@@ -172,7 +172,7 @@ contract FenerbahceAuction is Ownable, ReentrancyGuard {
         emit AuctionSelled(_auctionId, msg.sender);
     }
 
-    function refund(string memory _auctionId, address _to) public nonReentrant {
+    function refund(uint32 _auctionId, address _to) public nonReentrant {
         Auction memory auction = idToAuctions[_auctionId];
         require(
             block.timestamp > auction.endDate,
@@ -180,7 +180,7 @@ contract FenerbahceAuction is Ownable, ReentrancyGuard {
         );
         require(auction.buyNowPrice != 0, "There is no auction like that");
 
-        uint256 value = idToOffers[_auctionId][_to];
+        uint32 value = idToOffers[_auctionId][_to];
 
         fbToken.approve(address(this), value);
         fbToken.safeTransferFrom(address(this), _to, value);
@@ -188,14 +188,15 @@ contract FenerbahceAuction is Ownable, ReentrancyGuard {
         emit AuctionRefunded(_auctionId, _to, value);
     }
 
-    function getUserBalanceByAuctionId(
-        string memory _auctionId,
-        address _address
-    ) public view returns (uint256) {
+    function getUserBalanceByAuctionId(uint32 _auctionId, address _address)
+        public
+        view
+        returns (uint32)
+    {
         return idToOffers[_auctionId][_address];
     }
 
-    function updateBuyNowPrice(string memory _auctionId, uint256 _newPrice)
+    function updateBuyNowPrice(uint32 _auctionId, uint32 _newPrice)
         public
         onlyOwner
     {
