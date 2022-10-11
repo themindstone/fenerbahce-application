@@ -132,7 +132,7 @@ export const KYCModal = () => {
 										});
 										const p = phoneUtil.format(
 											phoneUtil.parseAndKeepRawInput(l, "TR"),
-											gPhoneNumber.PhoneNumberFormat.INTERNATIONAL,
+											PNF.INTERNATIONAL,
 										);
 										e.target.value = p.trim();
 									}}

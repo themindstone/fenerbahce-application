@@ -1,6 +1,6 @@
 export const fbTokenAddress = {
 	"development": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-	"test": "0x984D3b44841EF84a3A1b1929d7be927C99fF3c59",
+	"test": "0x9b77053b733DDdA6B9F1E120280D154fb71a9392",
 	"production": "0xFB19075D77a0F111796FB259819830F4780f1429",
 };
 
