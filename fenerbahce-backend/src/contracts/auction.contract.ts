@@ -19,10 +19,8 @@ import { AuctionContractDevelopment } from "./auction.contract.dev";
 import { AuctionContractProduction } from "./auction.contract.prod";
 
 interface AuctionContractCreateAuctionDto {
-    auctionId: string;
     startDate: string;
     endDate: string;
-    bidIncrement: number;
     startPrice: number;
     buyNowPrice: number;
 }
@@ -102,7 +100,6 @@ export class AuctionContract {
                 this.eventEmitter,
                 this.startBlockNumber,
             );
-            console.log(contractProvider)
             this.contract.on(
                 "AuctionDeposited",
                 contractProvider.auctionDeposited.bind(contractProvider),
@@ -113,42 +110,49 @@ export class AuctionContract {
             );
             this.contract.on(
                 "AuctionBuyNowPriceUpdated",
-                contractProvider.auctionBuyNowPriceUpdated.bind(contractProvider),
+                contractProvider.auctionBuyNowPriceUpdated.bind(
+                    contractProvider,
+                ),
             );
             this.contract.on(
                 "AuctionProlonged",
                 contractProvider.auctionProlonged.bind(contractProvider),
             );
-            this.contract.on("AuctionSelled", contractProvider.auctionSelled.bind(contractProvider));
+            this.contract.on(
+                "AuctionSelled",
+                contractProvider.auctionSelled.bind(contractProvider),
+            );
         }
     }
 
     async createAuction({
-        auctionId,
+        // auctionId,
         startDate,
         endDate,
-        bidIncrement = 100,
         startPrice,
         buyNowPrice,
     }: AuctionContractCreateAuctionDto) {
         const tx = await this.contract.createAuction(
-            auctionId,
+            // auctionId,
             BigNumber.from(Math.floor(new Date(startDate).getTime() / 1000)),
             BigNumber.from(Math.floor(new Date(endDate).getTime() / 1000)),
-            parseUnits(bidIncrement.toString(), "18"),
             parseUnits(startPrice.toString(), "18"),
             parseUnits(buyNowPrice.toString(), "18"),
-            { gasLimit: 10000000 }
+            { gasLimit: 200000 },
         );
         return await tx.wait();
     }
 
-    async refundTokensToUsers(auctionId: string, losers: string[]) {
+    async refundTokensToUsers(auctionId: number, losers: string[]) {
         return await Promise.all(
             losers.map(async (loser) => {
                 const tx = await this.contract.refund(auctionId, loser);
                 await tx.wait();
             }),
         );
+    }
+
+    async getLatestId() {
+        return await this.contract.getLatestId();
     }
 }

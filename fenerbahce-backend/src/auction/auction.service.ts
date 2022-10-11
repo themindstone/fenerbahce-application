@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { ConsoleLogger, Injectable, NotFoundException } from "@nestjs/common";
 import { CreateAuctionDto, Auction } from "./auction.model";
 import { v4 } from "uuid";
 import { Auction as AuctionRepository } from "~/shared/entities";
@@ -23,24 +23,37 @@ export class AuctionService {
     ) {}
 
     async create(auction: CreateAuctionDto) {
-        const auctionId = v4();
-        const res = await this.auctionContract.createAuction({
-            auctionId,
-            startDate: auction.startDate,
-            endDate: auction.endDate,
-            bidIncrement: auction.bidIncrement,
-            startPrice: auction.startPrice,
-            buyNowPrice: auction.buyNowPrice,
-        });
+        // TODO: generate a normal number for auctionId
+        // const auctionId = v4();
+        try {
+            await this.auctionContract.createAuction({
+                // auctionId,
+                startDate: auction.startDate,
+                endDate: auction.endDate,
+                startPrice: auction.startPrice,
+                buyNowPrice: auction.buyNowPrice,
+            });
+            const res = await this.auctionContract.getLatestId();
 
-        const newAuction: DeepPartial<AuctionRepository> = {
-            ...auction,
-            id: auctionId,
-            isActive: true,
-        };
+            if (!Number(res)) {
+                throw new Error(
+                    "Auction contract createAuction method response is not number",
+                );
+            }
 
-        const createdAuction = this.auctionRepository.create(newAuction);
-        await this.auctionRepository.save(createdAuction);
+            // res is the auctionId
+            const newAuction: DeepPartial<AuctionRepository> = {
+                ...auction,
+                id: Number(res),
+                // id: auctionId,
+                isActive: true,
+            };
+
+            const createdAuction = this.auctionRepository.create(newAuction);
+            await this.auctionRepository.save(createdAuction);
+        } catch (e: any) {
+            console.log(e);
+        }
     }
 
     listByPage(page = 1): Auction[] | null {
@@ -52,7 +65,7 @@ export class AuctionService {
         return auctions;
     }
 
-    async getById(auctionId: string): Promise<any> {
+    async getById(auctionId: number): Promise<any> {
         const auction = await this.auctionRepository.findOne({
             select: [
                 "id",
@@ -130,7 +143,6 @@ export class AuctionService {
                 endDate: MoreThan(new Date()),
             },
         });
-        console.log(res);
         return res;
     }
 
@@ -182,7 +194,7 @@ export class AuctionService {
         });
     }
 
-    async activate(auctionId: string) {
+    async activate(auctionId: number) {
         await this.auctionRepository.update(
             { id: auctionId },
             { isActive: true },
@@ -190,7 +202,7 @@ export class AuctionService {
     }
 
     async finishAuction(
-        auctionId: string,
+        auctionId: number,
     ): Promise<{ message?: string; error?: string }> {
         let balances, auction;
         try {
@@ -245,14 +257,12 @@ export class AuctionService {
                 (balance) => balance.userAddress,
             );
         }
-        console.log(winner, losers);
 
         // TODO: we need to send auction.buyNowPrice to Paribu for burning
         // burnMaxOffer()
 
         try {
             // TODO: update is_refunded to true for all losers with listening events
-            console.log("losers: ", losers);
             await this.auctionContract.refundTokensToUsers(auctionId, losers);
         } catch (e: any) {
             console.log(e);

@@ -36,7 +36,7 @@ const mainnetEthersConfig: EthersModuleOptions = {
             envFilePath: envPath,
         }),
         MoralisAPIModule.forRoot(),
-        EthersModule.forRoot(mainnetEthersConfig),
+        EthersModule.forRoot(goerliEthersConfig),
         DatabaseModule,
         EventEmitterModule.forRoot(),
         AuthModule,

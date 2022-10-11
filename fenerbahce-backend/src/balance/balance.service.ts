@@ -11,7 +11,7 @@ export class BalanceService {
     ) {}
 
     async getHighestBalancesByAuctionId(
-        auctionId: string,
+        auctionId: number,
     ): Promise<BalanceRepository[]> {
         return await this.balanceRepository.find({
             select: ["id", "balance", "userAddress"],
@@ -25,13 +25,11 @@ export class BalanceService {
     }
 
     async getUserBalanceByAuctionId(
-        auctionId: string,
+        auctionId: number,
         userAddress: string,
     ): Promise<BalanceRepository[] | null> {
-        console.log('addR: ', userAddress)
         const res = await this.balanceRepository.query(`
             select * from balances where auction_id = '${auctionId}' and user_address = '${userAddress}'`);
-            console.log(res);
         // const res = await this.balanceRepository
         //     .createQueryBuilder()
         //     .select("*")
@@ -46,7 +44,7 @@ export class BalanceService {
     }
 
     async getBalancesByAuctionId(
-        auctionId: string,
+        auctionId: number,
         options: FindManyOptions<BalanceRepository>,
     ): Promise<BalanceRepository[]> {
         return await this.balanceRepository.find({

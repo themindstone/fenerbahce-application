@@ -67,7 +67,6 @@ export class AuctionController {
             throw new UnauthorizedException();
         }
         const res = await this.auctionService.finishAuction(auctionId);
-        console.log(res);
         return res;
     }
 
@@ -103,7 +102,7 @@ export class AuctionController {
     }
 
     @Get("/:auctionId/highest-offers")
-    async getHighestOffersByAuctionId(@Param("auctionId") auctionId: string) {
+    async getHighestOffersByAuctionId(@Param("auctionId") auctionId: number) {
         return await this.balanceService.getHighestBalancesByAuctionId(
             auctionId,
         );
@@ -111,7 +110,7 @@ export class AuctionController {
 
     @Get("/:auctionId/address/:userAddress/balance")
     async getUserBalanceByAuctionId(
-        @Param("auctionId") auctionId: string,
+        @Param("auctionId") auctionId: number,
         @Param("userAddress") userAddress: string,
     ) {
         return await this.balanceService.getUserBalanceByAuctionId(
@@ -122,7 +121,7 @@ export class AuctionController {
 
     @Get("/:auctionId")
     async getById(
-        @Param("auctionId") auctionId: string,
+        @Param("auctionId") auctionId: number,
     ): Promise<AuctionRepository> {
         return await this.auctionService.getById(auctionId);
     }

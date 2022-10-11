@@ -1,4 +1,3 @@
-
 export const auctionABI = [
     {
         inputs: [
@@ -16,9 +15,9 @@ export const auctionABI = [
         inputs: [
             {
                 indexed: false,
-                internalType: "string",
+                internalType: "uint256",
                 name: "auctionId",
-                type: "string",
+                type: "uint256",
             },
             {
                 indexed: false,
@@ -35,9 +34,9 @@ export const auctionABI = [
         inputs: [
             {
                 indexed: false,
-                internalType: "string",
+                internalType: "uint32",
                 name: "auctionId",
-                type: "string",
+                type: "uint32",
             },
             {
                 indexed: false,
@@ -49,12 +48,6 @@ export const auctionABI = [
                 indexed: false,
                 internalType: "uint256",
                 name: "buyNowPrice",
-                type: "uint256",
-            },
-            {
-                indexed: false,
-                internalType: "uint256",
-                name: "bidIncrement",
                 type: "uint256",
             },
             {
@@ -78,9 +71,9 @@ export const auctionABI = [
         inputs: [
             {
                 indexed: false,
-                internalType: "string",
+                internalType: "uint32",
                 name: "auctionId",
-                type: "string",
+                type: "uint32",
             },
             {
                 indexed: false,
@@ -103,9 +96,9 @@ export const auctionABI = [
         inputs: [
             {
                 indexed: false,
-                internalType: "string",
+                internalType: "uint32",
                 name: "auctionId",
-                type: "string",
+                type: "uint32",
             },
         ],
         name: "AuctionFinished",
@@ -116,9 +109,9 @@ export const auctionABI = [
         inputs: [
             {
                 indexed: false,
-                internalType: "string",
+                internalType: "uint32",
                 name: "auctionId",
-                type: "string",
+                type: "uint32",
             },
             {
                 indexed: false,
@@ -135,9 +128,9 @@ export const auctionABI = [
         inputs: [
             {
                 indexed: false,
-                internalType: "string",
+                internalType: "uint32",
                 name: "auctionId",
-                type: "string",
+                type: "uint32",
             },
             {
                 indexed: false,
@@ -160,9 +153,9 @@ export const auctionABI = [
         inputs: [
             {
                 indexed: false,
-                internalType: "string",
+                internalType: "uint32",
                 name: "auctionId",
-                type: "string",
+                type: "uint32",
             },
             {
                 indexed: false,
@@ -196,9 +189,9 @@ export const auctionABI = [
     {
         inputs: [
             {
-                internalType: "string",
+                internalType: "uint32",
                 name: "_auctionId",
-                type: "string",
+                type: "uint32",
             },
         ],
         name: "buyNow",
@@ -209,11 +202,6 @@ export const auctionABI = [
     {
         inputs: [
             {
-                internalType: "string",
-                name: "_auctionId",
-                type: "string",
-            },
-            {
                 internalType: "uint256",
                 name: "_startDate",
                 type: "uint256",
@@ -221,11 +209,6 @@ export const auctionABI = [
             {
                 internalType: "uint256",
                 name: "_endDate",
-                type: "uint256",
-            },
-            {
-                internalType: "uint256",
-                name: "_bidIncrement",
                 type: "uint256",
             },
             {
@@ -247,9 +230,9 @@ export const auctionABI = [
     {
         inputs: [
             {
-                internalType: "string",
+                internalType: "uint32",
                 name: "_auctionId",
-                type: "string",
+                type: "uint32",
             },
             {
                 internalType: "uint256",
@@ -263,11 +246,24 @@ export const auctionABI = [
         type: "function",
     },
     {
+        inputs: [],
+        name: "getLatestId",
+        outputs: [
+            {
+                internalType: "uint32",
+                name: "",
+                type: "uint32",
+            },
+        ],
+        stateMutability: "view",
+        type: "function",
+    },
+    {
         inputs: [
             {
-                internalType: "string",
+                internalType: "uint32",
                 name: "_auctionId",
-                type: "string",
+                type: "uint32",
             },
             {
                 internalType: "address",
@@ -302,9 +298,9 @@ export const auctionABI = [
     {
         inputs: [
             {
-                internalType: "string",
+                internalType: "uint32",
                 name: "_auctionId",
-                type: "string",
+                type: "uint32",
             },
             {
                 internalType: "address",
@@ -340,14 +336,14 @@ export const auctionABI = [
     {
         inputs: [
             {
-                internalType: "string",
+                internalType: "uint32",
                 name: "_auctionId",
-                type: "string",
+                type: "uint32",
             },
             {
-                internalType: "uint256",
+                internalType: "uint32",
                 name: "_newPrice",
-                type: "uint256",
+                type: "uint32",
             },
         ],
         name: "updateBuyNowPrice",

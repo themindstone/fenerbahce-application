@@ -11,8 +11,8 @@ export class Balance {
     @Generated("uuid")
     public id: string;
 
-    @Column({ name: "auction_id", type: "uuid", nullable: false })
-    public auctionId: string;
+    @Column({ name: "auction_id", type: "integer", nullable: false })
+    public auctionId: number;
 
     @Column({ name: "user_address", type: "varchar", nullable: false })
     public userAddress: string;

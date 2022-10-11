@@ -33,7 +33,6 @@ export class AuctionContractDevelopment {
             return;
         }
 
-        console.log(value, ",", formatEther(value))
         this.eventEmitter.emit("auction.deposited", {
             auctionId,
             address: from.toLocaleLowerCase(),
@@ -79,29 +78,26 @@ export class AuctionContractDevelopment {
         });
     }
 
-    auctionProlonged({ auctionId, toDate, block_number }: any) {
-        if (this.startBlockNumber >= block_number) {
+    auctionProlonged(auctionId: string, date: string, e: any) {
+        if (this.startBlockNumber >= e.block_number) {
             return;
         }
+
         this.eventEmitter.emit("auction.prolonged", {
             auctionId,
-            endDate: new Date(Number(toDate) * 1000),
+            endDate: new Date(Number(date) * 1000),
         });
     }
 
     async createAuction({
-        auctionId,
         startDate,
         endDate,
-        bidIncrement = 100,
         startPrice,
         buyNowPrice,
     }: AuctionContractCreateAuctionDto) {
         const tx = await this.contract.createAuction(
-            auctionId,
             BigNumber.from(Math.floor(new Date(startDate).getTime() / 1000)),
             BigNumber.from(Math.floor(new Date(endDate).getTime() / 1000)),
-            parseUnits(bidIncrement.toString(), "18"),
             parseUnits(startPrice.toString(), "18"),
             parseUnits(buyNowPrice.toString(), "18"),
         );

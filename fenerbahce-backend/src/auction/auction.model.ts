@@ -55,5 +55,5 @@ export class CreateAuctionDto {
 }
 
 export class FinishAuctionDto {
-    auctionId: string;
+    auctionId: number;
 }
