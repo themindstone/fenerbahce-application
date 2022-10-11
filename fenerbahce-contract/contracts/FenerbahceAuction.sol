@@ -11,9 +11,8 @@ contract FenerbahceAuction is Ownable, ReentrancyGuard {
     struct Auction {
         uint256 startDate;
         uint256 endDate;
-        uint32 startPrice;
-        uint32 buyNowPrice;
-        uint16 bidIncrement;
+        uint256 startPrice;
+        uint256 buyNowPrice;
         bool isBought;
     }
 
@@ -23,23 +22,22 @@ contract FenerbahceAuction is Ownable, ReentrancyGuard {
     IERC20 fbToken;
 
     mapping(uint32 => Auction) idToAuctions;
-    mapping(uint32 => mapping(address => uint32)) idToOffers;
-    mapping(uint32 => uint32) idToMaxOffers;
+    mapping(uint32 => mapping(address => uint256)) idToOffers;
+    mapping(uint32 => uint256) idToMaxOffers;
     mapping(uint32 => bool) idToAuctionRefundDone;
 
     event AuctionCreated(
         uint32 auctionId,
-        uint32 startPrice,
-        uint32 buyNowPrice,
-        uint16 bidIncrement,
+        uint256 startPrice,
+        uint256 buyNowPrice,
         uint256 startDate,
         uint256 endDate
     );
-    event AuctionDeposited(uint32 auctionId, address from, uint32 value);
+    event AuctionDeposited(uint32 auctionId, address from, uint256 value);
     event AuctionSelled(uint32 auctionId, address buyer);
-    event AuctionRefunded(uint32 auctionId, address to, uint32 value);
+    event AuctionRefunded(uint32 auctionId, address to, uint256 value);
     event AuctionProlonged(uint32 auctionId, uint256 toDate);
-    event AuctionBuyNowPriceUpdated(uint32 auctionId, uint32 newBuyNowPrice);
+    event AuctionBuyNowPriceUpdated(uint256 auctionId, uint256 newBuyNowPrice);
     event AuctionFinished(uint32 auctionId);
 
     constructor(address _address) {
@@ -48,7 +46,7 @@ contract FenerbahceAuction is Ownable, ReentrancyGuard {
     }
 
     function _prolongAuction(uint32 _auctionId) internal {
-        Auction memory auction = idToAuctions[_auctionId];
+        Auction storage auction = idToAuctions[_auctionId];
         uint256 diff = auction.endDate - block.timestamp;
 
         // if a user deposit to an auction half an hour before the auction is finished,
@@ -63,10 +61,9 @@ contract FenerbahceAuction is Ownable, ReentrancyGuard {
     function createAuction(
         uint256 _startDate,
         uint256 _endDate,
-        uint32 _startPrice,
-        uint32 _buyNowPrice,
-        uint16 _bidIncrement
-    ) public onlyOwner returns (uint32) {
+        uint256 _startPrice,
+        uint256 _buyNowPrice
+    ) public onlyOwner {
         latestId += 1;
 
         idToAuctions[latestId] = Auction(
@@ -74,7 +71,6 @@ contract FenerbahceAuction is Ownable, ReentrancyGuard {
             _endDate,
             _startPrice,
             _buyNowPrice,
-            _bidIncrement,
             false
         );
 
@@ -84,18 +80,16 @@ contract FenerbahceAuction is Ownable, ReentrancyGuard {
             latestId,
             _startPrice,
             _buyNowPrice,
-            _bidIncrement,
             _startDate,
             _endDate
         );
 
-        return latestId;
     }
 
-    function deposit(uint32 _auctionId, uint32 value) public nonReentrant {
+    function deposit(uint32 _auctionId, uint256 value) public nonReentrant {
         Auction memory auction = idToAuctions[_auctionId];
 
-        uint32 userBalanceToAuction = value +
+        uint256 userBalanceToAuction = value +
             idToOffers[_auctionId][msg.sender];
 
         require(auction.startDate != 0, "There is no auction like that");
@@ -172,15 +166,21 @@ contract FenerbahceAuction is Ownable, ReentrancyGuard {
         emit AuctionSelled(_auctionId, msg.sender);
     }
 
-    function refund(uint32 _auctionId, address _to) public nonReentrant {
+    function refund(uint32 _auctionId, address _to)
+        public
+        onlyOwner
+        nonReentrant
+    {
         Auction memory auction = idToAuctions[_auctionId];
-        require(
-            block.timestamp > auction.endDate,
-            "Auction have not finished yet!"
-        );
         require(auction.buyNowPrice != 0, "There is no auction like that");
+        if (auction.isBought == false) {
+            require(
+                block.timestamp > auction.endDate,
+                "Auction have not finished yet!"
+            );
+        }
 
-        uint32 value = idToOffers[_auctionId][_to];
+        uint256 value = idToOffers[_auctionId][_to];
 
         fbToken.approve(address(this), value);
         fbToken.safeTransferFrom(address(this), _to, value);
@@ -191,7 +191,7 @@ contract FenerbahceAuction is Ownable, ReentrancyGuard {
     function getUserBalanceByAuctionId(uint32 _auctionId, address _address)
         public
         view
-        returns (uint32)
+        returns (uint256)
     {
         return idToOffers[_auctionId][_address];
     }
@@ -200,7 +200,7 @@ contract FenerbahceAuction is Ownable, ReentrancyGuard {
         public
         onlyOwner
     {
-        Auction memory auction = idToAuctions[_auctionId];
+        Auction storage auction = idToAuctions[_auctionId];
         require(auction.isBought == false, "This auction is already selled");
         require(auction.buyNowPrice != 0, "There is no auction like that");
         require(
@@ -210,6 +210,10 @@ contract FenerbahceAuction is Ownable, ReentrancyGuard {
 
         idToAuctions[_auctionId].buyNowPrice = _newPrice;
         emit AuctionBuyNowPriceUpdated(_auctionId, _newPrice);
+    }
+
+    function getLatestId() public view returns (uint32) {
+        return latestId;
     }
 
     function withdrawOtherTokens(address tokenAddress)
