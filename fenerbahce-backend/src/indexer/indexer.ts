@@ -6,14 +6,12 @@ import {
 } from "~/shared/entities";
 import { Repository } from "typeorm";
 import {
-    IndexerAuctionContractCreatedDTO,
     IndexerAuctionContractDepositedDTO,
     IndexerAuctionContractRefundedDTO,
     IndexerAuctionContractProlongedDTO,
     IndexerAuctionContractBuyNowPriceUpdatedDTO,
 } from "./indexer.model";
 import { v4 } from "uuid";
-// import { formatEther } from "nestjs-ethers";
 
 export class Indexer {
     constructor(

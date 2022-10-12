@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { EventEmitter2 } from "@nestjs/event-emitter";
-import { Contract, BigNumber, parseUnits, formatEther } from "nestjs-ethers";
+import { Contract, BigNumber, parseUnits, formatUnits } from "nestjs-ethers";
 
 interface AuctionContractCreateAuctionDto {
     auctionId: string;
@@ -36,7 +36,7 @@ export class AuctionContractDevelopment {
         this.eventEmitter.emit("auction.deposited", {
             auctionId,
             address: from.toLocaleLowerCase(),
-            value: formatEther(value),
+            value: formatUnits(value),
         });
     }
 
@@ -59,7 +59,7 @@ export class AuctionContractDevelopment {
         this.eventEmitter.emit("auction.refunded", {
             auctionId,
             to: to.toLocaleLowerCase(),
-            value: formatEther(value),
+            value: formatUnits(value),
         });
     }
 
@@ -74,7 +74,7 @@ export class AuctionContractDevelopment {
 
         this.eventEmitter.emit("auction.buynowpriceupdated", {
             auctionId,
-            newBuyNowPrice: formatEther(newBuyNowPrice),
+            newBuyNowPrice: formatUnits(newBuyNowPrice),
         });
     }
 
