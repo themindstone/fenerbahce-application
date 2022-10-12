@@ -36,7 +36,7 @@ export class AuctionContractDevelopment {
         this.eventEmitter.emit("auction.deposited", {
             auctionId,
             address: from.toLocaleLowerCase(),
-            value: formatUnits(value),
+            value: formatUnits(value, "6"),
         });
     }
 
@@ -59,7 +59,7 @@ export class AuctionContractDevelopment {
         this.eventEmitter.emit("auction.refunded", {
             auctionId,
             to: to.toLocaleLowerCase(),
-            value: formatUnits(value),
+            value: formatUnits(value, "6"),
         });
     }
 
@@ -74,7 +74,7 @@ export class AuctionContractDevelopment {
 
         this.eventEmitter.emit("auction.buynowpriceupdated", {
             auctionId,
-            newBuyNowPrice: formatUnits(newBuyNowPrice),
+            newBuyNowPrice: formatUnits(newBuyNowPrice, "6"),
         });
     }
 
