@@ -33,6 +33,10 @@ export class AuctionService {
                 startPrice: auction.startPrice,
                 buyNowPrice: auction.buyNowPrice,
             });
+        } catch (error) {
+            throw new NotFoundException();
+        }
+        try {
             const res = await this.auctionContract.getLatestId();
 
             if (!Number(res)) {
@@ -52,7 +56,7 @@ export class AuctionService {
             const createdAuction = this.auctionRepository.create(newAuction);
             await this.auctionRepository.save(createdAuction);
         } catch (e: any) {
-            console.log(e);
+            throw new NotFoundException();
         }
     }
 
