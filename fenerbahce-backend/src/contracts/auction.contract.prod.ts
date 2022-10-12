@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { EventEmitter2 } from "@nestjs/event-emitter";
-import { formatEther } from "nestjs-ethers";
+import { formatUnits } from "nestjs-ethers";
 
 interface AuctionContractCreateAuctionDto {
     auctionId: string;
@@ -27,7 +27,7 @@ export class AuctionContractProduction {
         this.eventEmitter.emit("auction.deposited", {
             auctionId,
             address: from,
-            value: formatEther(value),
+            value: formatUnits(value, "6"),
         });
     }
 
@@ -50,7 +50,7 @@ export class AuctionContractProduction {
         this.eventEmitter.emit("auction.refunded", {
             auctionId,
             to,
-            value: formatEther(value),
+            value: formatUnits(value, "6"),
         });
     }
 
@@ -65,7 +65,7 @@ export class AuctionContractProduction {
 
         this.eventEmitter.emit("auction.buynowpriceupdated", {
             auctionId,
-            newBuyNowPrice: formatEther(newBuyNowPrice),
+            newBuyNowPrice: formatUnits(newBuyNowPrice, "6"),
         });
     }
 
