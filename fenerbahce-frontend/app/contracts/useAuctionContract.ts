@@ -21,7 +21,7 @@ export const useAuctionContract = (): AuctionContractFunctions => {
 			}
 
 			try {
-				const transaction = await contract.deposit(auctionId, ethers.utils.parseUnits(value, "18"), { gasLimit: 10000000 });
+				const transaction = await contract.deposit(auctionId, ethers.utils.parseUnits(value, "18"));
 				const tx = await transaction.wait();
 				return { tx, isError: false };
 			} catch (e: any) {
