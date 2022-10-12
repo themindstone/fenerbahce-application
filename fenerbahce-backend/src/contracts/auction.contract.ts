@@ -136,8 +136,8 @@ export class AuctionContract {
             // auctionId,
             BigNumber.from(Math.floor(new Date(startDate).getTime() / 1000)),
             BigNumber.from(Math.floor(new Date(endDate).getTime() / 1000)),
-            parseUnits(startPrice.toString(), "18"),
-            parseUnits(buyNowPrice.toString(), "18"),
+            parseUnits(startPrice.toString(), "6"),
+            parseUnits(buyNowPrice.toString(), "6"),
             { gasLimit: 200000 },
         );
         return await tx.wait();

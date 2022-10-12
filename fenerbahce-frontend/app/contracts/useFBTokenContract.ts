@@ -41,7 +41,7 @@ export const useFBTokenContract = (): FBTokenContractFunctions => {
 			try {
 				const transaction = await contract.approve(
 					auctionAddress[config.NODE_ENV],
-					ethers.utils.parseUnits(newOffer.toString(), "18") ?? ethers.constants.MaxUint256,
+					ethers.utils.parseUnits(newOffer.toString(), "6") ?? ethers.constants.MaxUint256,
 				);
 				const tx = await transaction.wait();
 

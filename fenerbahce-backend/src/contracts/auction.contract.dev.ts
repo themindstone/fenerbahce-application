@@ -98,8 +98,8 @@ export class AuctionContractDevelopment {
         const tx = await this.contract.createAuction(
             BigNumber.from(Math.floor(new Date(startDate).getTime() / 1000)),
             BigNumber.from(Math.floor(new Date(endDate).getTime() / 1000)),
-            parseUnits(startPrice.toString(), "18"),
-            parseUnits(buyNowPrice.toString(), "18"),
+            parseUnits(startPrice.toString(), "6"),
+            parseUnits(buyNowPrice.toString(), "6"),
         );
         return await tx.wait();
     }
