@@ -21,6 +21,14 @@ export class Indexer {
         private readonly balanceRepository: Repository<BalanceRepository>,
     ) {}
 
+    @OnEvent("auction.created")
+    async created(params: { auctionId: number }) {
+        await this.auctionRepository.update(
+            { id: params.auctionId },
+            { isActive: true },
+        );
+    }
+
     @OnEvent("auction.deposited")
     async deposited({
         auctionId,

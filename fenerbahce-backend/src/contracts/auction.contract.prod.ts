@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { EventEmitter2 } from "@nestjs/event-emitter";
-import { formatUnits } from "nestjs-ethers";
+import { formatEther, formatUnits } from "nestjs-ethers";
 
 interface AuctionContractCreateAuctionDto {
     auctionId: string;
@@ -19,6 +19,19 @@ export class AuctionContractProduction {
         this.startBlockNumber = startBlockNumber;
     }
 
+
+    async auctionCreated({ auctionId, block_number }: any) {
+        console.log(auctionId);
+        if (this.startBlockNumber >= block_number) {
+            return;
+        }
+
+        this.eventEmitter.emit("auction.created", {
+            auctionId: formatEther(auctionId),
+        });
+    }
+
+
     async auctionDeposited({ auctionId, from, value, block_number }: any) {
         if (this.startBlockNumber >= block_number) {
             return;
@@ -31,53 +44,53 @@ export class AuctionContractProduction {
         });
     }
 
-    async auctionSelled({ auctionId, buyer, block_number }: any) {
-        if (this.startBlockNumber >= block_number) {
-            return;
-        }
+    // async auctionSelled({ auctionId, buyer, block_number }: any) {
+    //     if (this.startBlockNumber >= block_number) {
+    //         return;
+    //     }
 
-        this.eventEmitter.emit("auction.selled", {
-            auctionId,
-            buyer,
-        });
-    }
+    //     this.eventEmitter.emit("auction.selled", {
+    //         auctionId,
+    //         buyer,
+    //     });
+    // }
 
-    auctionRefunded({ auctionId, to, value, block_number }: any) {
-        if (this.startBlockNumber >= block_number) {
-            return;
-        }
+    // auctionRefunded({ auctionId, to, value, block_number }: any) {
+    //     if (this.startBlockNumber >= block_number) {
+    //         return;
+    //     }
 
-        this.eventEmitter.emit("auction.refunded", {
-            auctionId,
-            to,
-            value: formatUnits(value, "6"),
-        });
-    }
+    //     this.eventEmitter.emit("auction.refunded", {
+    //         auctionId,
+    //         to,
+    //         value: formatUnits(value, "6"),
+    //     });
+    // }
 
-    auctionBuyNowPriceUpdated({
-        auctionId,
-        newBuyNowPrice,
-        block_number,
-    }: any) {
-        if (this.startBlockNumber >= block_number) {
-            return;
-        }
+    // auctionBuyNowPriceUpdated({
+    //     auctionId,
+    //     newBuyNowPrice,
+    //     block_number,
+    // }: any) {
+    //     if (this.startBlockNumber >= block_number) {
+    //         return;
+    //     }
 
-        this.eventEmitter.emit("auction.buynowpriceupdated", {
-            auctionId,
-            newBuyNowPrice: formatUnits(newBuyNowPrice, "6"),
-        });
-    }
+    //     this.eventEmitter.emit("auction.buynowpriceupdated", {
+    //         auctionId,
+    //         newBuyNowPrice: formatUnits(newBuyNowPrice, "6"),
+    //     });
+    // }
 
-    auctionProlonged({ auctionId, toDate, block_number }: any) {
-        if (this.startBlockNumber >= block_number) {
-            return;
-        }
-        this.eventEmitter.emit("auction.prolonged", {
-            auctionId,
-            endDate: new Date(Number(toDate) * 1000),
-        });
-    }
+    // auctionProlonged({ auctionId, toDate, block_number }: any) {
+    //     if (this.startBlockNumber >= block_number) {
+    //         return;
+    //     }
+    //     this.eventEmitter.emit("auction.prolonged", {
+    //         auctionId,
+    //         endDate: new Date(Number(toDate) * 1000),
+    //     });
+    // }
 
     // async createAuction({
     //     auctionId,

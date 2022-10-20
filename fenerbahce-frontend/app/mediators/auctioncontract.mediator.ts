@@ -119,63 +119,6 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 		[auctionContract, fbTokenContract, balances, userBalance, auction, ...deps],
 	);
 
-	const buyNow = useCallback(async () => {
-		if (!connectWallet.isConnected) {
-			modal1907EventBus.publish("modal.open", {
-				isSucceed: false,
-				description: "İşlem yapabilmek için cüzdanınızı bağlamanız gerekiyor.",
-			});
-			return;
-		}
-
-		try {
-			loadingModalEventBus.publish("loadingmodal.open", {
-				message: "Açık artırma hemen al teklifiniz veriliyor...",
-			});
-			await switchToNetwork();
-			const fbTokenAllowance = await fbTokenContract.approveAuctionContract(auction.buyNowPrice as number);
-			if (fbTokenAllowance.isError) {
-				modal1907EventBus.publish("modal.open", {
-					isSucceed: false,
-					description: fbTokenAllowance.errorMessage ?? "Hata",
-				});
-				return;
-			}
-		} catch (e: any) {
-			modal1907EventBus.publish("modal.open", {
-				isSucceed: false,
-				description: "Bilinmeyen bir hata oluştu",
-			});
-			return;
-		} finally {
-			loadingModalEventBus.publish("loadingmodal.close");
-		}
-
-		try {
-			loadingModalEventBus.publish("loadingmodal.open", {
-				message: "Açık artırma hemen al teklifiniz veriliyor...",
-			});
-			await switchToNetwork();
-			let { isError, errorMessage } = await auctionContract.buyNow({
-				auctionId: auction.id,
-			});
-			if (isError && errorMessage) {
-				// show modal with error message
-				modal1907EventBus.publish("modal.open", {
-					isSucceed: !isError,
-					description: errorMessage,
-				});
-			} else {
-				modal1907EventBus.publish("modal.open", {
-					isSucceed: true,
-					description: "İşleminiz başarıyla tamamlandı.",
-				});
-			}
-		} finally {
-			loadingModalEventBus.publish("loadingmodal.close");
-		}
-	}, [auctionContract, auction, ...deps]);
-
 	useEffect(() => {
 		if (!auction) {
 			return;
@@ -184,7 +127,7 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 		if (auction.isSelled) {
 			balances = [
 				{
-					id: "asdnfasdf",
+					id: "sdnfasdf",
 					balance: auction.buyNowPrice,
 					userAddress: auction.selledToAddress,
 				},
@@ -197,5 +140,5 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 		setBalances(balances);
 	}, [auction, ...deps]);
 
-	return { deposit, buyNow };
+	return { deposit };
 };

@@ -1,4 +1,11 @@
-import { IsArray, IsISO8601, IsNumber, IsString, ValidateIf } from "class-validator";
+import { Type } from "class-transformer";
+import { ArrayMinSize, IsArray, IsISO8601, IsNotEmpty, IsNumber, IsString, ValidateIf } from "class-validator";
+
+class PhotoUrls {
+    @IsString()
+    @IsNotEmpty()
+    photoUrl: string;
+}
 
 export class Auction {
     @IsString()
@@ -50,8 +57,11 @@ export class CreateAuctionDto {
     @IsNumber()
     bidIncrement: number;
 
+    @IsNotEmpty()
     @IsArray()
-    photoUrls: string[];
+    @ArrayMinSize(1)
+    @Type(() => PhotoUrls)
+    photoUrls: Array<PhotoUrls>;
 }
 
 export class FinishAuctionDto {

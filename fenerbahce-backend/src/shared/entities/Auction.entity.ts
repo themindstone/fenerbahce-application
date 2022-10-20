@@ -14,12 +14,9 @@ import { Balance } from "./Balance.entity";
     name: "auctions",
 })
 export class Auction {
-    // @PrimaryColumn({ name: "id", type: "uuid" })
-    // @Generated("uuid")
-    // public id: string;
     @PrimaryColumn()
+    @Generated("increment")
     public id: number;
-    
 
     @Column({ name: "name", type: "varchar", nullable: false })
     public name: string;
@@ -27,8 +24,14 @@ export class Auction {
     @Column({ name: "selled_to_address", type: "varchar", nullable: true })
     public selledToAddress: string;
 
-    @Column({ name: "photoUrls", type: "text", nullable: false, array: true })
-    public photoUrls: string[];
+    // @Column({ name: "photoUrls", type: "text", nullable: false, array: true })
+    // public photoUrls: string[];
+
+    @Column("jsonb", {
+        name: "photoUrls",
+        nullable: false,
+    })
+    public photoUrls: Array<{ photoUrl: string }> = [];
 
     @Column({ name: "start_price", type: "float", nullable: false })
     public startPrice: number;

@@ -24,7 +24,7 @@ export const AdminHome = (): ReactElement => {
 		})
 	};
 
-	return <Layout>
+	return <Layout authenticationRequired={true}>
 		<GoldenFizzButton onClick={addTokenToMetamask}>Tokeni metamask'a ekle</GoldenFizzButton>
 	</Layout>
 };

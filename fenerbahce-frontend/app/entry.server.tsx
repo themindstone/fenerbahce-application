@@ -10,6 +10,7 @@ import createEmotionCache from "./createEmotionCache";
 import { config } from "~/configs";
 
 global.config = config;
+// global.localStorage = {}
 
 export default function handleRequest(
 	request: Request,

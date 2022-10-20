@@ -1,4 +1,4 @@
-import { APIClientInstance, ParibuAPIClient } from "~/utils";
+import { APIClientInstance, getTokens, ParibuAPIClient } from "~/utils";
 
 interface BalanceFunctions {
 	getBalanceByAuctionId: (auctionId: string, address: string) => Promise<any>;
@@ -24,7 +24,6 @@ interface AuctionFunctions {
 	getAuctionsByPage: ({ page, auctionByPage }: GetAuctionsByPageParams) => Promise<any>;
 	finishAuction: (params: FinishAuctionParams) => Promise<any>;
 	listFinishedAuctions: (params: ListFinishedAuctionParams) => Promise<any>;
-	// getHighestBalanceByAuctionId: (params: { auctionId: string }) => Promise<any>;
 }
 
 export const useAuctionClient = (): AuctionFunctions => {
@@ -48,10 +47,6 @@ export const useAuctionClient = (): AuctionFunctions => {
 	const listFinishedAuctions = async (params: ListFinishedAuctionParams) => {
 		return await APIClientInstance.get("auction/list-finished-auctions", { params });
 	};
-
-	// const getHighestBalanceByAuctionId = async (params: { auctionId: string }) => {
-	// 	return await APIClientInstance.get(`auction/${params.auctionId}/highest-offer`);
-	// };
 
 	return {
 		getHighestBalancesByAuctionId,
@@ -79,4 +74,34 @@ export const useParibuClient = () => {
 	};
 
 	return { getLatestFBTokenPrice };
+};
+
+export const useAuthClient = () => {
+	const login = async (params: { email: string; password: string }) => {
+		const res = await APIClientInstance.post("auth/login", { email: params.email, password: params.password });
+		return res.data;
+	};
+
+	const logout = async () => {
+		const res = await APIClientInstance.post("auth/logout");
+		return res.data;
+	};
+
+	const getAuthUser = async () => {
+		const { accessToken } = getTokens();
+
+		if (!accessToken) {
+			throw new Error("No access token found!");
+		}
+
+		const res = await APIClientInstance.get("auth/me");
+		console.log("res", res);
+		return res.data;
+	};
+
+	return {
+		login,
+		logout,
+		getAuthUser,
+	};
 };

@@ -22,42 +22,18 @@ export class AuctionService {
         private readonly balanceService: BalanceService,
     ) {}
 
-    async create(auction: CreateAuctionDto) {
-        // TODO: generate a normal number for auctionId
-        // const auctionId = v4();
-        try {
-            await this.auctionContract.createAuction({
-                // auctionId,
-                startDate: auction.startDate,
-                endDate: auction.endDate,
-                startPrice: auction.startPrice,
-                buyNowPrice: auction.buyNowPrice,
-            });
-        } catch (error) {
-            throw new NotFoundException();
-        }
-        try {
-            const res = await this.auctionContract.getLatestId();
-
-            if (!Number(res)) {
-                throw new Error(
-                    "Auction contract createAuction method response is not number",
-                );
-            }
-
-            // res is the auctionId
-            const newAuction: DeepPartial<AuctionRepository> = {
+    async create(auction: CreateAuctionDto): Promise<number> {
+        const auctionId = await this.auctionRepository
+            .createQueryBuilder()
+            .insert()
+            .into(AuctionRepository)
+            .values({
                 ...auction,
-                id: Number(res),
-                // id: auctionId,
-                isActive: true,
-            };
-
-            const createdAuction = this.auctionRepository.create(newAuction);
-            await this.auctionRepository.save(createdAuction);
-        } catch (e: any) {
-            throw new NotFoundException();
-        }
+            })
+            .returning("id")
+            .execute()
+            .then((r) => r.generatedMaps[0].id);
+        return Number(auctionId);
     }
 
     listByPage(page = 1): Auction[] | null {
@@ -205,78 +181,80 @@ export class AuctionService {
         );
     }
 
-    async finishAuction(
-        auctionId: number,
-    ): Promise<{ message?: string; error?: string }> {
-        let balances, auction;
-        try {
-            const balancePromise = this.balanceService.getBalancesByAuctionId(
-                auctionId,
-                {
-                    select: ["userAddress", "isRefunded", "balance"],
-                    where: { isRefunded: false },
-                    order: { balance: "DESC" },
-                },
-            );
-            const auctionPromise = this.auctionRepository.findOne({
-                select: [
-                    "endDate",
-                    "isSelled",
-                    "selledToAddress",
-                    "buyNowPrice",
-                ],
-                where: { id: auctionId },
-            });
+    // TODO: add a seperate script to finish auction
 
-            [balances, auction] = await Promise.all([
-                balancePromise,
-                auctionPromise,
-            ]);
-            balances = balances.filter((balance) => !balance.isRefunded);
-        } catch (e: any) {
-            console.log(e);
-            return {
-                error: "An error occured, you need to try again",
-            };
-        }
+    // async finishAuction(
+    //     auctionId: number,
+    // ): Promise<{ message?: string; error?: string }> {
+    //     let balances, auction;
+    //     try {
+    //         const balancePromise = this.balanceService.getBalancesByAuctionId(
+    //             auctionId,
+    //             {
+    //                 select: ["userAddress", "isRefunded", "balance"],
+    //                 where: { isRefunded: false },
+    //                 order: { balance: "DESC" },
+    //             },
+    //         );
+    //         const auctionPromise = this.auctionRepository.findOne({
+    //             select: [
+    //                 "endDate",
+    //                 "isSelled",
+    //                 "selledToAddress",
+    //                 "buyNowPrice",
+    //             ],
+    //             where: { id: auctionId },
+    //         });
 
-        if (!auction) {
-            return { error: AuctionContractErrorsEnglish.AuctionNotFoundError };
-        }
+    //         [balances, auction] = await Promise.all([
+    //             balancePromise,
+    //             auctionPromise,
+    //         ]);
+    //         balances = balances.filter((balance) => !balance.isRefunded);
+    //     } catch (e: any) {
+    //         console.log(e);
+    //         return {
+    //             error: "An error occured, you need to try again",
+    //         };
+    //     }
 
-        if (new Date(auction.endDate) >= new Date()) {
-            // this auction have yet not to be finished
-            return {
-                error: AuctionContractErrorsEnglish.AuctionNotFinishedError,
-            };
-        }
+    //     if (!auction) {
+    //         return { error: AuctionContractErrorsEnglish.AuctionNotFoundError };
+    //     }
 
-        let winner, losers;
+    //     if (new Date(auction.endDate) >= new Date()) {
+    //         // this auction have yet not to be finished
+    //         return {
+    //             error: AuctionContractErrorsEnglish.AuctionNotFinishedError,
+    //         };
+    //     }
 
-        if (auction.isSelled) {
-            winner = auction.selledToAddress;
-            losers = balances.map((balance) => balance.userAddress);
-        } else {
-            [winner, ...losers] = balances.map(
-                (balance) => balance.userAddress,
-            );
-        }
+    //     let winner, losers;
 
-        // TODO: we need to send auction.buyNowPrice to Paribu for burning
-        // burnMaxOffer()
+    //     if (auction.isSelled) {
+    //         winner = auction.selledToAddress;
+    //         losers = balances.map((balance) => balance.userAddress);
+    //     } else {
+    //         [winner, ...losers] = balances.map(
+    //             (balance) => balance.userAddress,
+    //         );
+    //     }
 
-        try {
-            // TODO: update is_refunded to true for all losers with listening events
-            await this.auctionContract.refundTokensToUsers(auctionId, losers);
-        } catch (e: any) {
-            console.log(e);
-            return { error: getAuctionContractErrorMessage(e.message) };
-        }
+    //     // TODO: we need to send auction.buyNowPrice to Paribu for burning
+    //     // burnMaxOffer()
 
-        // await this.balanceService.refundAllUsersFBToken(auctionId, losers);
+    //     try {
+    //         // TODO: update is_refunded to true for all losers with listening events
+    //         // await this.auctionContract.refundTokensToUsers(auctionId, losers);
+    //     } catch (e: any) {
+    //         console.log(e);
+    //         return { error: getAuctionContractErrorMessage(e.message) };
+    //     }
 
-        return {
-            message: "success",
-        };
-    }
+    //     // await this.balanceService.refundAllUsersFBToken(auctionId, losers);
+
+    //     return {
+    //         message: "success",
+    //     };
+    // }
 }

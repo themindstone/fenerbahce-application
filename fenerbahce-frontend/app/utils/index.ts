@@ -5,3 +5,4 @@ export * as MathUtils from "./math-utils";
 export * from "./auctionContractErrorMessages";
 export * from "./switchToNetwork";
 export * from "./getShortAddress";
+export * from "./getTokens";

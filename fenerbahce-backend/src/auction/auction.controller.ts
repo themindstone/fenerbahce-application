@@ -5,30 +5,14 @@ import {
     Param,
     Post,
     Query,
-    UnauthorizedException,
+    UseGuards,
 } from "@nestjs/common";
 import { Auction as AuctionRepository } from "~/shared/entities";
 import { AuthService } from "~/auth/auth.service";
 import { CreateAuctionDto, FinishAuctionDto } from "./auction.model";
 import { AuctionService } from "./auction.service";
-import { IsString } from "class-validator";
 import { BalanceService } from "~/balance/balance.service";
-
-class FinishAuctionWithCred extends FinishAuctionDto {
-    @IsString()
-    username: string;
-
-    @IsString()
-    password: string;
-}
-
-class CreateAuctionDtoWithCred extends CreateAuctionDto {
-    @IsString()
-    username: string;
-
-    @IsString()
-    password: string;
-}
+import { AccessTokenAuthGuard } from "~/auth/guards";
 
 @Controller("/auction")
 export class AuctionController {
@@ -38,36 +22,32 @@ export class AuctionController {
         private readonly authService: AuthService,
     ) {}
 
+    @UseGuards(AccessTokenAuthGuard)
     @Post("/create")
     async create(
         @Body()
-        { username, password, ...createAuctionDto }: CreateAuctionDtoWithCred,
-    ): Promise<{ message: string }> {
-        const isAuthenticated = this.authService.isAuthenticated(
-            username,
-            password,
-        );
-
-        if (!isAuthenticated) {
-            throw new UnauthorizedException();
-        }
-
-        await this.auctionService.create(createAuctionDto);
+        params: CreateAuctionDto,
+    ) {
+        const res = await this.auctionService.create(params);
 
         return {
-            message: "Auction Created",
+            message: "Auction created",
+            data: {
+                auctionId: res,
+            },
         };
     }
 
+    @UseGuards(AccessTokenAuthGuard)
     @Post("/finish")
-    async finish(
-        @Body() { username, password, auctionId }: FinishAuctionWithCred,
-    ) {
-        if (!this.authService.isAuthenticated(username, password)) {
-            throw new UnauthorizedException();
-        }
-        const res = await this.auctionService.finishAuction(auctionId);
-        return res;
+    async finish(@Body() params: FinishAuctionDto) {
+        // TODO: change authentication rules
+        // if (!this.authService.isAuthenticated(username, password)) {
+        //     throw new UnauthorizedException();
+        // }
+        // TODO: add a script for finsihing auctions
+        // const res = await this.auctionService.finishAuction(params.auctionId);
+        // return res;
     }
 
     @Get("/list")
@@ -98,7 +78,10 @@ export class AuctionController {
         @Query("page") page: number,
         @Query("auctionByPage") auctionByPage: number,
     ): Promise<AuctionRepository[]> {
-        return await this.auctionService.listFinishedAuctionsByPage(page, auctionByPage);
+        return await this.auctionService.listFinishedAuctionsByPage(
+            page,
+            auctionByPage,
+        );
     }
 
     @Get("/:auctionId/highest-offers")

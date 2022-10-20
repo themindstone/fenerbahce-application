@@ -79,22 +79,22 @@ export class AuctionContract {
             this.moralisApiService.LiveQuery("AuctionDeposited", (object) =>
                 contractProvider.auctionDeposited(object.attributes),
             );
-            this.moralisApiService.LiveQuery("AuctionSelled", (object) =>
-                contractProvider.auctionSelled(object.attributes),
-            );
-            this.moralisApiService.LiveQuery("AuctionRefunded", (object) =>
-                contractProvider.auctionRefunded(object.attributes),
-            );
-            this.moralisApiService.LiveQuery("AuctionProlonged", (object) =>
-                contractProvider.auctionProlonged(object.attributes),
-            );
-            this.moralisApiService.LiveQuery(
-                "AuctionBuyNowPriceUpdated",
-                (object) =>
-                    contractProvider.auctionBuyNowPriceUpdated(
-                        object.attributes,
-                    ),
-            );
+            // this.moralisApiService.LiveQuery("AuctionSelled", (object) =>
+            //     contractProvider.auctionSelled(object.attributes),
+            // );
+            // this.moralisApiService.LiveQuery("AuctionRefunded", (object) =>
+            //     contractProvider.auctionRefunded(object.attributes),
+            // );
+            // this.moralisApiService.LiveQuery("AuctionProlonged", (object) =>
+            //     contractProvider.auctionProlonged(object.attributes),
+            // );
+            // this.moralisApiService.LiveQuery(
+            //     "AuctionBuyNowPriceUpdated",
+            //     (object) =>
+            //         contractProvider.auctionBuyNowPriceUpdated(
+            //             object.attributes,
+            //         ),
+            // );
         } else {
             const contractProvider = new AuctionContractDevelopment(
                 this.eventEmitter,
@@ -104,53 +104,53 @@ export class AuctionContract {
                 "AuctionDeposited",
                 contractProvider.auctionDeposited.bind(contractProvider),
             );
-            this.contract.on(
-                "AuctionRefunded",
-                contractProvider.auctionRefunded.bind(contractProvider),
-            );
-            this.contract.on(
-                "AuctionBuyNowPriceUpdated",
-                contractProvider.auctionBuyNowPriceUpdated.bind(
-                    contractProvider,
-                ),
-            );
-            this.contract.on(
-                "AuctionProlonged",
-                contractProvider.auctionProlonged.bind(contractProvider),
-            );
-            this.contract.on(
-                "AuctionSelled",
-                contractProvider.auctionSelled.bind(contractProvider),
-            );
+            // this.contract.on(
+            //     "AuctionRefunded",
+            //     contractProvider.auctionRefunded.bind(contractProvider),
+            // );
+            // this.contract.on(
+            //     "AuctionBuyNowPriceUpdated",
+            //     contractProvider.auctionBuyNowPriceUpdated.bind(
+            //         contractProvider,
+            //     ),
+            // );
+            // this.contract.on(
+            //     "AuctionProlonged",
+            //     contractProvider.auctionProlonged.bind(contractProvider),
+            // );
+            // this.contract.on(
+            //     "AuctionSelled",
+            //     contractProvider.auctionSelled.bind(contractProvider),
+            // );
         }
     }
 
-    async createAuction({
-        // auctionId,
-        startDate,
-        endDate,
-        startPrice,
-        buyNowPrice,
-    }: AuctionContractCreateAuctionDto) {
-        const tx = await this.contract.createAuction(
-            // auctionId,
-            BigNumber.from(Math.floor(new Date(startDate).getTime() / 1000)),
-            BigNumber.from(Math.floor(new Date(endDate).getTime() / 1000)),
-            parseUnits(startPrice.toString(), "6"),
-            parseUnits(buyNowPrice.toString(), "6"),
-            { gasLimit: 200000 },
-        );
-        return await tx.wait();
-    }
+    // async createAuction({
+    //     // auctionId,
+    //     startDate,
+    //     endDate,
+    //     startPrice,
+    //     buyNowPrice,
+    // }: AuctionContractCreateAuctionDto) {
+    //     const tx = await this.contract.createAuction(
+    //         // auctionId,
+    //         BigNumber.from(Math.floor(new Date(startDate).getTime() / 1000)),
+    //         BigNumber.from(Math.floor(new Date(endDate).getTime() / 1000)),
+    //         parseUnits(startPrice.toString(), "6"),
+    //         parseUnits(buyNowPrice.toString(), "6"),
+    //         { gasLimit: 200000 },
+    //     );
+    //     return await tx.wait();
+    // }
 
-    async refundTokensToUsers(auctionId: number, losers: string[]) {
-        return await Promise.all(
-            losers.map(async (loser) => {
-                const tx = await this.contract.refund(auctionId, loser);
-                await tx.wait();
-            }),
-        );
-    }
+    // async refundTokensToUsers(auctionId: number, losers: string[]) {
+    //     return await Promise.all(
+    //         losers.map(async (loser) => {
+    //             const tx = await this.contract.refund(auctionId, loser);
+    //             await tx.wait();
+    //         }),
+    //     );
+    // }
 
     async getLatestId() {
         return await this.contract.getLatestId();

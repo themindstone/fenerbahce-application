@@ -34,12 +34,12 @@ const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoUrls, en
 
 	const updateBuyNowPrice = useCallback(
 		async ({ newBuyNowPrice }: any) => {
-			const { isError, errorMessage } = await auctionContract.updateBuyNowPrice({ auctionId, newBuyNowPrice });
-			if (isError && errorMessage) {
-				modal1907EventBus.publish("modal.open", { isSucceed: false, description: errorMessage });
-				// we need to show a modal in case of errors to the user
-				return;
-			}
+			// const { isError, errorMessage } = await auctionContract.updateBuyNowPrice({ auctionId, newBuyNowPrice });
+			// if (isError && errorMessage) {
+			// 	modal1907EventBus.publish("modal.open", { isSucceed: false, description: errorMessage });
+			// 	// we need to show a modal in case of errors to the user
+			// 	return;
+			// }
 
 			onClose();
 		},
@@ -82,11 +82,12 @@ const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoUrls, en
 		},
 	);
 
+	console.log(photoUrls)
 	return (
 		<Flex bg="var(--governor-bay)" p="10px" borderRadius="10px" direction="column" gap="10px">
 			<Box
 				w="100%"
-				bgImage={`url(${photoUrls[0]})`}
+				bgImage={`url(${photoUrls[0].photoUrl})`}
 				bgSize="cover"
 				borderRadius="5px"
 				style={{ aspectRatio: "1" }}></Box>
@@ -151,7 +152,7 @@ export const UpdateBuyNowPrice = (): ReactElement => {
 	};
 
 	return (
-		<Layout>
+		<Layout authenticationRequired={true}>
 			<Flex gap="10px" margin="20px 0">
 				<GoldenFizzButton onClick={addTokenToMetamask}>Tokeni Metamask'a Ekle</GoldenFizzButton>
 				<GoldenFizzButton
