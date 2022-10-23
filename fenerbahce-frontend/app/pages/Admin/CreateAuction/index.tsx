@@ -1,13 +1,11 @@
 import { Box, Flex, FormLabel, Heading, Input, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { GoldenFizzButton } from "~/components";
-import { Layout } from "~/admincomponents";
 import { loadingModalEventBus, modal1907EventBus } from "~/eventbus";
 import { SubmitErrorHandler, useFieldArray } from "react-hook-form";
 import { AuctionClient } from "~/client";
 import { CreateAuctionFormType, useCreateAuctionForm } from "./schema";
 import { useAuctionContract } from "~/contracts";
-import { useConnectWallet } from "~/context";
 
 // we need to list products in this page
 export const CreateAuction = () => {
@@ -37,10 +35,9 @@ export const CreateAuction = () => {
 		startDate,
 		endDate,
 	}: CreateAuctionFormType) => {
-		let auctionId: number;
-		loadingModalEventBus.publish("loadingmodal.open", { message: "Açık artırma oluşturuluyor" });
 		try {
-			const res = await AuctionClient.create({
+			loadingModalEventBus.publish("loadingmodal.open", { message: "Açık artırma oluşturuluyor" });
+			await AuctionClient.create({
 				name,
 				startPrice: startPrice,
 				buyNowPrice: buyNowPrice,
@@ -49,27 +46,17 @@ export const CreateAuction = () => {
 				startDate: new Date(startDate).toISOString(),
 				endDate: new Date(endDate).toISOString(),
 			});
-			auctionId = res.data.auctionId;
+			modal1907EventBus.publish("modal.open", {
+				isSucceed: true,
+				description: "Açık artırma oluşturuldu.",
+			});
 		} catch (error: any) {
 			modal1907EventBus.publish("modal.open", {
 				isSucceed: false,
 				description: "Açık artırma oluşturulurken bir hata meydana geldi.",
 			});
+		} finally {
 			loadingModalEventBus.publish("loadingmodal.close");
-			return;
-		}
-		const { isError, errorMessage } = await auctionContract.createAuction({ auctionId: 15 });
-		loadingModalEventBus.publish("loadingmodal.close");
-		if (isError && errorMessage) {
-			modal1907EventBus.publish("modal.open", {
-				isSucceed: false,
-				description: errorMessage,
-			});
-		} else {
-			modal1907EventBus.publish("modal.open", {
-				isSucceed: true,
-				description: "Açık artırma başarıyla oluşturuldu.",
-			});
 		}
 	};
 

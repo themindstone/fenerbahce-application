@@ -20,7 +20,7 @@ export const BuyNowModal = (): ReactElement => {
 
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
-	const { buyNow } = useAuctionContractAdapter(auction, [auction]);
+	const { deposit } = useAuctionContractAdapter(auction, [auction]);
 
 	buyNowModalEventBus.useListener(
 		"buynowmodal.open",
@@ -44,7 +44,7 @@ export const BuyNowModal = (): ReactElement => {
 								flexBasis="125px"
 								height="125px"
 								flexShrink={0}
-								bgImage={`url(${auction?.photoUrls && auction.photoUrls[0]})`}
+								bgImage={`url(${auction?.photoUrls && auction.photoUrls[0].photoUrl})`}
 								bgSize="contain"></Box>
 							<Flex justifyContent="center" direction="column" gap="12px">
 								<Text>Hemen Alınan Açık Artırma</Text>
@@ -63,7 +63,7 @@ export const BuyNowModal = (): ReactElement => {
 								{humanReadableNumber(auction.buyNowPrice).toFixed(2)} FB
 							</Box>
 						</Flex>
-						<WhiteButton onClick={buyNow}>HEMEN AL</WhiteButton>
+						<WhiteButton onClick={() => deposit({ offer: auction.buyNowPrice || 0})}>HEMEN AL</WhiteButton>
 					</Flex>
 				</ModalContent>
 			</ModalOverlay>

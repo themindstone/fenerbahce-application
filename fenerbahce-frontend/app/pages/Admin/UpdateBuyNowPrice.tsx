@@ -17,34 +17,55 @@ import { Layout } from "~/admincomponents";
 import { useAuctionClient } from "~/client";
 import { GoldenFizzButton, WhiteButton } from "~/components";
 import { useAuctionContract } from "~/contracts";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import moment from "moment";
-import { modal1907EventBus } from "~/eventbus";
+import { loadingModalEventBus, modal1907EventBus } from "~/eventbus";
 import { AdminModal } from "./components";
 import { getAuctionContractErrorMessage } from "~/utils";
 import { fbTokenAddress } from "~/data";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+const schema = yup.object({
+	newBuyNowPrice: yup.number().required("Lütfen yeni satın alma fiyatını giriniz."),
+});
+
+type FormData = yup.InferType<typeof schema>;
 
 const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoUrls, endDate }: any): ReactElement => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
-	const { register, handleSubmit } = useForm();
+	const { register, handleSubmit } = useForm<FormData>({ resolver: yupResolver(schema) });
 
-	const auctionContract = useAuctionContract();
+	// const auctionContract = useAuctionContract();
 	const auctionClient = useAuctionClient();
 
-	const updateBuyNowPrice = useCallback(
-		async ({ newBuyNowPrice }: any) => {
-			// const { isError, errorMessage } = await auctionContract.updateBuyNowPrice({ auctionId, newBuyNowPrice });
-			// if (isError && errorMessage) {
-			// 	modal1907EventBus.publish("modal.open", { isSucceed: false, description: errorMessage });
-			// 	// we need to show a modal in case of errors to the user
-			// 	return;
-			// }
-
-			onClose();
+	const updateBuyNowPriceMutation = useMutation(
+		async ({ newBuyNowPrice }: FormData) => {
+			const res = await auctionClient.updateAuction({ auctionId, buyNowPrice: newBuyNowPrice });
+			return res.data;
 		},
-		[auctionContract],
+		{
+			onSuccess: () => {
+				onClose();
+			},
+			onError: error => {
+				modal1907EventBus.publish("modal.open", {
+					isSucceed: false,
+					description: "Hemen al fiyatını güncellerken bir hata oluştu.",
+				});
+			},
+			onSettled: () => {
+				// we can do something here
+				loadingModalEventBus.publish("loadingmodal.close");
+			},
+		},
 	);
+
+	const updateBuyNowPrice: SubmitHandler<FormData> = (data: FormData) => {
+		loadingModalEventBus.publish("loadingmodal.open", { message: "Hemen al fiyatı güncelleniyor..." });
+		updateBuyNowPriceMutation.mutate(data);
+	};
 
 	const finishAuctionMutation = useMutation(
 		() => {
@@ -82,7 +103,6 @@ const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoUrls, en
 		},
 	);
 
-	console.log(photoUrls)
 	return (
 		<Flex bg="var(--governor-bay)" p="10px" borderRadius="10px" direction="column" gap="10px">
 			<Box
@@ -164,6 +184,9 @@ export const UpdateBuyNowPrice = (): ReactElement => {
 			</Flex>
 			<Grid gridTemplateColumns="1fr 1fr 1fr" gap="20px">
 				{(auctions.data as any[]).map((product: any) => {
+					if (product.endDate < new Date().getTime() || product.isSelled) {
+						return <></>
+					}
 					return (
 						<ProductCard
 							key={product.id}

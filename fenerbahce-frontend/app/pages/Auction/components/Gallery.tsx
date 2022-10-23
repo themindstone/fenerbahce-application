@@ -27,10 +27,10 @@ export const Gallery = (): ReactElement => {
 	const [md] = useMediaQuery("(max-width: 900px)");
     const { auction: { photoUrls } } = useLoaderData();
 
-    const _photoUrls = photoUrls.map((item: string) => {
+    const _photoUrls = photoUrls.map((item: { photoUrl: string }) => {
         return {
-            original: item,
-            thumbnail: item,
+            original: item.photoUrl,
+            thumbnail: item.photoUrl,
         };
     });
 

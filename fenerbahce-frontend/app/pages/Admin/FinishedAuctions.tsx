@@ -19,7 +19,7 @@ export const FinishedAuctions = () => {
 	});
 
 	return (
-		<Layout>
+		<Layout authenticationRequired={false}>
 			<Grid gridTemplateColumns="1fr 1fr 1fr" gap="20px">
 				{auctions.isSuccess &&
 					auctions.data.length > 0 &&

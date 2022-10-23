@@ -1,20 +1,8 @@
 import { ethers } from "ethers";
 
-// export interface FBTokenContractTransactionReturnType {
-// 	tx?: ethers.Transaction;
-// 	isError: boolean;
-// 	errorMessage?: string;
-// };
-
 export interface FBTokenGetAuctionContractAllowanceDTO {
 	address: string;
 };
-
-// export interface FBTokenContractQueryReturnType {
-// 	res?: any;
-// 	isError: boolean;
-// 	errorMessage?: string;
-// }
 
 
 export interface FBTokenContractFunctions {

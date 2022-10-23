@@ -39,10 +39,10 @@ export const useFBTokenContract = (): FBTokenContractFunctions => {
 			}
 
 			try {
-				const transaction = await contract.approve(
+				const transaction = await contract.increaseAllowance(
 					auctionAddress[config.NODE_ENV],
 					ethers.utils.parseUnits(newOffer.toString(), "6") ?? ethers.constants.MaxUint256,
-				);
+				)
 				const tx = await transaction.wait();
 
 				return {
@@ -71,7 +71,8 @@ export const useFBTokenContract = (): FBTokenContractFunctions => {
 
 			try {
 				const res = await contract.allowance(address, auctionAddress[config.NODE_ENV]);
-				const allowance = Number(ethers.utils.formatEther(res));
+				console.log(res)
+				const allowance = Number(ethers.utils.formatUnits(res.toString(), "6"));
 
 				return {
 					allowance,

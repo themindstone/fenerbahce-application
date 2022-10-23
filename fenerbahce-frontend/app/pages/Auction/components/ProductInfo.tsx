@@ -14,19 +14,7 @@ import { buyNowModalEventBus, placeBidModalEventBus } from "~/eventbus";
 export const ProductInfo = (): ReactElement => {
 	const { auction } = useLoaderData();
 
-	const [balances, setBalances] = useState<any[]>(() => {
-		if (auction.isSelled) {
-			return [
-				{
-					id: "asdnfasdf",
-					balance: auction.buyNowPrice,
-					userAddress: auction.selledToAddress,
-				},
-				...auction.balances,
-			];
-		}
-		return auction.balances;
-	});
+	const [balances, setBalances] = useState<any[]>(() => auction.balances);
 
 	const openPlaceBidModal = () => {
 		placeBidModalEventBus.publish("placebidmodal.open", {

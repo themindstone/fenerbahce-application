@@ -1,35 +1,30 @@
 import { Box, Flex, Heading, Input, Modal, ModalContent, ModalOverlay, Text, useDisclosure } from "@chakra-ui/react";
 import moment from "moment";
 import { ReactElement, useCallback } from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { useAuctionClient } from "~/client";
 import { GoldenFizzButton, WhiteButton } from "~/components";
 import { useAuctionContract } from "~/contracts";
-import { modal1907EventBus } from "~/eventbus";
+import { loadingModalEventBus, modal1907EventBus } from "~/eventbus";
 import { getAuctionContractErrorMessage } from "~/utils";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 export const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoUrls, endDate }: any): ReactElement => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
-	const { register, handleSubmit } = useForm();
+	// const { register, handleSubmit } = useForm<FormData>({
+	// 	resolver: yupResolver(schema),
+	// });
 
-	const auctionContract = useAuctionContract();
+	// const auctionContract = useAuctionContract();
 	const auctionClient = useAuctionClient();
 
-	const updateBuyNowPrice = useCallback(
-		async ({ newBuyNowPrice }: any) => {
-			const { isError, errorMessage } = await auctionContract.updateBuyNowPrice({ auctionId, newBuyNowPrice });
-			if (isError && errorMessage) {
-				modal1907EventBus.publish("modal.open", { isSucceed: false, description: errorMessage });
-				// we need to show a modal in case of errors to the user
-				return;
-			}
 
-			onClose();
-		},
-		[auctionContract],
-	);
+	const handleupdateBuyNowPriceError = (errors: any) => {
+		console.log(errors)
+	}
 
 	const finishAuctionMutation = useMutation(
 		() => {
@@ -82,18 +77,18 @@ export const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoU
 			</Text>
 			<WhiteButton onClick={() => finishAuctionMutation.mutate()}>Açık Artırmayı Bitir</WhiteButton>
 			<GoldenFizzButton onClick={onOpen}>Hemen Al Fiyatını Güncelle</GoldenFizzButton>
-			<Modal isOpen={isOpen} onClose={onClose}>
+			{/* <Modal isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay></ModalOverlay>
 				<ModalContent p="20px">
-					<form onSubmit={handleSubmit(updateBuyNowPrice)}>
+					<form onSubmit={handleSubmit(updateBuyNowPrice, handleupdateBuyNowPriceError)}>
 						<Flex direction="column" gap="10px" color="black">
 							<Heading size="md">{name}</Heading>
-							<Input type="text" placeholder="Yeni hemen al fiyatı" {...register("newBuyNowPrice")} />
+							<Input type="number" placeholder="Yeni hemen al fiyatı" {...register("newBuyNowPrice")} />
 							<GoldenFizzButton type="submit">Güncelle</GoldenFizzButton>
 						</Flex>
 					</form>
 				</ModalContent>
-			</Modal>
+			</Modal> */}
 		</Flex>
 	);
 };

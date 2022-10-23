@@ -19,11 +19,17 @@ interface ListFinishedAuctionParams {
 	page: number;
 }
 
+interface UpdateAuctionParams {
+	auctionId: string;
+	buyNowPrice: number;
+}
+
 interface AuctionFunctions {
 	getHighestBalancesByAuctionId: (auctionId: string) => Promise<any>;
 	getAuctionsByPage: ({ page, auctionByPage }: GetAuctionsByPageParams) => Promise<any>;
 	finishAuction: (params: FinishAuctionParams) => Promise<any>;
 	listFinishedAuctions: (params: ListFinishedAuctionParams) => Promise<any>;
+	updateAuction: (params: UpdateAuctionParams) => Promise<any>;
 }
 
 export const useAuctionClient = (): AuctionFunctions => {
@@ -48,10 +54,16 @@ export const useAuctionClient = (): AuctionFunctions => {
 		return await APIClientInstance.get("auction/list-finished-auctions", { params });
 	};
 
+	const updateAuction = async (params: UpdateAuctionParams) => {
+		const { auctionId, ...paramsWithoutId } = params;
+		return await APIClientInstance.put(`auction/update/${auctionId}`, paramsWithoutId);
+	};
+
 	return {
 		getHighestBalancesByAuctionId,
 		getAuctionsByPage,
 		finishAuction,
+		updateAuction,
 		listFinishedAuctions,
 		// getHighestBalanceByAuctionId,
 	};

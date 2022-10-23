@@ -18,7 +18,7 @@ export const AdminHome = (): ReactElement => {
 				options: {
 					address: fbTokenAddress[config.NODE_ENV],
 					symbol: "FB",
-					decimals: 18
+					decimals: config.NODE_ENV === "production" ? 6 : 18,
 				}
 			}
 		})

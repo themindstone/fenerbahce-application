@@ -51,6 +51,20 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 		},
 	);
 
+	const { data: fbTokenAllowanceData } = useQuery(
+		["fbTokenAllowance", connectWallet.address],
+		() => {
+			return fbTokenContract.getAuctionContractAllowance({
+				address: connectWallet.address,
+			});
+		},
+		{
+			enabled: connectWallet.isConnected && fbTokenContract.isConnected,
+		},
+	);
+
+	console.log("fbTokenAllowanceData", fbTokenAllowanceData);
+
 	const deposit = useCallback(
 		async (params: { offer: number }) => {
 			if (!connectWallet.isConnected) {
@@ -61,20 +75,33 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 				return;
 			}
 
+			if (!fbTokenAllowanceData || fbTokenAllowanceData.allowance === undefined) {
+				modal1907EventBus.publish("modal.open", {
+					isSucceed: false,
+					description: "İşlemi gerçekleştirebilmek için FB Token izninizin olması gerekiyor.",
+				});
+				return;
+			}
+
 			const balance = Number((userBalance as any).data?.balance?.toFixed?.(2)) || 0;
 
-			const newOffer = (params.offer - balance).toFixed(2);
+			const newOffer = Number((params.offer - balance).toFixed(2));
+			const increaseByAllowance = newOffer - fbTokenAllowanceData.allowance;
+
 			try {
 				loadingModalEventBus.publish("loadingmodal.open", { message: "Açık artırma teklifiniz yükleniyor..." });
 				await switchToNetwork();
-				const fbTokenAllowance = await fbTokenContract.approveAuctionContract(params.offer);
 
-				if (fbTokenAllowance.isError) {
-					modal1907EventBus.publish("modal.open", {
-						isSucceed: false,
-						description: fbTokenAllowance.errorMessage ?? "Hata",
-					});
-					return;
+				if (increaseByAllowance >= newOffer) {
+					const fbTokenAllowance = await fbTokenContract.approveAuctionContract(increaseByAllowance);
+
+					if (fbTokenAllowance.isError) {
+						modal1907EventBus.publish("modal.open", {
+							isSucceed: false,
+							description: fbTokenAllowance.errorMessage ?? "Hata",
+						});
+						return;
+					}
 				}
 			} catch (e: any) {
 				modal1907EventBus.publish("modal.open", {
