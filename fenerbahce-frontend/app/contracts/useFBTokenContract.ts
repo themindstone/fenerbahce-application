@@ -79,7 +79,6 @@ export const useFBTokenContract = (): FBTokenContractFunctions => {
 					isError: false,
 				};
 			} catch (e: any) {
-				console.log(e);
 				return {
 					isError: true,
 				};

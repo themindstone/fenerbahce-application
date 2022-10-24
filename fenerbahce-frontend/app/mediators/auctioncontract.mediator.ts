@@ -51,7 +51,7 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 		},
 	);
 
-	const { data: fbTokenAllowanceData } = useQuery(
+	const { data: fbTokenAllowanceData, error } = useQuery(
 		["fbTokenAllowance", connectWallet.address],
 		() => {
 			return fbTokenContract.getAuctionContractAllowance({
@@ -63,7 +63,7 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 		},
 	);
 
-	console.log("fbTokenAllowanceData", fbTokenAllowanceData);
+	console.log("fbTokenAllowanceData", error);
 
 	const deposit = useCallback(
 		async (params: { offer: number }) => {

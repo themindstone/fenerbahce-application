@@ -10,7 +10,7 @@ interface FinishedAuctionsCardProps {
 	id: string;
 	name: string;
 	offers: number[];
-	photoUrls: string[];
+	photoUrls: { photoUrl: string }[];
 }
 
 const options = {
@@ -64,7 +64,7 @@ const FinishedAuctionsCard = (auction: FinishedAuctionsCardProps): ReactElement 
 		<Flex borderRadius="15px" overflow="hidden" bg="var(--governor-bay)" direction="column">
 				<Box
 					style={{ aspectRatio: "13/16" }}
-					bgImage={`url(${auction.photoUrls[0]})`}
+					bgImage={`url(${auction.photoUrls[0].photoUrl})`}
 					bgSize={"cover"}
 					w="100%"
 					bgRepeat="no-repeat"

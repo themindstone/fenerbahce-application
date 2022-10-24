@@ -97,7 +97,7 @@ export function PlaceBidModal() {
 								flexBasis="125px"
 								height="125px"
 								flexShrink={0}
-								bgImage={`url(${auction?.photoUrls && auction.photoUrls[0]})`}
+								bgImage={`url(${auction?.photoUrls && auction.photoUrls[0].photoUrl})`}
 								bgSize="contain"></Box>
 							<Flex justifyContent="center" direction="column" gap="12px">
 								<Text>Teklif Verilen Açık Artırma</Text>
