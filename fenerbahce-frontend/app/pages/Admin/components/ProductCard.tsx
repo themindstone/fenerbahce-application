@@ -11,7 +11,7 @@ import { getAuctionContractErrorMessage } from "~/utils";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-export const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoUrls, endDate }: any): ReactElement => {
+export const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoUrls, endDate, isFinished = false }: any): ReactElement => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	// const { register, handleSubmit } = useForm<FormData>({
@@ -76,7 +76,8 @@ export const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoU
 				Bitiş Tarihi: {moment(new Date(endDate).getTime()).locale("tr").format("MMMM Do YYYY, h:mm:ss a")}
 			</Text>
 			{/* <WhiteButton onClick={() => finishAuctionMutation.mutate()}>Açık Artırmayı Bitir</WhiteButton> */}
-			<GoldenFizzButton onClick={onOpen}>Hemen Al Fiyatını Güncelle</GoldenFizzButton>
+			{!isFinished &&
+			<GoldenFizzButton onClick={onOpen}>Hemen Al Fiyatını Güncelle</GoldenFizzButton>}
 			{/* <Modal isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay></ModalOverlay>
 				<ModalContent p="20px">

@@ -32,7 +32,8 @@ export const FinishedAuctions = () => {
 								buyNowPrice={product.buyNowPrice}
 								photoUrls={product.photoUrls}
 								highestOffer={product.highestOffer}
-								endDate={product.endDate}></ProductCard>
+								endDate={product.endDate}
+								isFinished={true}></ProductCard>
 						);
 					})}
 				{auctions.isSuccess && auctions.data.length === 0 && "Gösterilecek bir şey yok"}
