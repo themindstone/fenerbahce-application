@@ -39,6 +39,7 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 		},
 		{
 			enabled: connectWallet.isConnected && !!auction.id &&connectWallet.isCorrectNetwork,
+			refetchInterval: 10000,
 		},
 	);
 
@@ -49,6 +50,7 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 		},
 		{
 			enabled: auction.isActive && !auction.isSelled && !!auction.id && connectWallet.isCorrectNetwork,
+			refetchInterval: 10000,
 		},
 	);
 
@@ -61,11 +63,9 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 		},
 		{
 			enabled: connectWallet.isConnected && fbTokenContract.isConnected && connectWallet.isCorrectNetwork,
+			refetchInterval: 60000,
 		},
 	);
-
-	console.log("correct: ", connectWallet.isCorrectNetwork);
-	console.log("fbTokenAllowanceData2", fbTokenAllowanceData);
 
 	const deposit = useCallback(
 		async (params: { offer: number }) => {
@@ -90,8 +90,6 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 
 			const newOffer = Number((params.offer - balance).toFixed(2));
 			const increaseByAllowance = Number((newOffer - fbTokenAllowanceData.allowance).toFixed(2));
-
-			console.log(balance, newOffer, increaseByAllowance);
 
 			try {
 				loadingModalEventBus.publish("loadingmodal.open", { message: "Açık artırma teklifiniz yükleniyor..." });
