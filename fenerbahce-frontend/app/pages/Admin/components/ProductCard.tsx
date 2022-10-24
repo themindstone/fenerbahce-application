@@ -75,7 +75,7 @@ export const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoU
 			<Text>
 				Bitiş Tarihi: {moment(new Date(endDate).getTime()).locale("tr").format("MMMM Do YYYY, h:mm:ss a")}
 			</Text>
-			<WhiteButton onClick={() => finishAuctionMutation.mutate()}>Açık Artırmayı Bitir</WhiteButton>
+			{/* <WhiteButton onClick={() => finishAuctionMutation.mutate()}>Açık Artırmayı Bitir</WhiteButton> */}
 			<GoldenFizzButton onClick={onOpen}>Hemen Al Fiyatını Güncelle</GoldenFizzButton>
 			{/* <Modal isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay></ModalOverlay>
