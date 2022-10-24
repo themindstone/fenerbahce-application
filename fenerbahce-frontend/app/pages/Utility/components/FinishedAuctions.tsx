@@ -81,7 +81,7 @@ const FinishedAuctionsCard = (auction: FinishedAuctionsCardProps): ReactElement 
 							<Text color="var(--golden-fizz)">
 								{auctionHighestBalances.isSuccess && auctionHighestBalances.data.length > 0
 									? humanReadableNumber(auctionHighestBalances.data[0].balance).toFixed(2) + " FB"
-									: "-"}
+									: "Teklif Yok"}
 							</Text>
 						</Flex>
 					</Flex>

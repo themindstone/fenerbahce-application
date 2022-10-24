@@ -37,7 +37,7 @@ const HighestOffersCard = (auction: HighestOffersCardProps): ReactElement => {
 	const [state, setState] = useState<boolean>(false);
 	const [highestBalances, setHighestBalances] = useState<number[]>([]);
 
-	const { buyNow } = useAuctionContractAdapter(auction);
+	const { deposit } = useAuctionContractAdapter(auction);
 
 	const onOver = () => {
 		setState(true);
@@ -94,7 +94,7 @@ const HighestOffersCard = (auction: HighestOffersCardProps): ReactElement => {
 							onClick={e => {
 								e.preventDefault();
 							}}>
-							<WhiteButton onClick={buyNow}>Hemen Al</WhiteButton>
+							<WhiteButton onClick={() => deposit(15)}>Hemen Al</WhiteButton>
 							<GoldenFizzButton onClick={openPlaceBidModal}>Teklif Ver</GoldenFizzButton>
 						</Grid>
 					)}

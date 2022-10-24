@@ -105,7 +105,7 @@ export const AuctionCard = (auction: any, isFinished: boolean = false): ReactEle
 							<Text color="var(--golden-fizz)">
 								{auctionHighestBalances.isSuccess && auctionHighestBalances.data.length > 0
 									? humanReadableNumber(auctionHighestBalances.data[0].balance).toFixed(2) + " FB"
-									: "-"}
+									: "Teklif Yok"}
 							</Text>
 						</Flex>
 					</Flex>
