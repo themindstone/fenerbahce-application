@@ -50,39 +50,43 @@ export class MoralisStreamController {
         const auctionRefundedParams = ["uint32", "address", "uint256"];
         const auctionRefundedEvent =
             "0x42b9addd57622432772e24a2f9f559da5dbb4c7ff04f1da746079492403840b1";
-        
+
         console.log("log: ", log);
 
         const decoder = new AbiCoder();
 
         if (log.topic0 === auctionDepositedEvent) {
-            console.log("auction deposited")
-            const [auctionId, address, value] = decoder.decode(
+            console.log("auction deposited");
+            const [auctionId, address, val] = decoder.decode(
                 auctionDepositedParams,
                 log.data,
             );
+
+            const value = formatUnits(val, "6");
 
             console.log({ auctionId, address, value });
 
             this.eventEmitter.emit("auction.deposited", {
                 auctionId,
                 address: address.toLocaleLowerCase(),
-                value: value.toNumber(),
+                value: value,
             });
         } else if (log.topic0 === auctionRefundedEvent) {
-            console.log("auction refunded")
+            console.log("auction refunded");
 
-            const [auctionId, address, value] = decoder.decode(
+            const [auctionId, address, val] = decoder.decode(
                 auctionRefundedParams,
                 log.data,
             );
+
+            const value =formatUnits(val, "6");
 
             console.log({ auctionId, address, value });
 
             this.eventEmitter.emit("auction.refunded", {
                 auctionId,
                 address: address.toLocaleLowerCase(),
-                value: value.toNumber(),
+                value: value,
             });
         }
         return "Hello World!";
