@@ -17,4 +17,5 @@ export interface FBTokenContractFunctions {
 export interface FBTokenContractErrors {
 	UnknownError: string;
 	InsufficentBalance: string;
+	UserDeniedTransaction: string;
 }

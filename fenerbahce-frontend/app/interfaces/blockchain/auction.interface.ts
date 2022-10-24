@@ -24,4 +24,5 @@ export interface AuctionContractErrors {
     InsufficentAllowance: string;
     InsufficentBalance: string;
     InsufficentFBTokenBalance: string;
+	UserDeniedTransaction: string;
 }

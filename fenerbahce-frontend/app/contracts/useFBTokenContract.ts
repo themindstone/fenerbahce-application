@@ -7,11 +7,13 @@ import { FBTokenContractFunctions, FBTokenContractErrors, FBTokenGetAuctionContr
 export const FBTokenContractErrorsEnglish: FBTokenContractErrors = {
 	UnknownError: "An error occured",
 	InsufficentBalance: "insufficent balance",
+	UserDeniedTransaction: "User denied transaction signature",
 };
 
 export const FBTokenContractErrorsTurkish: FBTokenContractErrors = {
 	UnknownError: "Bilinmeyen bir hata oluştu.",
 	InsufficentBalance: "Yetersiz bakiye",
+	UserDeniedTransaction: "İşlemi onaylamadınız",
 };
 
 export const getFBTokenContractErrorMessage = (e: string | null) => {

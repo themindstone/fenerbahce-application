@@ -5,6 +5,7 @@ export const AuctionContractErrorsEnglish: AuctionContractErrors = {
 	InsufficentAllowance: "insufficient allowance",
 	InsufficentFBTokenBalance: "transfer amount exceeds balance",
 	InsufficentBalance: "insufficient balance",
+	UserDeniedTransaction: "User denied transaction signature",
 };
 
 export const AuctionContractErrorsTurkish: AuctionContractErrors = {
@@ -12,6 +13,7 @@ export const AuctionContractErrorsTurkish: AuctionContractErrors = {
 	InsufficentAllowance: "Yetersiz FB Token izninde dolayı işlem gerçekleştirilemedi",
 	InsufficentFBTokenBalance: "Yetersiz FB Token bakiyesi dolayı işlem gerçekleştirilemedi",
 	InsufficentBalance: "Yetersiz bakiye",
+	UserDeniedTransaction: "İşlemi onaylamadınız",
 };
 
 export const getAuctionContractErrorMessage = (e: string | null) => {
