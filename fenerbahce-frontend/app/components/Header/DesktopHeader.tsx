@@ -1,4 +1,4 @@
-import type { ReactElement } from "react";
+import { ReactElement, useEffect } from "react";
 import { Fragment } from "react";
 import { useConnectWallet } from "~/context";
 import { Flex, Image, Text, Box, Link } from "@chakra-ui/react";
@@ -26,8 +26,9 @@ export const DesktopHeader = (): ReactElement => {
 				<FBTokenText />
 			</Flex>
 			<Flex gap="30px" alignItems="center" display={{ base: "none", lg: "flex" }}>
-				<NavLink>KULLANIM ŞARTLARI</NavLink>
-				<NavLink>S.S.S</NavLink>
+				<NavLink href="/">KULLANIM ŞARTLARI</NavLink>
+				<NavLink href="/#sss">S.S.S</NavLink>
+				{/* <a href="/#sss" style={{ fontWeight: "bold"}}>S.S.S</a> */}
 
 				{connectWallet.connectionState === "disconnected" && (
 					<GoldenFizzButton onClick={connectWalletModalOpen} leftIcon={<UserIcon />}>

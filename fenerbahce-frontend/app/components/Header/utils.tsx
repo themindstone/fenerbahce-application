@@ -1,12 +1,8 @@
 import { Fragment, ReactElement } from "react";
-import { Link, Text } from "@chakra-ui/react";
+import { Link, LinkProps, Text } from "@chakra-ui/react";
 import { useFBTokenCalculator } from "~/hooks";
 
-interface NavLinkProps {
-	children?: React.ReactNode;
-}
-
-export const NavLink = ({ children, ...rest }: NavLinkProps): ReactElement => {
+export const NavLink = ({ children, ...rest }: LinkProps): ReactElement => {
 	return (
 		<Link {...rest} fontWeight="bold">
 			{children}

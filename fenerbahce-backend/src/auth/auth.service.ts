@@ -123,7 +123,7 @@ export class AuthService {
         fullname: string;
     }): { accessToken: string; refreshToken: string } {
         const accessToken = this.jwtService.sign(params, {
-            expiresIn: "15m",
+            expiresIn: "30m",
             secret: "access_token_secret",
         });
         const refreshToken = this.jwtService.sign(params, {

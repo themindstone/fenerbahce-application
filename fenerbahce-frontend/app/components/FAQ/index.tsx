@@ -1,4 +1,4 @@
-import type { ReactElement } from "react";
+import { ReactElement, useEffect } from "react";
 import { Box, Flex, Heading, Text, VStack } from "@chakra-ui/react";
 import { IFAQ } from "~/interfaces";
 import { faq } from "~/data";
@@ -24,8 +24,14 @@ const FAQItem = ({ text, answer }: FAQItemProps): ReactElement => {
 };
 
 export const FAQ = (): ReactElement => {
+	useEffect(() => {
+		if (window.location.hash === "#sss") {
+			window.location.href = "#sss";
+		}
+	}, []);	
+
 	return (
-		<VStack bg="#fbfbfb" color="black" paddingTop="150px" paddingBottom="100px">
+		<VStack bg="#fbfbfb" color="black" paddingTop="150px" paddingBottom="100px" id="sss">
 			<Heading size="lg">Sıkça Sorulan Sorular</Heading>
 			<Box maxW="800px" w="90%">
 				{faq.map((item, index) => {
