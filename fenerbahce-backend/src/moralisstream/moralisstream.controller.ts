@@ -50,6 +50,8 @@ export class MoralisStreamController {
         const auctionRefundedParams = ["uint32", "address", "uint256"];
         const auctionRefundedEvent =
             "0x42b9addd57622432772e24a2f9f559da5dbb4c7ff04f1da746079492403840b1";
+        
+        console.log("log: ", log);
 
         if (log.topics[0] === auctionDepositedEvent) {
             const [auctionId, address, value] = new AbiCoder().decode(
