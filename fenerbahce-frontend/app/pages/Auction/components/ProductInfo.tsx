@@ -34,13 +34,9 @@ export const ProductInfo = (): ReactElement => {
 		},
 		{
 			enabled: auction.isActive && !auction.isSelled && !!auction.id,
+			refetchInterval: 10000
 		},
 	);
-
-	// refetch auction highest balance in every 2 minutes
-	useInterval(() => {
-		auctionHighestBalances.refetch();
-	}, 1000 * 60 * 2);
 
 	useEffect(() => {
 		if (auctionHighestBalances.data) {
