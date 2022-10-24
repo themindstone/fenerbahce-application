@@ -16,7 +16,7 @@ export const DesktopHeader = (): ReactElement => {
 	return (
 		<Fragment>
 			<Flex gap="40px" alignItems="center" display={{ base: "none", lg: "flex" }}>
-				<Link href="/" _hover={{ textDecoration: "none" }}>
+				<Link href="/admin" _hover={{ textDecoration: "none" }}>
 					<Flex gap="10px" alignItems="center">
 						<Image src="/images/token-logo.png" w="60px" />
 						<Text fontWeight="bold">
