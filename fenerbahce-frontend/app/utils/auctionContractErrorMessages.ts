@@ -3,13 +3,15 @@ import { AuctionContractErrors } from "~/interfaces";
 export const AuctionContractErrorsEnglish: AuctionContractErrors = {
 	UnknownError: "An error occured",
 	InsufficentAllowance: "insufficient allowance",
-	InsufficentBalance: "transfer amount exceeds balance",
+	InsufficentFBTokenBalance: "transfer amount exceeds balance",
+	InsufficentBalance: "insufficient balance",
 };
 
 export const AuctionContractErrorsTurkish: AuctionContractErrors = {
 	UnknownError: "Bilinmeyen bir hata oluştu.",
-	InsufficentAllowance: "Yetersiz fb token izninde dolayı işlem gerçekleştirilemedi",
-	InsufficentBalance: "Yetersiz fb token bakiyesi dolayı işlem gerçekleştirilemedi",
+	InsufficentAllowance: "Yetersiz FB Token izninde dolayı işlem gerçekleştirilemedi",
+	InsufficentFBTokenBalance: "Yetersiz FB Token bakiyesi dolayı işlem gerçekleştirilemedi",
+	InsufficentBalance: "Yetersiz bakiye",
 };
 
 export const getAuctionContractErrorMessage = (e: string | null) => {

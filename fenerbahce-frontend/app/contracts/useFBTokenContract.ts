@@ -6,10 +6,12 @@ import { FBTokenContractFunctions, FBTokenContractErrors, FBTokenGetAuctionContr
 
 export const FBTokenContractErrorsEnglish: FBTokenContractErrors = {
 	UnknownError: "An error occured",
+	InsufficentBalance: "insufficent balance",
 };
 
 export const FBTokenContractErrorsTurkish: FBTokenContractErrors = {
 	UnknownError: "Bilinmeyen bir hata oluştu.",
+	InsufficentBalance: "Yetersiz bakiye",
 };
 
 export const getFBTokenContractErrorMessage = (e: string | null) => {
@@ -31,7 +33,6 @@ export const useFBTokenContract = (): FBTokenContractFunctions => {
 
 	const approveAuctionContract = useCallback(
 		async (newOffer: number) => {
-			// console.log(newOffer); // 2
 			if (!contract) {
 				return {
 					isError: true,
