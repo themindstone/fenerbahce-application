@@ -9,7 +9,7 @@ export const sidenavlink: ISideNavLink[] = [
     {
         id: "ae10ef7d-ace6-4552-bca6-beda9738f375",
         href: "/",
-        text: "FAYDALAR",
+        text: "KULLANIM ŞARTLARI",
     },
     // {
     //     id: "7430d629-2031-40d5-8a86-c8acb6e8bd30",
