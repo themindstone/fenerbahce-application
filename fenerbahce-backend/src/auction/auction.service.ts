@@ -13,9 +13,9 @@ export class AuctionService {
     constructor(
         @InjectRepository(AuctionRepository)
         private readonly auctionRepository: Repository<AuctionRepository>,
-        // private readonly auctionContract: AuctionContract,
-        // private readonly balanceService: BalanceService,
-    ) {}
+    ) // private readonly auctionContract: AuctionContract,
+    // private readonly balanceService: BalanceService,
+    {}
 
     async create(auction: CreateAuctionDto): Promise<number> {
         const auctionId = await this.auctionRepository
@@ -24,7 +24,7 @@ export class AuctionService {
             .into(AuctionRepository)
             .values({
                 ...auction,
-                isActive: true
+                isActive: true,
             })
             .returning("id")
             .execute()
@@ -118,13 +118,35 @@ export class AuctionService {
                 isSelled: false,
                 startDate: LessThan(new Date()),
                 endDate: MoreThan(new Date()),
-                isActive: true
+                isActive: true,
             },
         });
         return res;
     }
 
     async listHighestOfferAuctions(): Promise<AuctionRepository[]> {
+        return await this.auctionRepository.find({
+            select: [
+                "id",
+                "name",
+                "selledToAddress",
+                "photoUrls",
+                "bidIncrement",
+                "buyNowPrice",
+                "startPrice",
+                "startDate",
+                "endDate",
+                "isSelled",
+                "isActive",
+            ],
+            where: {
+                isSelled: false,
+                endDate: MoreThan(new Date()),
+            },
+        });
+    }
+
+    async listUnfinishedAuctions(): Promise<AuctionRepository[]> {
         return await this.auctionRepository.find({
             select: [
                 "id",
