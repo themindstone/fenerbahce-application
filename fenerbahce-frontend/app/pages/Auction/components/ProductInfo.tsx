@@ -1,7 +1,7 @@
 import { Box, Flex, Heading, Text, useInterval } from "@chakra-ui/react";
 import { Fragment, ReactElement, useEffect, useState } from "react";
 import { GoldenFizzButton, WhiteButton } from "~/components";
-import { useCountdownTimer } from "~/hooks";
+import { useChainConfig, useCountdownTimer } from "~/hooks";
 import { useLoaderData } from "@remix-run/react";
 import { OfferCard } from "./OfferCard";
 import { CollapsibleCard } from "./CollapsibleCard";
@@ -16,14 +16,16 @@ export const ProductInfo = (): ReactElement => {
 
 	const [balances, setBalances] = useState<any[]>(() => auction.balances);
 
-	const openPlaceBidModal = () => {
+	const { days, hours, minutes, seconds, status } = useCountdownTimer(auction.endDate);
+	// const { switchToNetwork } = useChainConfig();
+
+	const openPlaceBidModal = async () => {
+		// await switchToNetwork();
 		placeBidModalEventBus.publish("placebidmodal.open", {
 			...auction,
 			balances: auction.balances.map((i: any) => i.balance),
 		});
 	};
-
-	const { days, hours, minutes, seconds, status } = useCountdownTimer(auction.endDate);
 
 	const auctionHighestBalances = useQuery(
 		["balances", auction.id],
@@ -46,7 +48,8 @@ export const ProductInfo = (): ReactElement => {
 		}
 	}, [auctionHighestBalances]);
 
-	const buyNowModalOpen = () => {
+	const buyNowModalOpen = async () => {
+		// await switchToNetwork();
 		buyNowModalEventBus.publish("buynowmodal.open", auction);
 	};
 

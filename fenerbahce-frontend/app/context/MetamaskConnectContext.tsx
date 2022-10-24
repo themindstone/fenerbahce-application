@@ -3,6 +3,7 @@ import type { ReactElement } from "react";
 import { wallets } from "~/wallets";
 import { IWallet, ConnectWalletProviderInterface, ConnectWalletContextInterface } from "~/interfaces";
 import { KYCProvider } from "./KYCContext";
+import { useChainConfig } from "~/hooks";
 
 const ConnectWalletContext = React.createContext<ConnectWalletContextInterface>({
 	initialize: (name: keyof typeof wallets) => {},
@@ -13,25 +14,47 @@ const ConnectWalletContext = React.createContext<ConnectWalletContextInterface>(
 	shortAddress: "",
 	isConnected: false,
 	connectionState: "idle",
+	isCorrectNetwork: false,
 });
+
+export const useProviderListener = (event: string, listener: (...args: any[]) => void, deps: any[]) => {
+	useEffect(() => {
+		window.ethereum.on(event, listener);
+		return () => {
+			window.ethereum.removeListener(event, listener);
+		};
+	}, deps);
+};
 
 export const ConnectWalletProvider = ({ children }: ConnectWalletProviderInterface): ReactElement => {
 	// fetch last default wallet from local storage
 	const [defaultWallet, setDefaultWallet] = useState<IWallet>(() => wallets.MetamaskWallet);
+	const [isCorrectNetwork, setIsCorrectNetwork] = useState<boolean>(false);
 
-	useEffect(() => {
-		// check every wallet and show connected ones
-		async function handler() {
+	const { checkIfIsCorrectNetwork } = useChainConfig()
+
+	const connectWallet = async () => {
+		if (!defaultWallet.isConnected) {
 			const wallet = wallets[(localStorage.defaultWallet as keyof typeof wallets) || "MetamaskWallet"];
 			await wallet.initialize();
 			const newWallet = wallet.getWallet();
 
 			setDefaultWallet(newWallet);
 		}
-		if (!defaultWallet.isConnected) {
-			handler();
-		}
+	};
+
+	const networkChanged = async () => {
+		connectWallet();
+		setIsCorrectNetwork(await checkIfIsCorrectNetwork());
+	};
+
+	useEffect(() => {
+		// check every wallet and show connected ones
+		networkChanged();
 	}, []);
+
+	useProviderListener("accountsChanged", connectWallet, []);
+	useProviderListener("networkChanged", networkChanged, []);
 
 	const initialize = async (name: keyof typeof wallets) => {
 		await wallets[name].initialize();
@@ -64,6 +87,7 @@ export const ConnectWalletProvider = ({ children }: ConnectWalletProviderInterfa
 		isConnected: defaultWallet.isConnected,
 		connectionState: defaultWallet.connectionState,
 		shortAddress: defaultWallet.shortAddress,
+		isCorrectNetwork,
 	};
 
 	return (

@@ -23,6 +23,7 @@ export const useAuctionContract = (): AuctionContractFunctions => {
 				const tx = await transaction.wait();
 				return { tx, isError: false };
 			} catch (e: any) {
+				console.log(e)
 				return { isError: true, errorMessage: getAuctionContractErrorMessage(e.message as string) };
 			}
 		},

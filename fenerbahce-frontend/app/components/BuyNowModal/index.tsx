@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { ReactElement, useState } from "react";
 import { buyNowModalEventBus } from "~/eventbus";
+import { useChainConfig } from "~/hooks";
 import { useAuctionContractAdapter } from "~/mediators";
 import { humanReadableNumber } from "~/utils";
 import { WhiteButton } from "../Button";
@@ -21,12 +22,14 @@ export const BuyNowModal = (): ReactElement => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const { deposit } = useAuctionContractAdapter(auction, [auction]);
+	const { switchToNetwork } = useChainConfig();
 
 	buyNowModalEventBus.useListener(
 		"buynowmodal.open",
-		(auction: any) => {
+		async (auction: any) => {
+			await switchToNetwork();
 			setAuction(auction);
-            onOpen();
+			onOpen();
 		},
 		[],
 	);
@@ -63,7 +66,7 @@ export const BuyNowModal = (): ReactElement => {
 								{humanReadableNumber(auction.buyNowPrice).toFixed(2)} FB
 							</Box>
 						</Flex>
-						<WhiteButton onClick={() => deposit({ offer: auction.buyNowPrice || 0})}>HEMEN AL</WhiteButton>
+						<WhiteButton onClick={() => deposit({ offer: auction.buyNowPrice || 0 })}>HEMEN AL</WhiteButton>
 					</Flex>
 				</ModalContent>
 			</ModalOverlay>

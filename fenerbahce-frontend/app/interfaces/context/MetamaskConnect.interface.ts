@@ -10,6 +10,7 @@ export interface ConnectWalletContextInterface {
     shortAddress: string;
     isConnected: boolean;
     connectionState: IWallet["connectionState"];
+    isCorrectNetwork: boolean;
 }
 
 export interface ConnectWalletProviderInterface {

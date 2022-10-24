@@ -5,7 +5,7 @@ export const AuctionContractErrorsEnglish: AuctionContractErrors = {
 	InsufficentAllowance: "insufficient allowance",
 	InsufficentFBTokenBalance: "transfer amount exceeds balance",
 	InsufficentBalance: "insufficient balance",
-	UserDeniedTransaction: "User denied transaction signature",
+	UserDeniedTransaction: "user rejected transaction",
 };
 
 export const AuctionContractErrorsTurkish: AuctionContractErrors = {

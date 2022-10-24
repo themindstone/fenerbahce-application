@@ -31,13 +31,14 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 		return auction.balances || [];
 	});
 
+
 	const userBalance = useQuery(
 		["balance", connectWallet.address, auction.id],
 		() => {
 			return balanceClient.getBalanceByAuctionId(auction.id, connectWallet.address).then(res => res.data);
 		},
 		{
-			enabled: connectWallet.isConnected && !!auction.id,
+			enabled: connectWallet.isConnected && !!auction.id &&connectWallet.isCorrectNetwork,
 		},
 	);
 
@@ -47,7 +48,7 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 			return auctionClient.getHighestBalancesByAuctionId(auction.id).then(res => res.data);
 		},
 		{
-			enabled: auction.isActive && !auction.isSelled && !!auction.id,
+			enabled: auction.isActive && !auction.isSelled && !!auction.id && connectWallet.isCorrectNetwork,
 		},
 	);
 
@@ -59,11 +60,12 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 			});
 		},
 		{
-			enabled: connectWallet.isConnected && fbTokenContract.isConnected,
+			enabled: connectWallet.isConnected && fbTokenContract.isConnected && connectWallet.isCorrectNetwork,
 		},
 	);
 
-	console.log("fbTokenAllowanceData", fbTokenAllowanceData);
+	console.log("correct: ", connectWallet.isCorrectNetwork);
+	console.log("fbTokenAllowanceData2", fbTokenAllowanceData);
 
 	const deposit = useCallback(
 		async (params: { offer: number }) => {

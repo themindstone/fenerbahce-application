@@ -7,7 +7,7 @@ import { FBTokenContractFunctions, FBTokenContractErrors, FBTokenGetAuctionContr
 export const FBTokenContractErrorsEnglish: FBTokenContractErrors = {
 	UnknownError: "An error occured",
 	InsufficentBalance: "insufficent balance",
-	UserDeniedTransaction: "User denied transaction signature",
+	UserDeniedTransaction: "user rejected transaction",
 };
 
 export const FBTokenContractErrorsTurkish: FBTokenContractErrors = {
@@ -55,7 +55,7 @@ export const useFBTokenContract = (): FBTokenContractFunctions => {
 					isError: false,
 				};
 			} catch (e: any) {
-				console.log(e);
+				console.log(e.message);
 				return {
 					isError: true,
 					errorMessage: getFBTokenContractErrorMessage(e.message),
@@ -84,6 +84,7 @@ export const useFBTokenContract = (): FBTokenContractFunctions => {
 					isError: false,
 				};
 			} catch (e: any) {
+				console.log(e)
 				return {
 					isError: true,
 				};

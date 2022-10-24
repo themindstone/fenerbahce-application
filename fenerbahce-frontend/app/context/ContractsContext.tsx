@@ -75,14 +75,14 @@ export const useContract = (
 	error: any;
 } => {
 	const { contracts, connectContractIfNotConnected } = useContext(ContractsContext);
-	const { isConnected } = useConnectWallet();
+	const { isConnected, isCorrectNetwork } = useConnectWallet();
 	const [error, setError] = useState();
 
 	useEffect(() => {
-		if (isConnected) {
+		if (isConnected && isCorrectNetwork) {
 			connect();
 		}
-	}, [isConnected]);
+	}, [isConnected, isCorrectNetwork]);
 
 	const connect = useCallback(() => {
 		if (isConnected) {

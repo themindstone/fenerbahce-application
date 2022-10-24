@@ -17,6 +17,7 @@ import { GoldenFizzButton } from "~/components";
 import { modal1907EventBus, placeBidModalEventBus } from "~/eventbus";
 import { humanReadableNumber } from "~/utils";
 import { MinusIcon, PlusIcon } from "~/assets";
+import { useChainConfig } from "~/hooks";
 
 export function PlaceBidModal() {
 	const { isOpen, onClose, onOpen } = useDisclosure();
@@ -26,10 +27,12 @@ export function PlaceBidModal() {
 	const [minValue, setMinValue] = useState(0);
 
 	const { deposit } = useAuctionContractAdapter(auction, [auction]);
+	const { switchToNetwork } = useChainConfig()
 
 	placeBidModalEventBus.useListener(
 		"placebidmodal.open",
-		newAuction => {
+		async newAuction => {
+			await switchToNetwork();
 			const newValue =
 				newAuction.balances.length > 0
 					? newAuction.bidIncrement + newAuction.balances[0]
