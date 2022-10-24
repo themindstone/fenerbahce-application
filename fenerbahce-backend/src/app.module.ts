@@ -20,6 +20,7 @@ import { MoralisAPIModule } from "./shared/libs";
 import { KYCModule } from "./kyc/kyc.module";
 import { UsersModule } from "./users/users.module";
 import { JwtModule } from "@nestjs/jwt";
+import { MoralisStreamModule } from "./moralisstream/moralisstream.module";
 
 const localEthersConfig: EthersModuleOptions = {
     custom: "http://localhost:8545",
@@ -64,6 +65,7 @@ export class CoreModule {}
         }),
         CoreModule,
         MoralisAPIModule.forRoot(),
+        MoralisStreamModule,
         EthersModule.forRoot(goerliEthersConfig),
         DatabaseModule,
         EventEmitterModule.forRoot(),
