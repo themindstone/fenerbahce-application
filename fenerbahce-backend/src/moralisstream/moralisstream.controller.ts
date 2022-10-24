@@ -32,6 +32,10 @@ export class MoralisStreamController {
         @Headers("x-signature") signature: string,
         @Body() params: any,
     ) {
+
+        if (!params.confirmed) {
+            return "not confirmed";
+        }
         const log = params.logs[0];
 
         console.log("verifying...");
