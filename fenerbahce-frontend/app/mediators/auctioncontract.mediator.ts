@@ -82,6 +82,7 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 				});
 				return;
 			}
+			await switchToNetwork();
 
 			const balance = Number((userBalance as any).data?.balance?.toFixed?.(2)) || 0;
 
@@ -92,7 +93,6 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 
 			try {
 				loadingModalEventBus.publish("loadingmodal.open", { message: "Açık artırma teklifiniz yükleniyor..." });
-				await switchToNetwork();
 
 				if (fbTokenAllowanceData.allowance + increaseByAllowance >= newOffer && increaseByAllowance > 0) {
 					const fbTokenAllowance = await fbTokenContract.approveAuctionContract(increaseByAllowance);
