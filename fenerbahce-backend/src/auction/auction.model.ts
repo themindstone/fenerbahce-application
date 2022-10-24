@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { ArrayMinSize, IsArray, IsISO8601, IsNotEmpty, IsNumber, IsString, ValidateIf } from "class-validator";
+import { ArrayMinSize, IsArray, IsISO8601, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateIf } from "class-validator";
 
 class PhotoUrls {
     @IsString()
@@ -61,6 +61,39 @@ export class CreateAuctionDto {
     @IsArray()
     @ArrayMinSize(1)
     @Type(() => PhotoUrls)
+    photoUrls: Array<PhotoUrls>;
+}
+
+export class UpdateAuctionDto {
+    @IsString()
+    @IsOptional()
+    name: string;
+
+    @IsISO8601()
+    @IsOptional()
+    startDate: string;
+
+    @IsISO8601()
+    @IsOptional()
+    endDate: string;
+
+    @IsNumber()
+    @IsOptional()
+    startPrice: number;
+
+    @IsNumber()
+    @IsOptional()
+    buyNowPrice: number;
+
+    @IsNumber()
+    @IsOptional()
+    bidIncrement: number;
+
+    @IsNotEmpty()
+    @IsArray()
+    @ArrayMinSize(1)
+    @Type(() => PhotoUrls)
+    @IsOptional()
     photoUrls: Array<PhotoUrls>;
 }
 

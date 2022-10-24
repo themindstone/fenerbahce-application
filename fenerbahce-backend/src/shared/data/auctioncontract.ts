@@ -15,52 +15,9 @@ export const auctionABI = [
         inputs: [
             {
                 indexed: false,
-                internalType: "uint256",
-                name: "auctionId",
-                type: "uint256",
-            },
-            {
-                indexed: false,
-                internalType: "uint256",
-                name: "newBuyNowPrice",
-                type: "uint256",
-            },
-        ],
-        name: "AuctionBuyNowPriceUpdated",
-        type: "event",
-    },
-    {
-        anonymous: false,
-        inputs: [
-            {
-                indexed: false,
                 internalType: "uint32",
                 name: "auctionId",
                 type: "uint32",
-            },
-            {
-                indexed: false,
-                internalType: "uint256",
-                name: "startPrice",
-                type: "uint256",
-            },
-            {
-                indexed: false,
-                internalType: "uint256",
-                name: "buyNowPrice",
-                type: "uint256",
-            },
-            {
-                indexed: false,
-                internalType: "uint256",
-                name: "startDate",
-                type: "uint256",
-            },
-            {
-                indexed: false,
-                internalType: "uint256",
-                name: "endDate",
-                type: "uint256",
             },
         ],
         name: "AuctionCreated",
@@ -95,82 +52,6 @@ export const auctionABI = [
         anonymous: false,
         inputs: [
             {
-                indexed: false,
-                internalType: "uint32",
-                name: "auctionId",
-                type: "uint32",
-            },
-        ],
-        name: "AuctionFinished",
-        type: "event",
-    },
-    {
-        anonymous: false,
-        inputs: [
-            {
-                indexed: false,
-                internalType: "uint32",
-                name: "auctionId",
-                type: "uint32",
-            },
-            {
-                indexed: false,
-                internalType: "uint256",
-                name: "toDate",
-                type: "uint256",
-            },
-        ],
-        name: "AuctionProlonged",
-        type: "event",
-    },
-    {
-        anonymous: false,
-        inputs: [
-            {
-                indexed: false,
-                internalType: "uint32",
-                name: "auctionId",
-                type: "uint32",
-            },
-            {
-                indexed: false,
-                internalType: "address",
-                name: "to",
-                type: "address",
-            },
-            {
-                indexed: false,
-                internalType: "uint256",
-                name: "value",
-                type: "uint256",
-            },
-        ],
-        name: "AuctionRefunded",
-        type: "event",
-    },
-    {
-        anonymous: false,
-        inputs: [
-            {
-                indexed: false,
-                internalType: "uint32",
-                name: "auctionId",
-                type: "uint32",
-            },
-            {
-                indexed: false,
-                internalType: "address",
-                name: "buyer",
-                type: "address",
-            },
-        ],
-        name: "AuctionSelled",
-        type: "event",
-    },
-    {
-        anonymous: false,
-        inputs: [
-            {
                 indexed: true,
                 internalType: "address",
                 name: "previousOwner",
@@ -194,34 +75,6 @@ export const auctionABI = [
                 type: "uint32",
             },
         ],
-        name: "buyNow",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-    },
-    {
-        inputs: [
-            {
-                internalType: "uint256",
-                name: "_startDate",
-                type: "uint256",
-            },
-            {
-                internalType: "uint256",
-                name: "_endDate",
-                type: "uint256",
-            },
-            {
-                internalType: "uint256",
-                name: "_startPrice",
-                type: "uint256",
-            },
-            {
-                internalType: "uint256",
-                name: "_buyNowPrice",
-                type: "uint256",
-            },
-        ],
         name: "createAuction",
         outputs: [],
         stateMutability: "nonpayable",
@@ -243,19 +96,6 @@ export const auctionABI = [
         name: "deposit",
         outputs: [],
         stateMutability: "nonpayable",
-        type: "function",
-    },
-    {
-        inputs: [],
-        name: "getLatestId",
-        outputs: [
-            {
-                internalType: "uint32",
-                name: "",
-                type: "uint32",
-            },
-        ],
-        stateMutability: "view",
         type: "function",
     },
     {
@@ -296,24 +136,6 @@ export const auctionABI = [
         type: "function",
     },
     {
-        inputs: [
-            {
-                internalType: "uint32",
-                name: "_auctionId",
-                type: "uint32",
-            },
-            {
-                internalType: "address",
-                name: "_to",
-                type: "address",
-            },
-        ],
-        name: "refund",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-    },
-    {
         inputs: [],
         name: "renounceOwnership",
         outputs: [],
@@ -329,24 +151,6 @@ export const auctionABI = [
             },
         ],
         name: "transferOwnership",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-    },
-    {
-        inputs: [
-            {
-                internalType: "uint32",
-                name: "_auctionId",
-                type: "uint32",
-            },
-            {
-                internalType: "uint32",
-                name: "_newPrice",
-                type: "uint32",
-            },
-        ],
-        name: "updateBuyNowPrice",
         outputs: [],
         stateMutability: "nonpayable",
         type: "function",

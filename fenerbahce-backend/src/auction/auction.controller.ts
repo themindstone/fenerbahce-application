@@ -4,12 +4,13 @@ import {
     Get,
     Param,
     Post,
+    Put,
     Query,
     UseGuards,
 } from "@nestjs/common";
 import { Auction as AuctionRepository } from "~/shared/entities";
 import { AuthService } from "~/auth/auth.service";
-import { CreateAuctionDto, FinishAuctionDto } from "./auction.model";
+import { CreateAuctionDto, FinishAuctionDto, UpdateAuctionDto } from "./auction.model";
 import { AuctionService } from "./auction.service";
 import { BalanceService } from "~/balance/balance.service";
 import { AccessTokenAuthGuard } from "~/auth/guards";
@@ -108,4 +109,15 @@ export class AuctionController {
     ): Promise<AuctionRepository> {
         return await this.auctionService.getById(auctionId);
     }
+
+    @Put("/update/:auctionId")
+    async update(
+        @Param("auctionId") auctionId: number,
+        @Body() params: UpdateAuctionDto,
+    ) {
+        console.log('merhaba dunya', params)
+        await this.auctionService.update(auctionId, params);
+        return { message: "Auction updated" };
+    }
+
 }

@@ -10,13 +10,12 @@ import {
 	useDisclosure,
 	Input,
 } from "@chakra-ui/react";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import type { ReactElement } from "react";
 import { useMutation, useQuery } from "react-query";
 import { Layout } from "~/admincomponents";
 import { useAuctionClient } from "~/client";
 import { GoldenFizzButton, WhiteButton } from "~/components";
-import { useAuctionContract } from "~/contracts";
 import { SubmitHandler, useForm } from "react-hook-form";
 import moment from "moment";
 import { loadingModalEventBus, modal1907EventBus } from "~/eventbus";
@@ -134,7 +133,7 @@ const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoUrls, en
 	);
 };
 
-export const UpdateBuyNowPrice = (): ReactElement => {
+export const Home = (): ReactElement => {
 	const [pageNumber] = useState<number>(1);
 	const [auctionByPage] = useState<number>(10);
 

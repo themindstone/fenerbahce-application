@@ -8,27 +8,20 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 contract FenerbahceAuction is Ownable, ReentrancyGuard {
     using SafeERC20 for IERC20;
 
-    uint32 latestId;
-
     address fbTokenAddress;
     IERC20 fbToken;
 
+    // uint32 public latestAuctionId = 0;
+
     event AuctionCreated(uint32 auctionId);
     event AuctionDeposited(uint32 auctionId, address from, uint256 value);
+    event AuctionRefunded(uint32 auctionId, address to, uint256 value);
 
     mapping(uint32 => mapping(address => uint256)) auctions;
 
     constructor(address _address) {
         fbTokenAddress = _address;
         fbToken = IERC20(fbTokenAddress);
-    }
-
-    function createAuction(
-        uint32 _auctionId
-    ) public onlyOwner {
-        latestId += 1;
-        auctions[_auctionId][address(0)] = 0;
-        emit AuctionCreated(latestId);
     }
 
     function deposit(uint32 _auctionId, uint256 value) public nonReentrant {
@@ -39,8 +32,12 @@ contract FenerbahceAuction is Ownable, ReentrancyGuard {
         emit AuctionDeposited(_auctionId, msg.sender, auctions[_auctionId][msg.sender]);
     }
 
-    function getLatestId() public view returns (uint32) {
-        return latestId;
+    function refund(uint32 _auctionId, address _to) public onlyOwner {
+        uint256 value = auctions[_auctionId][_to];
+        auctions[_auctionId][_to] = 0;
+
+        fbToken.safeTransfer(_to, value);
+        emit AuctionRefunded(_auctionId, _to, value);
     }
 
     function getUserBalanceByAuctionId(uint32 _auctionId, address _address) public view returns (uint256) {

@@ -8,10 +8,8 @@ import {
     EthersSigner,
     Wallet,
     Contract,
-    BigNumber,
     InjectEthersProvider,
     Provider,
-    parseUnits,
 } from "nestjs-ethers";
 import { auctionABI } from "~/shared/data";
 import { MoralisAPIService } from "~/shared/libs";
@@ -76,29 +74,24 @@ export class AuctionContract {
                 this.eventEmitter,
                 this.startBlockNumber,
             );
+            this.moralisApiService.LiveQuery("AuctionCreated", (e) => {
+                contractProvider.auctionCreated(e.attributes);
+            });
+
             this.moralisApiService.LiveQuery("AuctionDeposited", (object) =>
                 contractProvider.auctionDeposited(object.attributes),
             );
-            // this.moralisApiService.LiveQuery("AuctionSelled", (object) =>
-            //     contractProvider.auctionSelled(object.attributes),
-            // );
             // this.moralisApiService.LiveQuery("AuctionRefunded", (object) =>
             //     contractProvider.auctionRefunded(object.attributes),
-            // );
-            // this.moralisApiService.LiveQuery("AuctionProlonged", (object) =>
-            //     contractProvider.auctionProlonged(object.attributes),
-            // );
-            // this.moralisApiService.LiveQuery(
-            //     "AuctionBuyNowPriceUpdated",
-            //     (object) =>
-            //         contractProvider.auctionBuyNowPriceUpdated(
-            //             object.attributes,
-            //         ),
             // );
         } else {
             const contractProvider = new AuctionContractDevelopment(
                 this.eventEmitter,
                 this.startBlockNumber,
+            );
+            this.contract.on(
+                "AuctionCreated",
+                contractProvider.auctionCreated.bind(contractProvider),
             );
             this.contract.on(
                 "AuctionDeposited",
@@ -108,49 +101,8 @@ export class AuctionContract {
             //     "AuctionRefunded",
             //     contractProvider.auctionRefunded.bind(contractProvider),
             // );
-            // this.contract.on(
-            //     "AuctionBuyNowPriceUpdated",
-            //     contractProvider.auctionBuyNowPriceUpdated.bind(
-            //         contractProvider,
-            //     ),
-            // );
-            // this.contract.on(
-            //     "AuctionProlonged",
-            //     contractProvider.auctionProlonged.bind(contractProvider),
-            // );
-            // this.contract.on(
-            //     "AuctionSelled",
-            //     contractProvider.auctionSelled.bind(contractProvider),
-            // );
         }
     }
-
-    // async createAuction({
-    //     // auctionId,
-    //     startDate,
-    //     endDate,
-    //     startPrice,
-    //     buyNowPrice,
-    // }: AuctionContractCreateAuctionDto) {
-    //     const tx = await this.contract.createAuction(
-    //         // auctionId,
-    //         BigNumber.from(Math.floor(new Date(startDate).getTime() / 1000)),
-    //         BigNumber.from(Math.floor(new Date(endDate).getTime() / 1000)),
-    //         parseUnits(startPrice.toString(), "6"),
-    //         parseUnits(buyNowPrice.toString(), "6"),
-    //         { gasLimit: 200000 },
-    //     );
-    //     return await tx.wait();
-    // }
-
-    // async refundTokensToUsers(auctionId: number, losers: string[]) {
-    //     return await Promise.all(
-    //         losers.map(async (loser) => {
-    //             const tx = await this.contract.refund(auctionId, loser);
-    //             await tx.wait();
-    //         }),
-    //     );
-    // }
 
     async getLatestId() {
         return await this.contract.getLatestId();
