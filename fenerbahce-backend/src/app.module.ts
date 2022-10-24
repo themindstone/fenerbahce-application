@@ -65,7 +65,7 @@ export class CoreModule {}
         CoreModule,
         MoralisAPIModule.forRoot(),
         MoralisStreamModule,
-        EthersModule.forRoot(goerliEthersConfig),
+        EthersModule.forRoot(mainnetEthersConfig),
         DatabaseModule,
         EventEmitterModule.forRoot(),
         AuthModule,
