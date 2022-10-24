@@ -1,11 +1,25 @@
 import { Body, Controller, Get, Headers, Post } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import Moralis from "moralis";
 import { AbiCoder, formatUnits } from "nestjs-ethers";
 
 @Controller("moralis")
 export class MoralisStreamController {
-    constructor(private readonly eventEmitter: EventEmitter2) {
+    constructor(
+        private readonly eventEmitter: EventEmitter2,
+        private readonly configService: ConfigService,
+    ) {}
+
+    onModuleInit() {
+        const apikey = this.configService.get("MORALIS_API_KEY");
+        if (!apikey) {
+            throw new Error("MORALIS_API_KEY is not defined");
+        }
+
+        Moralis.start({
+            apiKey: apikey,
+        });
     }
 
     @Get("/webhook")
@@ -20,15 +34,14 @@ export class MoralisStreamController {
     ) {
         const log = params.logs[0];
 
-        console.log("verifying...")
+        console.log("verifying...");
 
         Moralis.Streams.verifySignature({
             signature,
             body: params,
         });
 
-
-        console.log("geliyor gelmekte olan")
+        console.log("geliyor gelmekte olan");
 
         const auctionDepositedParams = ["uint32", "address", "uint256"];
         const auctionDepositedEvent =
