@@ -11,8 +11,6 @@ contract FenerbahceAuction is Ownable, ReentrancyGuard {
     address fbTokenAddress;
     IERC20 fbToken;
 
-    // uint32 public latestAuctionId = 0;
-
     event AuctionCreated(uint32 auctionId);
     event AuctionDeposited(uint32 auctionId, address from, uint256 value);
     event AuctionRefunded(uint32 auctionId, address to, uint256 value);
