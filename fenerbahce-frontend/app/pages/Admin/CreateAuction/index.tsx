@@ -60,8 +60,20 @@ export const CreateAuction = () => {
 	};
 
 	const handleErrors: SubmitErrorHandler<CreateAuctionFormType> = (errors: any) => {
-		console.log(errors);
-		if (errors) {
+		if (!errors) {
+			return
+		}
+		const firstItem = errors[Object.keys(errors)[0]];
+		if (Array.isArray(firstItem)) {
+			const messages = firstItem.filter(item => !!item);
+			console.log(messages)
+			if (messages[0].photoUrl) {
+				modal1907EventBus.publish("modal.open", {
+					isSucceed: false,
+					description: messages[0].photoUrl.message,
+				});
+			}
+		} else if (errors) {
 			modal1907EventBus.publish("modal.open", {
 				isSucceed: false,
 				description: errors[Object.keys(errors)[0]].message,
