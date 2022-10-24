@@ -1,5 +1,5 @@
 import { Box, Flex, FormLabel, Heading, Input, Text } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { GoldenFizzButton } from "~/components";
 import { loadingModalEventBus, modal1907EventBus } from "~/eventbus";
 import { SubmitErrorHandler, useFieldArray } from "react-hook-form";
@@ -19,11 +19,8 @@ export const CreateAuction = () => {
 	});
 
 	const decrease = (index: number | undefined) => {
-		// if (auctionPhotosInputCount === 1) {
-		// 	return;
-		// }
-		// setAuctionPhotosInputCount(auctionPhotosInputCount - 1);
-		photoUrls.remove(index && photoUrls.fields.length - 1);
+		// photoUrls.move(index, index - 1);
+		photoUrls.remove(index ? index : photoUrls.fields.length - 1);
 	};
 
 	const createAuction = async ({
@@ -62,12 +59,12 @@ export const CreateAuction = () => {
 
 	const handleErrors: SubmitErrorHandler<CreateAuctionFormType> = (errors: any) => {
 		if (!errors) {
-			return
+			return;
 		}
 		const firstItem = errors[Object.keys(errors)[0]];
 		if (Array.isArray(firstItem)) {
 			const messages = firstItem.filter(item => !!item);
-			console.log(messages)
+			console.log(messages);
 			if (messages[0].photoUrl) {
 				modal1907EventBus.publish("modal.open", {
 					isSucceed: false,
@@ -106,11 +103,14 @@ export const CreateAuction = () => {
 							<Flex direction="column" gap="15px" flexGrow="1">
 								{photoUrls.fields.map((item, index) => {
 									return (
-										<Input
-											placeholder="urun fotograflari"
-											{...register(`photoUrls.${index}.photoUrl`)}
-											key={`product-photos-${index}`}
-										/>
+										<Flex gap="10px">
+											<Input
+												placeholder="urun fotograflari"
+												{...register(`photoUrls.${index}.photoUrl`)}
+												key={`product-photos-${Math.random()}`}
+											/>
+											<GoldenFizzButton onClick={() => decrease(index)}>Çıkar</GoldenFizzButton>
+										</Flex>
 									);
 								})}
 							</Flex>
@@ -118,7 +118,6 @@ export const CreateAuction = () => {
 								<GoldenFizzButton onClick={() => photoUrls.append({ photoUrl: "" })}>
 									Ekle
 								</GoldenFizzButton>
-								<GoldenFizzButton onClick={decrease}>Çıkar</GoldenFizzButton>
 							</Flex>
 						</Flex>
 					</FormLabel>
