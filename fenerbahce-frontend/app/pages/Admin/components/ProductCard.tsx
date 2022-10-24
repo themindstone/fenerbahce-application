@@ -66,7 +66,7 @@ export const ProductCard = ({ auctionId, name, buyNowPrice, highestOffer, photoU
 		<Flex bg="var(--governor-bay)" p="10px" borderRadius="10px" direction="column" gap="10px">
 			<Box
 				w="100%"
-				bgImage={`url(${photoUrls[0]})`}
+				bgImage={`url(${photoUrls[0].photoUrl})`}
 				bgSize="cover"
 				borderRadius="5px"
 				style={{ aspectRatio: "1" }}></Box>
