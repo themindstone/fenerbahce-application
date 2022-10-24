@@ -86,7 +86,7 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 			const balance = Number((userBalance as any).data?.balance?.toFixed?.(2)) || 0;
 
 			const newOffer = Number((params.offer - balance).toFixed(2));
-			const increaseByAllowance = newOffer - fbTokenAllowanceData.allowance;
+			const increaseByAllowance = Number((newOffer - fbTokenAllowanceData.allowance).toFixed(2));
 
 			try {
 				loadingModalEventBus.publish("loadingmodal.open", { message: "Açık artırma teklifiniz yükleniyor..." });
