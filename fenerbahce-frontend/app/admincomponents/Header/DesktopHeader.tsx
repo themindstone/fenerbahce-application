@@ -22,13 +22,11 @@ export const DesktopHeader = (): ReactElement => {
 							FENERBAHÇE <br /> TOKEN
 						</Text>
 					</Flex>
-					<FBTokenText />
 				</Flex>
 			</Link>
 			<Flex gap="30px" alignItems="center" display={{ base: "none", lg: "flex" }}>
 				<NavLink href="/admin">AÇIK ARTIRMALAR</NavLink>
 				<NavLink href="/admin/finished-auctions">BİTEN AÇIK ARTIRMALAR</NavLink>
-				<NavLink href="/admin/create-auction">AÇIK ARTIRMA OLUŞTUR</NavLink>
 				<NavLink>EN</NavLink>
 
 				{connectWallet.connectionState === "disconnected" && (

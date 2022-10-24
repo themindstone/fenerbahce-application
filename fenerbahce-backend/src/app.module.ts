@@ -14,7 +14,6 @@ import {
 import { envPath } from "~/shared/utils";
 import { EventEmitterModule } from "@nestjs/event-emitter";
 import { IndexerModule } from "~/indexer/indexer.module";
-import { ContractsModule } from "~/contracts";
 import { BalanceModule } from "~/balance/balance.module";
 import { MoralisAPIModule } from "./shared/libs";
 import { KYCModule } from "./kyc/kyc.module";
@@ -74,7 +73,6 @@ export class CoreModule {}
         AuctionModule,
         BalanceModule,
         KYCModule,
-        ContractsModule,
         IndexerModule,
     ],
     controllers: [AppController],
