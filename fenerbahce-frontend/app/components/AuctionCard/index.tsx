@@ -59,7 +59,7 @@ export const AuctionCard = (auction: any, isFinished: boolean = false): ReactEle
 
 			setHighestBalances(balances);
 		}
-	}, [auctionHighestBalances.isSuccess]);
+	}, [auctionHighestBalances]);
 
 	const buyNowModalOpen = () => {
 		buyNowModalEventBus.publish("buynowmodal.open", auction);

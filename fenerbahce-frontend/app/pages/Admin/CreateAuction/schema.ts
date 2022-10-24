@@ -24,11 +24,13 @@ const schema = yup.object({
 		.typeError("Başlangıç tarihi geçerli bir tarih olmalıdır")
 		.when([], (schema: any) => schema.min(new Date(), "Başlangıç tarihi bugünden ileri olmalıdır."))
 		.required("Başlangıç tarihi zorunludur."),
-	endDate: yup.date().typeError("Bitiş tarihi geçerli bir tarih olmalıdır").required("Bitiş tarihi zorunludur.")
+	endDate: yup
+		.date()
+		.typeError("Bitiş tarihi geçerli bir tarih olmalıdır")
+		.required("Bitiş tarihi zorunludur.")
 		.when(["startDate"], (startDate: Date, schema: any) =>
 			schema.min(startDate, "Başlangıç tarihi bitiş tarihinden önce olmalıdır."),
-		)
-	,
+		),
 	photoUrls: yup
 		.array()
 		.of(
