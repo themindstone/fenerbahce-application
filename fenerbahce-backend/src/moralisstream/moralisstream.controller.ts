@@ -53,26 +53,31 @@ export class MoralisStreamController {
         
         console.log("log: ", log);
 
-        if (log.topics[0] === auctionDepositedEvent) {
-            const [auctionId, address, value] = new AbiCoder().decode(
+        const decoder = new AbiCoder();
+
+        if (log.topic0 === auctionDepositedEvent) {
+            console.log("auction deposited")
+            const [auctionId, address, value] = decoder.decode(
                 auctionDepositedParams,
                 log.data,
             );
 
-            console.log("auctionDeposited", { auctionId, address, value });
+            console.log({ auctionId, address, value });
 
             this.eventEmitter.emit("auction.deposited", {
                 auctionId,
                 address: address.toLocaleLowerCase(),
                 value: value.toNumber(),
             });
-        } else if (log.topics[0] === auctionRefundedEvent) {
-            const [auctionId, address, value] = new AbiCoder().decode(
+        } else if (log.topic0 === auctionRefundedEvent) {
+            console.log("auction refunded")
+
+            const [auctionId, address, value] = decoder.decode(
                 auctionRefundedParams,
                 log.data,
             );
 
-            console.log("auctionRefunded", { auctionId, address, value });
+            console.log({ auctionId, address, value });
 
             this.eventEmitter.emit("auction.refunded", {
                 auctionId,
