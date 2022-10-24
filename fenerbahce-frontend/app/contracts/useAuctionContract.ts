@@ -1,8 +1,7 @@
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 import { useCallback } from "react";
 import { useContract } from "~/context";
 import {
-	AuctionContractCreateAuctionDto,
 	AuctionContractDepositDTO,
 	AuctionContractFunctionReturnType,
 	AuctionContractFunctions,
