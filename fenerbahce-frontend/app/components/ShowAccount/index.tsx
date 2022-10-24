@@ -85,7 +85,7 @@ export const ShowAccount = (): ReactElement => {
 
 				<CopyIcon h="20px" />
 			</Flex>
-			<CustomButton>Bağlantıyı kes</CustomButton>
+			{/* <CustomButton>Bağlantıyı kes</CustomButton> */}
 			<Link href="#">
 				<Flex gap="10px" alignItems="center" justifyContent="center">
 					<Icon as={ViewEtherscanIcon}></Icon>
