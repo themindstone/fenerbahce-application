@@ -89,7 +89,9 @@ export const ShowAccount = (): ReactElement => {
 			<Link href="#">
 				<Flex gap="10px" alignItems="center" justifyContent="center">
 					<Icon as={ViewEtherscanIcon}></Icon>
-					<Text textAlign="center">View on Etherscan</Text>
+					<a target="_blank" href="https://etherscan.io/address/0xFB19075D77a0F111796FB259819830F4780f1429">
+						<Text textAlign="center">View on Etherscan</Text>
+					</a>
 				</Flex>
 			</Link>
 		</Flex>
