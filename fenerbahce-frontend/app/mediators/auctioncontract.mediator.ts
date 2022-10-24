@@ -88,6 +88,8 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 			const newOffer = Number((params.offer - balance).toFixed(2));
 			const increaseByAllowance = Number((newOffer - fbTokenAllowanceData.allowance).toFixed(2));
 
+			console.log(balance, newOffer, increaseByAllowance);
+
 			try {
 				loadingModalEventBus.publish("loadingmodal.open", { message: "Açık artırma teklifiniz yükleniyor..." });
 				await switchToNetwork();
