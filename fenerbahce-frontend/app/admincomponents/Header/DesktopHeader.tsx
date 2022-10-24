@@ -30,7 +30,7 @@ export const DesktopHeader = (): ReactElement => {
 			<Flex gap="30px" alignItems="center" display={{ base: "none", lg: "flex" }}>
 				<NavLink href="/admin">AÇIK ARTIRMALAR</NavLink>
 				<NavLink href="/admin/finished-auctions">BİTEN AÇIK ARTIRMALAR</NavLink>
-				<NavLink>EN</NavLink>
+				{/* <NavLink>EN</NavLink> */}
 
 				{connectWallet.connectionState === "disconnected" && (
 					<GoldenFizzButton onClick={connectWalletModalOpen} leftIcon={<UserIcon />}>

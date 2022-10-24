@@ -30,7 +30,7 @@ export const DesktopHeader = (): ReactElement => {
 				<NavLink>FAYDALAR</NavLink>
 				{/* <NavLink>ŞARTLAR</NavLink> */}
 				<NavLink>S.S.S</NavLink>
-				<NavLink>EN</NavLink>
+				{/* <NavLink>EN</NavLink> */}
 
 				{connectWallet.connectionState === "disconnected" && (
 					<GoldenFizzButton onClick={connectWalletModalOpen} leftIcon={<UserIcon />}>
