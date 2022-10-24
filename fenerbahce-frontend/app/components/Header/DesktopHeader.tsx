@@ -14,17 +14,17 @@ export const DesktopHeader = (): ReactElement => {
 
 	return (
 		<Fragment>
-			<Link href="/" _hover={{ textDecoration: "none" }}>
-				<Flex gap="40px" alignItems="center" display={{ base: "none", lg: "flex" }}>
+			<Flex gap="40px" alignItems="center" display={{ base: "none", lg: "flex" }}>
+				<Link href="/" _hover={{ textDecoration: "none" }}>
 					<Flex gap="10px" alignItems="center">
 						<Image src="/images/token-logo.png" w="60px" />
 						<Text fontWeight="bold">
 							FENERBAHÇE <br /> TOKEN
 						</Text>
 					</Flex>
-					<FBTokenText />
-				</Flex>
-			</Link>
+				</Link>
+				<FBTokenText />
+			</Flex>
 			<Flex gap="30px" alignItems="center" display={{ base: "none", lg: "flex" }}>
 				<NavLink>KULLANIM ŞARTLARI</NavLink>
 				<NavLink>S.S.S</NavLink>

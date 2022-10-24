@@ -8,7 +8,6 @@ import { UserIcon } from "~/assets";
 import { useConnectWalletModal, useWalletModal } from "~/hooks";
 import { FBTokenText } from "~/components/Header/utils";
 
-
 export const DesktopHeader = (): ReactElement => {
 	const connectWallet = useConnectWallet();
 	const { connectWalletModalOpen } = useConnectWalletModal();
@@ -16,17 +15,17 @@ export const DesktopHeader = (): ReactElement => {
 
 	return (
 		<Fragment>
-			<Link href="/" _hover={{ textDecoration: "none" }}>
-				<Flex gap="40px" alignItems="center" display={{ base: "none", lg: "flex" }}>
+			<Flex gap="40px" alignItems="center" display={{ base: "none", lg: "flex" }}>
+				<Link href="/" _hover={{ textDecoration: "none" }}>
 					<Flex gap="10px" alignItems="center">
 						<Image src="/images/token-logo.png" w="60px" />
 						<Text fontWeight="bold">
 							FENERBAHÇE <br /> TOKEN
 						</Text>
 					</Flex>
-					<FBTokenText />
-				</Flex>
-			</Link>
+				</Link>
+				<FBTokenText />
+			</Flex>
 			<Flex gap="30px" alignItems="center" display={{ base: "none", lg: "flex" }}>
 				<NavLink href="/admin">AÇIK ARTIRMALAR</NavLink>
 				<NavLink href="/admin/finished-auctions">BİTEN AÇIK ARTIRMALAR</NavLink>
