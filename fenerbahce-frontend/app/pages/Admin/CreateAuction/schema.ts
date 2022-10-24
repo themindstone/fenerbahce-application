@@ -29,7 +29,14 @@ const schema = yup.object({
 	endDate: yup.date().required("Bitiş tarihi zorunludur."),
 	photoUrls: yup
 		.array()
-		.of(yup.object({ photoUrl: yup.string().required("Fotoğraf url'si zorunludur.") }))
+		.of(
+			yup.object({
+				photoUrl: yup
+					.string()
+					.url("Fotoğraf için geçerli bir url girmeniz gerekiyor")
+					.required("Fotoğraf url'si zorunludur."),
+			}),
+		)
 		.required("Fotoğraf url'si zorunludur"),
 });
 
