@@ -63,7 +63,7 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 		},
 	);
 
-	console.log("fbTokenAllowanceData", error);
+	console.log("fbTokenAllowanceData", fbTokenAllowanceData);
 
 	const deposit = useCallback(
 		async (params: { offer: number }) => {

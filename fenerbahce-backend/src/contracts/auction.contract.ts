@@ -43,57 +43,57 @@ export class AuctionContract {
 
     // This will be refactored with registerAsync methods
     async onModuleInit() {
-        const auctionAddress = this.configService.get(
-            "AUCTION_CONTRACT_ADDRESS",
-        );
-        const nodeEnv = this.configService.get("NODE_ENV");
-        const wallet = this.configService.get<string>("WALLET");
-        if (!auctionAddress) {
-            throw new Error("AUCTION_CONTRACT_ADDRESS must exist!");
-        }
-        if (!wallet) {
-            throw new Error("WALLET must exist!");
-        }
-        if (!nodeEnv) {
-            throw new Error("NODE_ENV must exist!");
-        }
-        try {
-            this.wallet = this.ethersSigner.createWalletfromMnemonic(wallet);
-            this.contract = this.ethersContract.create(
-                auctionAddress,
-                auctionABI,
-                this.wallet,
-            );
-        } catch {
-            throw new Error("Error connecting to the contract");
-        }
-        this.startBlockNumber = await this.provider.getBlockNumber();
+        // const auctionAddress = this.configService.get(
+        //     "AUCTION_CONTRACT_ADDRESS",
+        // );
+        // const nodeEnv = this.configService.get("NODE_ENV");
+        // const wallet = this.configService.get<string>("WALLET");
+        // if (!auctionAddress) {
+        //     throw new Error("AUCTION_CONTRACT_ADDRESS must exist!");
+        // }
+        // if (!wallet) {
+        //     throw new Error("WALLET must exist!");
+        // }
+        // if (!nodeEnv) {
+        //     throw new Error("NODE_ENV must exist!");
+        // }
+        // try {
+        //     this.wallet = this.ethersSigner.createWalletfromMnemonic(wallet);
+        //     this.contract = this.ethersContract.create(
+        //         auctionAddress,
+        //         auctionABI,
+        //         this.wallet,
+        //     );
+        // } catch {
+        //     throw new Error("Error connecting to the contract");
+        // }
+        // this.startBlockNumber = await this.provider.getBlockNumber();
 
-        if (nodeEnv === "production") {
-            // const contractProvider = new AuctionContractProduction(
-            //     this.eventEmitter,
-            //     this.startBlockNumber,
-            // );
-            // this.moralisApiService.LiveQuery("AuctionDeposited", (object) =>
-            //     contractProvider.auctionDeposited(object.attributes),
-            // );
-            // this.moralisApiService.LiveQuery("AuctionRefunded", (object) =>
-            //     contractProvider.auctionRefunded(object.attributes),
-            // );
-        } else {
-            // const contractProvider = new AuctionContractDevelopment(
-            //     this.eventEmitter,
-            //     this.startBlockNumber,
-            // );
-            // this.contract.on(
-                // "AuctionDeposited",
-                // contractProvider.auctionDeposited.bind(contractProvider),
-            // );
-            // this.contract.on(
-            //     "AuctionRefunded",
-            //     contractProvider.auctionRefunded.bind(contractProvider),
-            // );
-        }
+        // if (nodeEnv === "production") {
+        //     // const contractProvider = new AuctionContractProduction(
+        //     //     this.eventEmitter,
+        //     //     this.startBlockNumber,
+        //     // );
+        //     // this.moralisApiService.LiveQuery("AuctionDeposited", (object) =>
+        //     //     contractProvider.auctionDeposited(object.attributes),
+        //     // );
+        //     // this.moralisApiService.LiveQuery("AuctionRefunded", (object) =>
+        //     //     contractProvider.auctionRefunded(object.attributes),
+        //     // );
+        // } else {
+        //     // const contractProvider = new AuctionContractDevelopment(
+        //     //     this.eventEmitter,
+        //     //     this.startBlockNumber,
+        //     // );
+        //     // this.contract.on(
+        //         // "AuctionDeposited",
+        //         // contractProvider.auctionDeposited.bind(contractProvider),
+        //     // );
+        //     // this.contract.on(
+        //     //     "AuctionRefunded",
+        //     //     contractProvider.auctionRefunded.bind(contractProvider),
+        //     // );
+        // }
     }
 
     async getLatestId() {

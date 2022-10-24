@@ -12,4 +12,4 @@ export const loader: LoaderFunction = () => {
 
 export default () => {
     return <FinishedAuctions />
-}
+};
