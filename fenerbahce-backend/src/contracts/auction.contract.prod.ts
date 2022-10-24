@@ -20,29 +20,29 @@ export class AuctionContractProduction {
     }
 
 
-    async auctionCreated({ auctionId, block_number }: any) {
-        console.log(auctionId);
-        if (this.startBlockNumber >= block_number) {
-            return;
-        }
+    // async auctionCreated({ auctionId, block_number }: any) {
+    //     console.log(auctionId);
+    //     if (this.startBlockNumber >= block_number) {
+    //         return;
+    //     }
 
-        this.eventEmitter.emit("auction.created", {
-            auctionId: formatEther(auctionId),
-        });
-    }
+    //     this.eventEmitter.emit("auction.created", {
+    //         auctionId: formatEther(auctionId),
+    //     });
+    // }
 
 
-    async auctionDeposited({ auctionId, from, value, block_number }: any) {
-        if (this.startBlockNumber >= block_number) {
-            return;
-        }
+    // async auctionDeposited({ auctionId, from, value, block_number }: any) {
+    //     if (this.startBlockNumber >= block_number) {
+    //         return;
+    //     }
 
-        this.eventEmitter.emit("auction.deposited", {
-            auctionId,
-            address: from,
-            value: formatUnits(value, "6"),
-        });
-    }
+    //     this.eventEmitter.emit("auction.deposited", {
+    //         auctionId,
+    //         address: from,
+    //         value: formatUnits(value, "6"),
+    //     });
+    // }
 
     // async auctionSelled({ auctionId, buyer, block_number }: any) {
     //     if (this.startBlockNumber >= block_number) {

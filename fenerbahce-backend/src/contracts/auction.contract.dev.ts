@@ -18,17 +18,17 @@ export class AuctionContractDevelopment {
         this.eventEmitter = eventEmitter;
     }
 
-    async auctionCreated(auctionId: BigNumber, e: any) {
-        console.log("auction created");
-        console.log(auctionId);
-        if (this.startBlockNumber >= e.block_number) {
-            return;
-        }
+    // async auctionCreated(auctionId: BigNumber, e: any) {
+    //     console.log("auction created");
+    //     console.log(auctionId);
+    //     if (this.startBlockNumber >= e.block_number) {
+    //         return;
+    //     }
 
-        this.eventEmitter.emit("auction.created", {
-            auctionId,
-        });
-    }
+    //     this.eventEmitter.emit("auction.created", {
+    //         auctionId,
+    //     });
+    // }
 
     async auctionDeposited(
         auctionId: string,

@@ -70,33 +70,25 @@ export class AuctionContract {
         this.startBlockNumber = await this.provider.getBlockNumber();
 
         if (nodeEnv === "production") {
-            const contractProvider = new AuctionContractProduction(
-                this.eventEmitter,
-                this.startBlockNumber,
-            );
-            this.moralisApiService.LiveQuery("AuctionCreated", (e) => {
-                contractProvider.auctionCreated(e.attributes);
-            });
-
-            this.moralisApiService.LiveQuery("AuctionDeposited", (object) =>
-                contractProvider.auctionDeposited(object.attributes),
-            );
+            // const contractProvider = new AuctionContractProduction(
+            //     this.eventEmitter,
+            //     this.startBlockNumber,
+            // );
+            // this.moralisApiService.LiveQuery("AuctionDeposited", (object) =>
+            //     contractProvider.auctionDeposited(object.attributes),
+            // );
             // this.moralisApiService.LiveQuery("AuctionRefunded", (object) =>
             //     contractProvider.auctionRefunded(object.attributes),
             // );
         } else {
-            const contractProvider = new AuctionContractDevelopment(
-                this.eventEmitter,
-                this.startBlockNumber,
-            );
-            this.contract.on(
-                "AuctionCreated",
-                contractProvider.auctionCreated.bind(contractProvider),
-            );
-            this.contract.on(
-                "AuctionDeposited",
-                contractProvider.auctionDeposited.bind(contractProvider),
-            );
+            // const contractProvider = new AuctionContractDevelopment(
+            //     this.eventEmitter,
+            //     this.startBlockNumber,
+            // );
+            // this.contract.on(
+                // "AuctionDeposited",
+                // contractProvider.auctionDeposited.bind(contractProvider),
+            // );
             // this.contract.on(
             //     "AuctionRefunded",
             //     contractProvider.auctionRefunded.bind(contractProvider),

@@ -2,9 +2,9 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateAuctionDto, Auction } from "./auction.model";
 import { Auction as AuctionRepository } from "~/shared/entities";
 import { InjectRepository } from "@nestjs/typeorm";
-import { DeepPartial, LessThan, LessThanOrEqual, MoreThan, Repository } from "typeorm";
-import { AuctionContract } from "~/contracts/auction.contract";
-import { BalanceService } from "~/balance/balance.service";
+import { DeepPartial, LessThan, MoreThan, Repository } from "typeorm";
+// import { AuctionContract } from "~/contracts/auction.contract";
+// import { BalanceService } from "~/balance/balance.service";
 
 @Injectable()
 export class AuctionService {
@@ -13,8 +13,8 @@ export class AuctionService {
     constructor(
         @InjectRepository(AuctionRepository)
         private readonly auctionRepository: Repository<AuctionRepository>,
-        private readonly auctionContract: AuctionContract,
-        private readonly balanceService: BalanceService,
+        // private readonly auctionContract: AuctionContract,
+        // private readonly balanceService: BalanceService,
     ) {}
 
     async create(auction: CreateAuctionDto): Promise<number> {

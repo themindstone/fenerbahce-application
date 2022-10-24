@@ -1,16 +1,15 @@
-import { Body, Controller, Get, Header, Headers, Post } from "@nestjs/common";
+import { Body, Controller, Get, Headers, Post } from "@nestjs/common";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 import Moralis from "moralis";
+import { AbiCoder, formatUnits } from "nestjs-ethers";
 
 @Controller("moralis")
 export class MoralisStreamController {
-    constructor() {
-        console.log("merhaba dunya");
-        console.log(Moralis.Streams);
+    constructor(private readonly eventEmitter: EventEmitter2) {
     }
 
     @Get("/webhook")
     async webhook() {
-        console.log("webhook get");
         return "webhook get";
     }
 
@@ -19,11 +18,53 @@ export class MoralisStreamController {
         @Headers("x-signature") signature: string,
         @Body() params: any,
     ) {
-        console.log("webhook post", params);
+        const log = params.logs[0];
+
+        console.log("verifying...")
+
         Moralis.Streams.verifySignature({
             signature,
             body: params,
         });
-        return "webhook";
+
+
+        console.log("geliyor gelmekte olan")
+
+        const auctionDepositedParams = ["uint32", "address", "uint256"];
+        const auctionDepositedEvent =
+            "0x28573a59b135946b59a8f696f86c287df11f9aa10bf7b9f1a499690b840ae20d";
+
+        const auctionRefundedParams = ["uint32", "address", "uint256"];
+        const auctionRefundedEvent =
+            "0x42b9addd57622432772e24a2f9f559da5dbb4c7ff04f1da746079492403840b1";
+
+        if (log.topics[0] === auctionDepositedEvent) {
+            const [auctionId, address, value] = new AbiCoder().decode(
+                auctionDepositedParams,
+                log.data,
+            );
+
+            console.log("auctionDeposited", { auctionId, address, value });
+
+            this.eventEmitter.emit("auction.deposited", {
+                auctionId,
+                address: address.toLocaleLowerCase(),
+                value: formatUnits(value, "6"),
+            });
+        } else if (log.topics[0] === auctionRefundedEvent) {
+            const [auctionId, address, value] = new AbiCoder().decode(
+                auctionRefundedParams,
+                log.data,
+            );
+
+            console.log("auctionRefunded", { auctionId, address, value });
+
+            this.eventEmitter.emit("auction.refunded", {
+                auctionId,
+                address: address.toLocaleLowerCase(),
+                value: formatUnits(value, "6"),
+            });
+        }
+        return "Hello World!";
     }
 }
