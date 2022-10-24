@@ -21,13 +21,13 @@ const schema = yup.object({
 	buyNowPrice: yup.number().typeError("Satın al fiyatı sayı olmalıdır").required("Satın al fiyatı zorunludur."),
 	startDate: yup
 		.date()
-		.typeError("Başlangıç tarihi tarih olmalıdır")
+		.typeError("Başlangıç tarihi geçerli bir tarih olmalıdır")
 		.required("Başlangıç tarihi zorunludur.")
 		.when([], (schema: any) => schema.min(new Date(), "Başlangıç tarihi bugünden ileri olmalıdır."))
 		.when(["endDate"], (endDate: Date, schema: any) =>
 			schema.max(endDate, "Başlangıç tarihi bitiş tarihinden önce olmalıdır."),
 		),
-	endDate: yup.date().typeError("Başlangıç tarihi tarih olmalıdır").required("Bitiş tarihi zorunludur."),
+	endDate: yup.date().typeError("Bitiş tarihi geçerli bir tarih olmalıdır").required("Bitiş tarihi zorunludur."),
 	photoUrls: yup
 		.array()
 		.of(
