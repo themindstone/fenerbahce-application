@@ -64,7 +64,7 @@ export class MoralisStreamController {
             this.eventEmitter.emit("auction.deposited", {
                 auctionId,
                 address: address.toLocaleLowerCase(),
-                value: formatUnits(value, "6"),
+                value: value.toNumber(),
             });
         } else if (log.topics[0] === auctionRefundedEvent) {
             const [auctionId, address, value] = new AbiCoder().decode(
@@ -77,7 +77,7 @@ export class MoralisStreamController {
             this.eventEmitter.emit("auction.refunded", {
                 auctionId,
                 address: address.toLocaleLowerCase(),
-                value: formatUnits(value, "6"),
+                value: value.toNumber(),
             });
         }
         return "Hello World!";
