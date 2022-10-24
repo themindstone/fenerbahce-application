@@ -2,6 +2,9 @@ import { APIClientInstance } from "~/utils";
 
 export async function create(data: any) {
 	const res = await APIClientInstance.post("auction/create", data);
+	if (res.status === 401) {
+		window.location.href = "/login"
+	}
 	return res.data;
 }
 

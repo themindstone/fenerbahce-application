@@ -5,7 +5,6 @@ import { loadingModalEventBus, modal1907EventBus } from "~/eventbus";
 import { SubmitErrorHandler, useFieldArray } from "react-hook-form";
 import { AuctionClient } from "~/client";
 import { CreateAuctionFormType, useCreateAuctionForm } from "./schema";
-import { useAuctionContract } from "~/contracts";
 
 // we need to list products in this page
 export const CreateAuction = () => {
