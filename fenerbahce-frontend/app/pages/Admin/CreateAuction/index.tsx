@@ -8,7 +8,7 @@ import { CreateAuctionFormType, useCreateAuctionForm } from "./schema";
 
 // we need to list products in this page
 export const CreateAuction = () => {
-	const [auctionPhotosInputCount, setAuctionPhotosInputCount] = useState<number>(1);
+	// const [auctionPhotosInputCount, setAuctionPhotosInputCount] = useState<number>(1);
 
 	// const auctionContract = useAuctionContract();
 	const { handleSubmit, register, control } = useCreateAuctionForm();
@@ -18,11 +18,12 @@ export const CreateAuction = () => {
 		name: "photoUrls",
 	});
 
-	const decrease = () => {
-		if (auctionPhotosInputCount === 1) {
-			return;
-		}
-		setAuctionPhotosInputCount(auctionPhotosInputCount - 1);
+	const decrease = (index: number | undefined) => {
+		// if (auctionPhotosInputCount === 1) {
+		// 	return;
+		// }
+		// setAuctionPhotosInputCount(auctionPhotosInputCount - 1);
+		photoUrls.remove(index && photoUrls.fields.length - 1);
 	};
 
 	const createAuction = async ({

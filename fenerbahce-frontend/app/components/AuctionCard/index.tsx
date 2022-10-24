@@ -44,7 +44,7 @@ export const AuctionCard = (auction: any, isFinished: boolean = false): ReactEle
 		() => {
 			return auctionClient.getHighestBalancesByAuctionId(auction.id).then(res => res.data);
 		},
-		{ enabled: !!auction.id },
+		{ enabled: !!auction.id, refetchInterval: 10000 },
 	);
 
 	useEffect(() => {
