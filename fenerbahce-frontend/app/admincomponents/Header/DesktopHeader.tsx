@@ -2,10 +2,12 @@ import type { ReactElement } from "react";
 import { Fragment } from "react";
 import { useConnectWallet } from "~/context";
 import { Flex, Image, Text, Box, Link } from "@chakra-ui/react";
-import { NavLink, FBTokenText } from "./utils";
+import { NavLink } from "./utils";
 import { GoldenFizzButton, ShowAccount } from "~/components";
 import { UserIcon } from "~/assets";
 import { useConnectWalletModal, useWalletModal } from "~/hooks";
+import { FBTokenText } from "~/components/Header/utils";
+
 
 export const DesktopHeader = (): ReactElement => {
 	const connectWallet = useConnectWallet();
@@ -22,6 +24,7 @@ export const DesktopHeader = (): ReactElement => {
 							FENERBAHÇE <br /> TOKEN
 						</Text>
 					</Flex>
+					<FBTokenText />
 				</Flex>
 			</Link>
 			<Flex gap="30px" alignItems="center" display={{ base: "none", lg: "flex" }}>
