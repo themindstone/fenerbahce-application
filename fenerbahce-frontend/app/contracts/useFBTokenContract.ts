@@ -31,6 +31,7 @@ export const useFBTokenContract = (): FBTokenContractFunctions => {
 
 	const approveAuctionContract = useCallback(
 		async (newOffer: number) => {
+			// console.log(newOffer); // 2
 			if (!contract) {
 				return {
 					isError: true,
@@ -41,8 +42,9 @@ export const useFBTokenContract = (): FBTokenContractFunctions => {
 			try {
 				const transaction = await contract.increaseAllowance(
 					auctionAddress[config.NODE_ENV],
-					ethers.utils.parseUnits(newOffer.toString(), "6") ?? ethers.constants.MaxUint256,
-				)
+					ethers.utils.parseUnits(newOffer.toString(), config.NODE_ENV === "production" ? "6" : "18") ??
+						ethers.constants.MaxUint256,
+				);
 				const tx = await transaction.wait();
 
 				return {
@@ -50,7 +52,7 @@ export const useFBTokenContract = (): FBTokenContractFunctions => {
 					isError: false,
 				};
 			} catch (e: any) {
-				console.log(e)
+				console.log(e);
 				return {
 					isError: true,
 					errorMessage: getFBTokenContractErrorMessage(e.message),
@@ -71,7 +73,7 @@ export const useFBTokenContract = (): FBTokenContractFunctions => {
 
 			try {
 				const res = await contract.allowance(address, auctionAddress[config.NODE_ENV]);
-				console.log(res)
+				console.log(res);
 				const allowance = Number(ethers.utils.formatUnits(res.toString(), "6"));
 
 				return {

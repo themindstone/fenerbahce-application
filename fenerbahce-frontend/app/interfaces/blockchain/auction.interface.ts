@@ -16,7 +16,7 @@ export interface AuctionContractCreateAuctionDto {
 
 export interface AuctionContractFunctions {
     deposit: (args: AuctionContractDepositDTO) => Promise<AuctionContractFunctionReturnType>;
-    createAuction: (args: AuctionContractCreateAuctionDto) => Promise<AuctionContractFunctionReturnType>;
+    // createAuction: (args: AuctionContractCreateAuctionDto) => Promise<AuctionContractFunctionReturnType>;
     isConnected: boolean;
 }
 

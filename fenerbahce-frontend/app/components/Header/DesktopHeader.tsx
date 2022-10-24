@@ -26,11 +26,8 @@ export const DesktopHeader = (): ReactElement => {
 				</Flex>
 			</Link>
 			<Flex gap="30px" alignItems="center" display={{ base: "none", lg: "flex" }}>
-				{/* <NavLink>HAKKINDA</NavLink> */}
 				<NavLink>KULLANIM ŞARTLARI</NavLink>
-				{/* <NavLink>ŞARTLAR</NavLink> */}
 				<NavLink>S.S.S</NavLink>
-				{/* <NavLink>EN</NavLink> */}
 
 				{connectWallet.connectionState === "disconnected" && (
 					<GoldenFizzButton onClick={connectWalletModalOpen} leftIcon={<UserIcon />}>

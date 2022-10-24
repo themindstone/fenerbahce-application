@@ -12,24 +12,6 @@ import { getAuctionContractErrorMessage } from "~/utils";
 export const useAuctionContract = (): AuctionContractFunctions => {
 	const { contract } = useContract("Auction");
 
-	const createAuction = useCallback(
-		async ({ auctionId }: AuctionContractCreateAuctionDto): Promise<AuctionContractFunctionReturnType> => {
-			if (!contract) {
-				return { isError: true, errorMessage: "İşlem yapabilmek için cüzdanınızı bağlamanız gerekiyor." };
-			}
-			try {
-				const transaction = await contract.createAuction(BigNumber.from(auctionId));
-				const tx = await transaction.wait();
-
-				return { tx, isError: false };
-			} catch (e: any) {
-				console.log(e)
-				return { isError: true, errorMessage: getAuctionContractErrorMessage(e.message as string) };
-			}
-		},
-		[contract],
-	);
-
 	// this will deposit with the bid increment
 	const deposit = useCallback(
 		async ({ auctionId, value }: AuctionContractDepositDTO): Promise<AuctionContractFunctionReturnType> => {
@@ -50,7 +32,7 @@ export const useAuctionContract = (): AuctionContractFunctions => {
 
 	return {
 		deposit,
-		createAuction,
+		// createAuction,
 		isConnected: !!contract,
 	};
 };
