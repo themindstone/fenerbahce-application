@@ -85,7 +85,6 @@ export class AuctionController {
         );
     }
 
-    @UseGuards(AccessTokenAuthGuard)
     @Get("/list-unfinished-auctions")
     async listUnfinishedAuctions(): Promise<AuctionRepository[]> {
         return await this.auctionService.listUnfinishedAuctions();
