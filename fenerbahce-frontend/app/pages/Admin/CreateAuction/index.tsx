@@ -11,7 +11,7 @@ import { useAuctionContract } from "~/contracts";
 export const CreateAuction = () => {
 	const [auctionPhotosInputCount, setAuctionPhotosInputCount] = useState<number>(1);
 
-	const auctionContract = useAuctionContract();
+	// const auctionContract = useAuctionContract();
 	const { handleSubmit, register, control } = useCreateAuctionForm();
 
 	const photoUrls = useFieldArray({
@@ -137,17 +137,17 @@ export const CreateAuction = () => {
 					<FormLabel gap="5px" display="flex" flexDirection="column">
 						<Text>Açık Artırma Başlangıç Tarihi (ay-gun-yıl)</Text>
 						<Input
-							placeholder="baslangic tarih (ay-gun-yil)"
-							defaultValue="11-09-2022"
+							placeholder="ay/gun/yıl saat:dakika:saniye"
+							defaultValue="10/25/2022 14:24:11"
 							{...register("startDate")}
 						/>
 					</FormLabel>
 					<FormLabel gap="5px" display="flex" flexDirection="column">
 						<Text>Açık Artırma Bitiş Tarihi (ay-gun-yıl)</Text>
 						<Input
-							placeholder="bitis tarih (ay-gun-yil)"
+							placeholder="ay/gun/yıl saat:dakika:saniye"
 							{...register("endDate")}
-							defaultValue="11/19/2022 14:24:11"
+							defaultValue="10/25/2022 14:24:11"
 						/>
 					</FormLabel>
 					<GoldenFizzButton alignSelf="start" type="submit">
