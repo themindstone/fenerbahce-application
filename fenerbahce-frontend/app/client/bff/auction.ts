@@ -28,6 +28,11 @@ export async function listActiveAuctions() {
 	return res.data;
 }
 
+export async function listUnfinishedAuctions() {
+	const res = await APIClientInstance.get("auction/list-unfinished-auctions");
+	return res.data;
+}
+
 export async function listHighestOfferAuctions() {
 	const res = await APIClientInstance("auction/list-highest-offer-auctions");
 	return res.data;

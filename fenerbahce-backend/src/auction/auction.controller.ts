@@ -85,6 +85,12 @@ export class AuctionController {
         );
     }
 
+    @UseGuards(AccessTokenAuthGuard)
+    @Get("/list-unfinished-auctions")
+    async listUnfinishedAuctions(): Promise<AuctionRepository[]> {
+        return await this.auctionService.listUnfinishedAuctions();
+    }
+
     @Get("/:auctionId/highest-offers")
     async getHighestOffersByAuctionId(@Param("auctionId") auctionId: number) {
         return await this.balanceService.getHighestBalancesByAuctionId(

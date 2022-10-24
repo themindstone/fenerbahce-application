@@ -98,10 +98,10 @@ export const Home = (): ReactElement => {
 	const [pageNumber] = useState<number>(1);
 	const [auctionByPage] = useState<number>(10);
 
-	const auctionClient = useAuctionClient();
+	// const auctionClient = useAuctionClient();
 
 	const auctions = useQuery(["auctionsByPage", pageNumber, auctionByPage], () => {
-		return AuctionClient.listActiveAuctions();
+		return AuctionClient.listUnfinishedAuctions();
 	});
 
 	if (!auctions.data) {
