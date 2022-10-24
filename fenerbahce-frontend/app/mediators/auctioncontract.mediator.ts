@@ -94,7 +94,7 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 				loadingModalEventBus.publish("loadingmodal.open", { message: "Açık artırma teklifiniz yükleniyor..." });
 				await switchToNetwork();
 
-				if (increaseByAllowance >= newOffer) {
+				if (fbTokenAllowanceData.allowance + increaseByAllowance >= newOffer) {
 					const fbTokenAllowance = await fbTokenContract.approveAuctionContract(increaseByAllowance);
 
 					if (fbTokenAllowance.isError) {
