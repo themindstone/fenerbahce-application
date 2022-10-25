@@ -17,7 +17,10 @@ export const ParibuWallet: IWallet = {
     initialize: async function(): Promise<IWallet> {
         // list accounts
         // set account
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        if (!window.ethereum) {
+            return this;
+        }
+        const provider = new ethers.providers.Web3Provider(window.ethereum as any);
         const accounts = await provider.listAccounts(); 
         if (accounts[0]) {
             this.address = accounts[0] as string;

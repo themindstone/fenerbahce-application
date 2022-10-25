@@ -38,6 +38,10 @@ export const ContractsProvider = ({ children }: ContractsProviderProps) => {
 	);
 
 	const connectContractIfNotConnected = (contractName: ContractName) => {
+
+		if (!window.ethereum) {
+			throw new Error("No ethereum provider found");
+		}
 		if (!isConnected && !contractQueue.includes(contractName)) {
 			setContractQueue(prev => [...prev, contractName]);
 			throw new Error("First, you need to connect your wallet");

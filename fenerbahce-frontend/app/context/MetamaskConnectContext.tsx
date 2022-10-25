@@ -19,6 +19,9 @@ const ConnectWalletContext = React.createContext<ConnectWalletContextInterface>(
 
 export const useProviderListener = (event: string, listener: (...args: any[]) => void, deps: any[]) => {
 	useEffect(() => {
+		if (!window.ethereum) {
+			return;
+		}
 		window.ethereum.on(event, listener);
 		return () => {
 			window.ethereum.removeListener(event, listener);
@@ -44,6 +47,9 @@ export const ConnectWalletProvider = ({ children }: ConnectWalletProviderInterfa
 	};
 
 	const networkChanged = async () => {
+		if (!window.ethereum) {
+			return;
+		}
 		connectWallet();
 		setIsCorrectNetwork(await checkIfIsCorrectNetwork());
 	};

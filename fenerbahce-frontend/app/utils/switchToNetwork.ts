@@ -1,6 +1,9 @@
 import { IChain } from "~/interfaces";
 
 export const checkIfIsCorrectNetwork = async (chain: IChain): Promise<boolean> => {
+	if (!window.ethereum) {
+		return false;
+	}
 	const chainId = await window.ethereum.request({ method: "eth_chainId" });
 
 	if (chainId === chain.chainId) {
