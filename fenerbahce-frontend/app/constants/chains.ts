@@ -13,11 +13,27 @@ export const localChain: IChain = {
 };
 
 export const mainnetChain: IChain = {
-	isDefaultNetwork: true,
-	chainId: "0x1",
+	isDefaultNetwork: false,
+	chainId: "0xa86a",
+	chainName: "Avalanche Mainnet C-Chain",
+	nativeCurrency: {
+		name: "Avalanche",
+		symbol: "AVAX",
+		decimals: 18,
+	},
+	rpcUrls: ["https://api.avax.network/ext/bc/C/rpc"],
+	blockExplorerUrls: ["https://snowtrace.io/"],
 };
 
 export const testnetChain: IChain = {
-	isDefaultNetwork: true,
-	chainId: `0x${(5).toString(16)}`,
+	isDefaultNetwork: false,
+	chainId: "0xa869",
+	chainName: "Avalanche Testnet C-Chain",
+	nativeCurrency: {
+		name: "Avalanche",
+		symbol: "AVAX",
+		decimals: 18,
+	},
+	rpcUrls: ["https://api.avax-test.network/ext/bc/C/rpc"],
+	blockExplorerUrls: ["https://testnet.snowtrace.io/"],
 };
