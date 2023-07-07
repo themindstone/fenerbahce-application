@@ -11,7 +11,8 @@ import {
 	Text,
 	useDisclosure,
 } from "@chakra-ui/react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import type { SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useConnectWallet, useKYC } from "~/context";
 import { KYCModalEventBus, loadingModalEventBus, modal1907EventBus } from "~/eventbus";
 import { GoldenFizzButton } from "../Button";
@@ -26,7 +27,6 @@ const schema = yup.object({
 	phone: yup.string().phone("TR", false, "Telefon numarası geçerli değil.").required("Telefon numarası zorunludur."),
 });
 
-
 type KYCFormType = yup.InferType<typeof schema>;
 
 const phoneUtil = gPhoneNumber.PhoneNumberUtil.getInstance();
@@ -40,7 +40,6 @@ export const KYCModal = () => {
 		handleSubmit,
 		register,
 		formState: { errors },
-		getValues,
 	} = useForm<KYCFormType>({ resolver: yupResolver(schema) });
 
 	KYCModalEventBus.useListener(
@@ -127,9 +126,12 @@ export const KYCModal = () => {
 										const formatter = new AsYouTypeFormatter("TR");
 										formatter.clear();
 										let l = "";
-										e.target.value.split("").filter(i => i !== " ").forEach(i => {
-											l = formatter.inputDigit(i);
-										});
+										e.target.value
+											.split("")
+											.filter(i => i !== " ")
+											.forEach(i => {
+												l = formatter.inputDigit(i);
+											});
 										const p = phoneUtil.format(
 											phoneUtil.parseAndKeepRawInput(l, "TR"),
 											PNF.INTERNATIONAL,

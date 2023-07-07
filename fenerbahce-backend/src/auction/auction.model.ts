@@ -1,5 +1,14 @@
 import { Type } from "class-transformer";
-import { ArrayMinSize, IsArray, IsISO8601, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateIf } from "class-validator";
+import {
+    ArrayMinSize,
+    IsArray,
+    IsISO8601,
+    IsNotEmpty,
+    IsNumber,
+    IsOptional,
+    IsString,
+    ValidateIf,
+} from "class-validator";
 
 class PhotoUrls {
     @IsString()
@@ -15,7 +24,7 @@ export class Auction {
     name: string;
 
     @IsISO8601()
-    @ValidateIf(o => new Date(o.startDate).getTime() > new Date().getTime())
+    @ValidateIf((o) => new Date(o.startDate).getTime() > new Date().getTime())
     @IsString()
     startDate: string;
 

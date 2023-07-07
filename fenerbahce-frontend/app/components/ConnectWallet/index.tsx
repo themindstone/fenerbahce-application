@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import type { ReactElement } from "react";
 import {
 	Flex,
 	Heading,
@@ -13,7 +13,7 @@ import {
 	VStack,
 } from "@chakra-ui/react";
 import type { ButtonProps } from "@chakra-ui/react";
-import { connectWalletEventBus, KYCModalEventBus } from "~/eventbus";
+import { connectWalletEventBus } from "~/eventbus";
 import { TokenLogoImage, MetamaskLogoImage, ParibuLogoImage } from "~/assets";
 import { ColorfulBorderButton } from "~/components";
 import { useConnectWallet } from "~/context";

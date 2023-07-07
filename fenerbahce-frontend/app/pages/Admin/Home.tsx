@@ -140,7 +140,7 @@ export const Home = (): ReactElement => {
 			<Grid gridTemplateColumns="1fr 1fr 1fr" gap="20px">
 				{(auctions.data as any[]).map((product: any) => {
 					if (product.endDate < new Date().getTime() || product.isSelled) {
-						return <></>
+						return <></>;
 					}
 					return (
 						<ProductCard

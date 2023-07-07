@@ -31,14 +31,13 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 		return auction.balances || [];
 	});
 
-
 	const userBalance = useQuery(
 		["balance", connectWallet.address, auction.id],
 		() => {
 			return balanceClient.getBalanceByAuctionId(auction.id, connectWallet.address).then(res => res.data);
 		},
 		{
-			enabled: connectWallet.isConnected && !!auction.id &&connectWallet.isCorrectNetwork,
+			enabled: connectWallet.isConnected && !!auction.id && connectWallet.isCorrectNetwork,
 			refetchInterval: 10000,
 		},
 	);
@@ -54,7 +53,7 @@ export const useAuctionContractAdapter = (auction: any, deps: any[] = []) => {
 		},
 	);
 
-	const { data: fbTokenAllowanceData, error } = useQuery(
+	const { data: fbTokenAllowanceData } = useQuery(
 		["fbTokenAllowance", connectWallet.address],
 		() => {
 			return fbTokenContract.getAuctionContractAllowance({

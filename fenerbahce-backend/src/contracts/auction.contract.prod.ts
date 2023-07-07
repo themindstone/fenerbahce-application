@@ -13,12 +13,13 @@ interface AuctionContractCreateAuctionDto {
 
 @Injectable()
 export class AuctionContractProduction {
-
-    constructor(private eventEmitter: EventEmitter2, private startBlockNumber: number) {
+    constructor(
+        private eventEmitter: EventEmitter2,
+        private startBlockNumber: number,
+    ) {
         this.eventEmitter = eventEmitter;
         this.startBlockNumber = startBlockNumber;
     }
-
 
     // async auctionCreated({ auctionId, block_number }: any) {
     //     console.log(auctionId);
@@ -30,7 +31,6 @@ export class AuctionContractProduction {
     //         auctionId: formatEther(auctionId),
     //     });
     // }
-
 
     // async auctionDeposited({ auctionId, from, value, block_number }: any) {
     //     if (this.startBlockNumber >= block_number) {

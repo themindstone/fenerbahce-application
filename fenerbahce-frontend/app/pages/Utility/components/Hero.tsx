@@ -10,7 +10,13 @@ const options = {
 };
 
 const HeroCard = (): ReactElement => {
-	return <Box borderRadius="15px" style={{ aspectRatio: "100/45" }} bgSize="cover" bgImage={`url(${JorgeJesusBanner})`}></Box>;
+	return (
+		<Box
+			borderRadius="15px"
+			style={{ aspectRatio: "100/45" }}
+			bgSize="cover"
+			bgImage={`url(${JorgeJesusBanner})`}></Box>
+	);
 };
 
 export const Hero = (): ReactElement => {

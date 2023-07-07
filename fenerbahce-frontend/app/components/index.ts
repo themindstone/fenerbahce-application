@@ -11,6 +11,6 @@ export * from "./ConnectWallet";
 export * from "./Slideshow";
 export * from "./Button";
 export * from "./Modal1907";
-export * from "./PlaceBidModal"
+export * from "./PlaceBidModal";
 export * from "./BuyNowModal";
 export * from "./KYCModal";

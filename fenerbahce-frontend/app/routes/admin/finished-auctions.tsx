@@ -3,13 +3,11 @@ import { config } from "~/configs";
 import { FinishedAuctions } from "~/pages";
 
 export const loader: LoaderFunction = () => {
-
 	return json({
 		config,
 	});
 };
 
-
 export default () => {
-    return <FinishedAuctions />
+	return <FinishedAuctions />;
 };

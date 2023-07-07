@@ -28,7 +28,7 @@ export const FAQ = (): ReactElement => {
 		if (window.location.hash === "#sss") {
 			window.location.href = "#sss";
 		}
-	}, []);	
+	}, []);
 
 	return (
 		<VStack bg="#fbfbfb" color="black" paddingTop="150px" paddingBottom="100px" id="sss">

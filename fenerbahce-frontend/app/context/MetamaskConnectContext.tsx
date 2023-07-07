@@ -34,7 +34,7 @@ export const ConnectWalletProvider = ({ children }: ConnectWalletProviderInterfa
 	const [defaultWallet, setDefaultWallet] = useState<IWallet>(() => wallets.MetamaskWallet);
 	const [isCorrectNetwork, setIsCorrectNetwork] = useState<boolean>(false);
 
-	const { checkIfIsCorrectNetwork } = useChainConfig()
+	const { checkIfIsCorrectNetwork } = useChainConfig();
 
 	const connectWallet = async () => {
 		if (!defaultWallet.isConnected) {

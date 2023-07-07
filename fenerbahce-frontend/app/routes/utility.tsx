@@ -9,6 +9,4 @@ export let links: LinksFunction = () => {
 	return [{ rel: "stylesheet", href: carouselStyles }];
 };
 
-
-
 export default () => <Utility />;

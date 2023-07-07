@@ -40,7 +40,6 @@ const LoginForm = () => {
 };
 
 export const LoginPage = (): ReactElement => {
-
 	return (
 		<Layout authenticationRequired={false}>
 			<Heading mb="15px">Login With Username and Password</Heading>

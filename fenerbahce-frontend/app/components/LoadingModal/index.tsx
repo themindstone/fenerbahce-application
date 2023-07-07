@@ -26,10 +26,12 @@ export const LoadingModal = (): ReactElement => {
 
 	return (
 		<Modal isOpen={isOpen} onClose={onClose} closeOnEsc={false} closeOnOverlayClick={false}>
-			<ModalOverlay display="grid" placeContent="center" bg="blackAlpha.800" >
+			<ModalOverlay display="grid" placeContent="center" bg="blackAlpha.800">
 				<VStack gap="30px">
 					<Spinner height="50px" width="50px"></Spinner>
-					<Box height="200px" fontSize="2xl">{message}</Box>
+					<Box height="200px" fontSize="2xl">
+						{message}
+					</Box>
 				</VStack>
 			</ModalOverlay>
 		</Modal>

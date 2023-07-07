@@ -11,7 +11,6 @@ export const NavLink = ({ children, ...rest }: LinkProps): ReactElement => {
 };
 
 export const FBTokenText = (): ReactElement => {
-
 	const fbTokenCalculator = useFBTokenCalculator();
 
 	if (!fbTokenCalculator.price) {

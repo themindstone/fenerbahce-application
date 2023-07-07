@@ -68,7 +68,6 @@ export class AuctionContract {
         //     throw new Error("Error connecting to the contract");
         // }
         // this.startBlockNumber = await this.provider.getBlockNumber();
-
         // if (nodeEnv === "production") {
         //     // const contractProvider = new AuctionContractProduction(
         //     //     this.eventEmitter,

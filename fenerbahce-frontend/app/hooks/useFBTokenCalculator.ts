@@ -8,11 +8,15 @@ import { modal1907EventBus } from "~/eventbus";
 export const useFBTokenCalculator = () => {
 	const paribuClient = useParibuClient();
 
-	const query = useQuery(["fbtokenprice"], () => {
-		return paribuClient.getLatestFBTokenPrice();
-	}, {
-		cacheTime: 30000
-	});
+	const query = useQuery(
+		["fbtokenprice"],
+		() => {
+			return paribuClient.getLatestFBTokenPrice();
+		},
+		{
+			cacheTime: 30000,
+		},
+	);
 
 	useInterval(() => {
 		query.refetch();

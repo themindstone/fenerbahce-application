@@ -5,8 +5,8 @@ import { Slideshow } from "~/components";
 
 const options = {
 	loop: false,
-    items: 1,
-    slideBy: 1,
+	items: 1,
+	slideBy: 1,
 };
 
 // const GalleryThumbnail = () => {
@@ -23,18 +23,21 @@ const options = {
 // };
 
 export const Gallery = (): ReactElement => {
-
 	const [md] = useMediaQuery("(max-width: 900px)");
-    const { auction: { photoUrls } } = useLoaderData();
+	const {
+		auction: { photoUrls },
+	} = useLoaderData();
 
-    const _photoUrls = photoUrls.map((item: { photoUrl: string }) => {
-        return {
-            original: item.photoUrl,
-            thumbnail: item.photoUrl,
-        };
-    });
+	const _photoUrls = photoUrls.map((item: { photoUrl: string }) => {
+		return {
+			original: item.photoUrl,
+			thumbnail: item.photoUrl,
+		};
+	});
 
-    return <Box overflow="hidden" maxW={md && "400px" || "unset"}>
-        <Slideshow options={options} images={_photoUrls} />
-    </Box>
+	return (
+		<Box overflow="hidden" maxW={(md && "400px") || "unset"}>
+			<Slideshow options={options} images={_photoUrls} />
+		</Box>
+	);
 };

@@ -1,19 +1,16 @@
 import { Grid } from "@chakra-ui/react";
-import { useState } from "react";
 import { useQuery } from "react-query";
 import { Layout } from "~/admincomponents";
 import { useAuctionClient } from "~/client";
 import { ProductCard } from "./components";
 
 export const FinishedAuctions = () => {
-	const [pageNumber, setPageNumber] = useState<number>(0);
-
 	const auctionClient = useAuctionClient();
 
-	const auctions = useQuery(["auctionsByPage", pageNumber], () => {
+	const auctions = useQuery(["auctionsByPage", 0], () => {
 		return auctionClient
 			.listFinishedAuctions({
-				page: pageNumber,
+				page: 0,
 			})
 			.then(res => res.data || []);
 	});

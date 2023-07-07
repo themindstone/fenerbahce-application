@@ -10,5 +10,5 @@ export interface SlideshowlGoToEventInterface {
 export interface SlideshowPropsInterface {
 	children?: React.ReactNode;
 	options: any;
-	images: { original: string, thumbnail: string }[];
+	images: { original: string; thumbnail: string }[];
 }

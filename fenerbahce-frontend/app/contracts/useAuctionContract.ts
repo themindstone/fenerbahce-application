@@ -1,11 +1,7 @@
 import { ethers } from "ethers";
 import { useCallback } from "react";
 import { useContract } from "~/context";
-import {
-	AuctionContractDepositDTO,
-	AuctionContractFunctionReturnType,
-	AuctionContractFunctions,
-} from "~/interfaces";
+import { AuctionContractDepositDTO, AuctionContractFunctionReturnType, AuctionContractFunctions } from "~/interfaces";
 import { getAuctionContractErrorMessage } from "~/utils";
 
 export const useAuctionContract = (): AuctionContractFunctions => {
@@ -23,7 +19,7 @@ export const useAuctionContract = (): AuctionContractFunctions => {
 				const tx = await transaction.wait();
 				return { tx, isError: false };
 			} catch (e: any) {
-				console.log(e)
+				console.log(e);
 				return { isError: true, errorMessage: getAuctionContractErrorMessage(e.message as string) };
 			}
 		},

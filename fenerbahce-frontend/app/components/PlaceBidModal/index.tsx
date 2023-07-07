@@ -27,7 +27,7 @@ export function PlaceBidModal() {
 	const [minValue, setMinValue] = useState(0);
 
 	const { deposit } = useAuctionContractAdapter(auction, [auction]);
-	const { switchToNetwork } = useChainConfig()
+	const { switchToNetwork } = useChainConfig();
 
 	placeBidModalEventBus.useListener(
 		"placebidmodal.open",
@@ -163,7 +163,8 @@ export function PlaceBidModal() {
 									border="1px solid #fff"
 									cursor="pointer"
 									_hover={{ filter: "brightness(0.9)" }}
-									_active={{ filter: "brightness(0.8)" }} onClick={increment}></IconButton>
+									_active={{ filter: "brightness(0.8)" }}
+									onClick={increment}></IconButton>
 							</Flex>
 						</Flex>
 						<Text color="whiteAlpha.800" fontSize="sm">

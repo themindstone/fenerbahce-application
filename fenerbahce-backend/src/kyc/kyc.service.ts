@@ -21,11 +21,13 @@ export class KYCService {
     }
 
     async getUserByAddress(params: { address: string }) {
-        return await this.kycRepository.findOne({
-            select: ["id", "fullname", "address", "phone", "email"],
-            where: {
-                address: params.address,
-            },
-        }) || {};
+        return (
+            (await this.kycRepository.findOne({
+                select: ["id", "fullname", "address", "phone", "email"],
+                where: {
+                    address: params.address,
+                },
+            })) || {}
+        );
     }
 }

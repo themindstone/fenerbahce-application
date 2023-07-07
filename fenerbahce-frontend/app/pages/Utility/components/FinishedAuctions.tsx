@@ -1,5 +1,6 @@
 import { Box, Flex, Heading, Text, VStack, Link } from "@chakra-ui/react";
-import { Fragment, ReactElement, useEffect, useMemo, useState } from "react";
+import type { ReactElement } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { Carousel } from "~/components";
 import { useLoaderData } from "@remix-run/react";
 import { humanReadableNumber } from "~/utils";
@@ -59,6 +60,8 @@ const FinishedAuctionsCard = (auction: FinishedAuctionsCardProps): ReactElement 
 		}
 	}, [auctionHighestBalances.isSuccess]);
 
+	console.log(highestBalances);
+
 	return (
 		<Link href={`/product/${auction.id}`} _hover={{ textDecor: "none" }}>
 			<Flex borderRadius="15px" overflow="hidden" bg="var(--governor-bay)" direction="column">
@@ -69,13 +72,11 @@ const FinishedAuctionsCard = (auction: FinishedAuctionsCardProps): ReactElement 
 					w="100%"
 					bgRepeat="no-repeat"
 					bgPos="center"
-					pos="relative">
-				</Box>
+					pos="relative"></Box>
 				<Flex direction="column" p="15px 20px" gap="10px" fontWeight="bold">
 					<Box fontSize="lg">{auction.name}</Box>
 					<Flex justifyContent="space-between">
-						<Flex direction="column">
-						</Flex>
+						<Flex direction="column"></Flex>
 						<Flex direction="column" alignItems="end">
 							<Text fontWeight="normal">En yüksek teklif</Text>
 							<Text color="var(--golden-fizz)">
@@ -89,7 +90,6 @@ const FinishedAuctionsCard = (auction: FinishedAuctionsCardProps): ReactElement 
 			</Flex>
 		</Link>
 	);
-
 };
 
 export const FinishedAuctions = (): ReactElement => {

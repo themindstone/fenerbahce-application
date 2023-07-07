@@ -3,6 +3,6 @@ export interface IChain {
 	chainId: string;
 	chainName?: string;
 	rpcUrls?: string[];
-    blockExplorerUrls?: string[];
+	blockExplorerUrls?: string[];
 	nativeCurrency?: { name: string; symbol: string; decimals: number };
 }

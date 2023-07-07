@@ -28,7 +28,12 @@ const KYCContext = React.createContext<KYCContextInterface>({
 });
 
 export const KYCProvider = (props: { children: React.ReactNode }) => {
-	const [customer, setCustomer] = useState<Omit<KYCContextInterface, "create">>({ fullname: "", address: "", email: "", phone: ""});
+	const [customer, setCustomer] = useState<Omit<KYCContextInterface, "create">>({
+		fullname: "",
+		address: "",
+		email: "",
+		phone: "",
+	});
 	const connectWallet = useConnectWallet();
 
 	const kycQuery = useQuery(

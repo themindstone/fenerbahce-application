@@ -14,4 +14,3 @@ export const FBTokenText = (): ReactElement => (
 		FB Token: 36.05₺
 	</Text>
 );
-

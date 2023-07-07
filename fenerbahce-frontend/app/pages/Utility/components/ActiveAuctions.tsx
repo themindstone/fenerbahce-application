@@ -1,9 +1,9 @@
 import { Heading, VStack } from "@chakra-ui/react";
-import { Fragment, ReactElement, useMemo } from "react";
-import { Carousel } from "~/components";
+import type { ReactElement } from "react";
+import { Fragment, useMemo } from "react";
+import { Carousel, AuctionCard } from "~/components";
 import { useLoaderData } from "@remix-run/react";
 import { humanReadableNumber } from "~/utils";
-import { AuctionCard } from "~/components";
 
 const options = {
 	loop: false,

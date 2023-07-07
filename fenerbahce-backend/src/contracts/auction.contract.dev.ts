@@ -1,10 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { EventEmitter2 } from "@nestjs/event-emitter";
-import {
-    Contract,
-    BigNumber,
-    formatUnits,
-} from "nestjs-ethers";
+import { Contract, BigNumber, formatUnits } from "nestjs-ethers";
 
 @Injectable()
 export class AuctionContractDevelopment {

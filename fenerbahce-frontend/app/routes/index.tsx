@@ -6,9 +6,7 @@ import { AuctionClient } from "~/client";
 import { config } from "~/configs";
 
 export let links: LinksFunction = () => {
-	return [
-		{ rel: "stylesheet", href: carouselStyles },
-	];
+	return [{ rel: "stylesheet", href: carouselStyles }];
 };
 
 export const loader: LoaderFunction = async ({ context }) => {
@@ -20,8 +18,8 @@ export const loader: LoaderFunction = async ({ context }) => {
 		highestOfferAuctions,
 		activeAuctions,
 		finishedAuctions,
-		config
+		config,
 	});
-}
+};
 
 export default () => <Utility />;

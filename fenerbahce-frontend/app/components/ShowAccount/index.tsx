@@ -1,17 +1,9 @@
 import { Flex, Heading, Text, useOutsideClick, Link, Icon } from "@chakra-ui/react";
-import type { ButtonProps } from "@chakra-ui/react";
-import { LegacyRef, ReactElement, useEffect, useReducer, useRef } from "react";
-import React from "react";
+import type { LegacyRef, ReactElement } from "react";
+import React, { useEffect, useReducer, useRef } from "react";
 import { connectWalletEventBus } from "~/eventbus";
 import { CloseIcon, CopyIcon, ViewEtherscanIcon } from "~/assets";
-import { ColorfulBorderButton } from "../Button";
 import { useConnectWallet } from "~/context";
-
-const CustomButton = (props: ButtonProps) => (
-	<ColorfulBorderButton from="var(--biscay)" to="var(--golden-fizz)" angle="to right" w="100%" {...props}>
-		{props.children}
-	</ColorfulBorderButton>
-);
 
 const isOpenReducer = (_: boolean, action: boolean) => {
 	connectWalletEventBus.publish("connectwallet.accountmodalchange", action);
@@ -89,7 +81,10 @@ export const ShowAccount = (): ReactElement => {
 			<Link href="#">
 				<Flex gap="10px" alignItems="center" justifyContent="center">
 					<Icon as={ViewEtherscanIcon}></Icon>
-					<a target="_blank" href="https://etherscan.io/address/0xFB19075D77a0F111796FB259819830F4780f1429">
+					<a
+						target="_blank"
+						href="https://etherscan.io/address/0xFB19075D77a0F111796FB259819830F4780f1429"
+						rel="noreferrer">
 						<Text textAlign="center">View on Etherscan</Text>
 					</a>
 				</Flex>

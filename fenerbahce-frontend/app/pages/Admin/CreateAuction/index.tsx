@@ -1,16 +1,15 @@
 import { Box, Flex, FormLabel, Heading, Input, Text } from "@chakra-ui/react";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { GoldenFizzButton } from "~/components";
 import { loadingModalEventBus, modal1907EventBus } from "~/eventbus";
-import { SubmitErrorHandler, useFieldArray } from "react-hook-form";
+import type { SubmitErrorHandler } from "react-hook-form";
+import { useFieldArray } from "react-hook-form";
 import { AuctionClient } from "~/client";
-import { CreateAuctionFormType, useCreateAuctionForm } from "./schema";
+import type { CreateAuctionFormType } from "./schema";
+import { useCreateAuctionForm } from "./schema";
 
 // we need to list products in this page
 export const CreateAuction = () => {
-	// const [auctionPhotosInputCount, setAuctionPhotosInputCount] = useState<number>(1);
-
-	// const auctionContract = useAuctionContract();
 	const { handleSubmit, register, control } = useCreateAuctionForm();
 
 	const photoUrls = useFieldArray({
@@ -19,7 +18,6 @@ export const CreateAuction = () => {
 	});
 
 	const decrease = (index: number | undefined) => {
-		// photoUrls.move(index, index - 1);
 		photoUrls.remove(index ? index : photoUrls.fields.length - 1);
 	};
 

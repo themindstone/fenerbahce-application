@@ -1,7 +1,16 @@
-import { Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, VStack, Image, Heading, Text } from "@chakra-ui/react"
-import { TokenLogoImage } from "~/assets"
+import {
+	Modal,
+	ModalOverlay,
+	ModalContent,
+	ModalCloseButton,
+	ModalBody,
+	VStack,
+	Image,
+	Heading,
+	Text,
+} from "@chakra-ui/react";
+import { TokenLogoImage } from "~/assets";
 import { GoldenFizzButton } from "~/components";
-
 
 interface Modal1907Props {
 	description: string;
@@ -11,9 +20,8 @@ interface Modal1907Props {
 }
 
 export const Modal1907 = ({ description, isSucceed, isOpen, onClose }: Modal1907Props) => {
-
-    return (
-        <Modal isOpen={isOpen} onClose={onClose} blockScrollOnMount={false}>
+	return (
+		<Modal isOpen={isOpen} onClose={onClose} blockScrollOnMount={false}>
 			<ModalOverlay />
 			<ModalContent bg="var(--governor-bay)" maxW="330px" p="20px" gap="10px">
 				<ModalCloseButton color="#fff" />
@@ -26,8 +34,10 @@ export const Modal1907 = ({ description, isSucceed, isOpen, onClose }: Modal1907
 						</VStack>
 					</VStack>
 				</ModalBody>
-				<GoldenFizzButton w="100%" onClick={onClose}>Kapat</GoldenFizzButton>
+				<GoldenFizzButton w="100%" onClick={onClose}>
+					Kapat
+				</GoldenFizzButton>
 			</ModalContent>
 		</Modal>
-    );
+	);
 };

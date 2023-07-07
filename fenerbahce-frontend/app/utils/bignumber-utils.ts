@@ -1,36 +1,35 @@
 import { ethers } from "ethers";
 
-
 const max = (arr: ethers.BigNumber[]): ethers.BigNumber => {
-    if (arr.length === 0) {
-        throw new Error("arr is empty");
-    }
+	if (arr.length === 0) {
+		throw new Error("arr is empty");
+	}
 
-    let maxValue = ethers.BigNumber.from(0);
+	let maxValue = ethers.BigNumber.from(0);
 
-    arr.forEach(item => {
-        if (item.gt(maxValue)) {
-            maxValue = item;
-        }
-    });
+	arr.forEach(item => {
+		if (item.gt(maxValue)) {
+			maxValue = item;
+		}
+	});
 
-    return maxValue;
+	return maxValue;
 };
 
 const min = (arr: ethers.BigNumber[]): ethers.BigNumber => {
-    if (arr.length === 0) {
-        throw new Error("arr is empty");
-    }
+	if (arr.length === 0) {
+		throw new Error("arr is empty");
+	}
 
-    let minValue = ethers.BigNumber.from(0);
+	let minValue = ethers.BigNumber.from(0);
 
-    arr.forEach(item => {
-        if (item.lt(minValue)) {
-            minValue = item;
-        }
-    });
+	arr.forEach(item => {
+		if (item.lt(minValue)) {
+			minValue = item;
+		}
+	});
 
-    return minValue;
+	return minValue;
 };
 
 // const sort = (arr: ethers.BigNumber[]) => {
@@ -38,15 +37,7 @@ const min = (arr: ethers.BigNumber[]): ethers.BigNumber => {
 //         throw new Error("arr is empty");
 //     }
 
-    
-
 //     // return maxValue;
 // }
 
-
-
-export {
-    max,
-    min
-};
-
+export { max, min };

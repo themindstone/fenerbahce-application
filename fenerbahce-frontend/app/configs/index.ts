@@ -13,7 +13,7 @@ export interface Config {
 const getEnv = (): ENV => {
 	return {
 		BACKEND_URL: process.env.BACKEND_URL,
-		NODE_ENV: process.env.NODE_ENV as NODE_ENV_TYPE
+		NODE_ENV: process.env.NODE_ENV as NODE_ENV_TYPE,
 	};
 };
 

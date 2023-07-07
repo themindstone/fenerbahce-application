@@ -38,7 +38,6 @@ export const ContractsProvider = ({ children }: ContractsProviderProps) => {
 	);
 
 	const connectContractIfNotConnected = (contractName: ContractName) => {
-
 		if (!window.ethereum) {
 			throw new Error("No ethereum provider found");
 		}

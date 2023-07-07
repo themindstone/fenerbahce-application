@@ -1,6 +1,5 @@
-
 export interface ISideNavLink {
-    id: string;
-    href: string;
-    text: string;
+	id: string;
+	href: string;
+	text: string;
 }

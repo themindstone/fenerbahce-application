@@ -1,6 +1,6 @@
-import { ReactElement } from "react";
+import type { ReactElement } from "react";
 import React, { useRef, useState, Fragment, useMemo, useLayoutEffect } from "react";
-import {
+import type {
 	CarouselPropsInterface,
 	OwlCarouselChangeEventInterface,
 	OwlCarouselGoToEventInterface,
@@ -61,6 +61,8 @@ const Carousel = (props: CarouselPropsInterface) => {
 	const OwlCarousel2 = ({ children, options }: CarouselPropsInterface): ReactElement => {
 		const [show, setShow] = useState<boolean>(false);
 		const [pageCount, setPageCount] = useState<number>(1);
+
+		console.log(setPageCount);
 
 		const ref = useRef() as any;
 
